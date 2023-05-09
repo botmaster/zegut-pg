@@ -302,6 +302,16 @@ onMounted(async () => {
 
       <section v-if="isAuthenticated" class="prose lg:prose-xl max-w-prose mt-14">
         <h2 class="">Fetch Zégut playlist on podCloud</h2>
+
+        <p class="border-l-4 border-amber-200 px-4 py-3 bg-amber-200/20 text-base">
+          <span class="inline-block mr-2">📢</span> En cas d'erreur (CORS), vous aurez besoin
+          d'installer et d'activer cette
+          <a
+            href="https://chrome.google.com/webstore/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf"
+            >extension</a
+          >.
+        </p>
+
         <p>
           The complete list of Zégut's podcasts can be found on
           <a
