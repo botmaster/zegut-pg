@@ -9,7 +9,7 @@ export async function redirectToAuthCodeFlow(clientId: string) {
   const params = new URLSearchParams()
   params.append('client_id', clientId)
   params.append('response_type', 'code')
-  params.append('redirect_uri', 'http://localhost:5173/callback')
+  params.append('redirect_uri', import.meta.env.VITE_SPOTIFY_REDIRECT_URI)
   params.append(
     'scope',
     'user-read-private user-read-email playlist-read-private playlist-read-collaborative playlist-modify-public playlist-modify-private'
@@ -28,7 +28,7 @@ export async function getAccessToken(clientId: string, code: string) {
   params.append('client_id', clientId)
   params.append('grant_type', 'authorization_code')
   params.append('code', code)
-  params.append('redirect_uri', 'http://localhost:5173/callback')
+  params.append('redirect_uri', import.meta.env.VITE_SPOTIFY_REDIRECT_URI)
   params.append('code_verifier', verifier!)
 
   const { data } = await axios.post('https://accounts.spotify.com/api/token', params, {
