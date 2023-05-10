@@ -186,6 +186,9 @@ const getPlaylist = async (playlistId: string = '') => {
 const submitPodcastUrlHandler = () => {
   console.log('submitHandler', podcastUrl.value)
   isScrapePending.value = true
+  hasScrapeError.value = false
+  playlist.value = null
+
   getPodcastTracks()
     .then((tracks) => {
       playlistList.value = tracks || []
@@ -394,7 +397,7 @@ onMounted(async () => {
         <div class="not-prose" v-if="hasCreatePlalistError">
           <p class="text-sm mt-2 text-red-600">Enable to create the Spotify playlist 😕.</p>
         </div>
-        <pre v-if="playlist" class="!text-xs">{{ playlist }}</pre>
+        <pre v-if="playlist" class="!text-xs max-h-64">{{ playlist }}</pre>
       </section>
     </div>
   </main>
