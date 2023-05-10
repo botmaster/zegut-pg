@@ -225,11 +225,6 @@ const createPlaylistSubmitHandler = async () => {
   }
 }
 
-const logoutClickHandler = () => {
-  console.log('logoutClickHandler')
-  authStore.logout()
-}
-
 /**
  * Vue lifecycle
  */
@@ -261,7 +256,7 @@ onMounted(async () => {
         <figure>
           <blockquote>
             <p>
-              No wait! Pop-Rock Station by Zégut's playlists are not on Spotify ?! <br />Ok I got
+              Oh wait! Pop-Rock Station by Zégut's playlists are not on Spotify ?! <br />Ok I got
               it, I'll take care of it.
             </p>
           </blockquote>
@@ -282,20 +277,15 @@ onMounted(async () => {
         <template v-else>
           <p v-if="!isAuthenticated">
             😬 You must be logged in to Spotify to create a playlist.
-            <RouterLink v-if="!isAuthenticated" :to="{ name: 'login' }" class="btn btn-primary"
-              >Log me in
-            </RouterLink>
+            <RouterLink v-if="!isAuthenticated" :to="{ name: 'login' }">Log me in! </RouterLink>
           </p>
 
           <div v-else>
             <p v-if="user">
-              🤘 Connected as {{ user.display_name }}
-              <button class="inline-flex btn btn-border" @click="logoutClickHandler">
-                Log me out
-              </button>
+              🤘 Connected as {{ user.display_name }}. More info on
+              <RouterLink :to="{ name: 'profil', params: { id: user.id } }">My profile</RouterLink>.
               <br /><img :src="user?.images[0]?.url" class="!m-0" width="80" alt="" />
             </p>
-            <pre v-if="user" class="!text-xs">{{ user }}</pre>
           </div>
         </template>
       </section>
