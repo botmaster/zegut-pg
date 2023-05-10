@@ -7,6 +7,7 @@ import { useAuthStore } from '@/stores/authStore'
 import { useUserStore } from '@/stores/userStore'
 import type { Playlist } from '@/types/types'
 import { Icon } from '@iconify/vue'
+import { toast } from 'vue-sonner'
 
 // AuthStore
 const authStore = useAuthStore()
@@ -192,9 +193,13 @@ const submitPodcastUrlHandler = () => {
   getPodcastTracks()
     .then((tracks) => {
       playlistList.value = tracks || []
+      toast.success('Podcast page scraped!')
     })
     .catch((error) => {
       hasScrapeError.value = error
+      toast.error('Error while scraping podcast page', {
+        description: error
+      })
     })
     .finally(() => {
       isScrapePending.value = false
@@ -223,7 +228,12 @@ const createPlaylistSubmitHandler = async () => {
 
     // Get playlist
     playlist.value = await getPlaylist(playlist.value?.id)
+
+    toast.success('Playlist created!')
   } catch (error) {
+    toast.error('Error while creating playlist', {
+      description: error
+    })
     console.error(error)
   }
 }
@@ -326,12 +336,7 @@ onMounted(async () => {
                 v-model="podcastUrl"
                 :disabled="isScrapePending"
               />
-              <span class="not-prose block" v-if="hasScrapeError">
-                <span class="block text-sm mt-2 text-red-600">
-                  Enable to retrieve the podcast playlist from podCloud 😕.
-                </span>
-              </span></label
-            >
+            </label>
           </div>
           <div class="mt-4">
             <button class="btn btn-primary" :disabled="isScrapePending" type="submit">
@@ -342,6 +347,11 @@ onMounted(async () => {
               class="inline-block ml-4"
               icon="svg-spinners:pulse-rings-multiple"
             ></Icon>
+          </div>
+          <div class="not-prose" v-if="hasScrapeError">
+            <span class="block text-sm mt-2 text-red-600">
+              Enable to retrieve the podcast playlist from podCloud 😕.
+            </span>
           </div>
         </form>
       </section>

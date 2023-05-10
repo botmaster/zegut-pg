@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { Toaster, toast } from 'vue-sonner'
+
 // Intercept axios requests
 import axios from 'axios'
 import { useAuthStore } from '@/stores/authStore'
@@ -37,6 +39,7 @@ axios.interceptors.response.use(
 
 <template>
   <div class="layout">
+    <Toaster richColors closeButton :hotkey="['KeyC']" position="top-right" />
     <TheHeader />
     <RouterView class="pt-[--header-height] grow shrink-0" />
     <TheFooter />
