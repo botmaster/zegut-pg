@@ -35,7 +35,13 @@
       "podcastInfos": "Podcast infos",
       "quote": "Oh wait! Pop-Rock Station by Zégut's playlists are not on Spotify ?!\nOk I got it, I'll take care of it.",
       "title": "Zégut PG",
-      "userProfil": "User profil"
+      "userProfil": "User profil",
+      "toast": {
+        "scrapSuccess": "Podcast page scraped!",
+        "scrapError": "Error while scraping podcast page 😕\n",
+        "playlistCreated": "Playlist created!",
+        "playlistError": "Error while creating playlist 😕\n"
+      }
     },
     "login": {
       "alreadyLogged": "You are already logged to Spotify 🤘",

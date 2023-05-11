@@ -200,11 +200,11 @@ const submitPodcastUrlHandler = () => {
   getPodcastTracks()
     .then((tracks) => {
       playlistList.value = tracks || []
-      toast.success('Podcast page scraped!')
+      toast.success(t('pages.home.toast.scrapSuccess').toString())
     })
     .catch((error) => {
       hasScrapeError.value = error
-      toast.error('Error while scraping podcast page 😕\n' + error)
+      toast.error(t('pages.home.toast.error').toString() + error)
     })
     .finally(() => {
       isScrapePending.value = false
@@ -234,9 +234,9 @@ const createPlaylistSubmitHandler = async () => {
     // Get playlist
     playlist.value = await getPlaylist(playlist.value?.id)
 
-    toast.success('Playlist created!')
+    toast.success(t('pages.home.toast.playlistCreated'))
   } catch (error) {
-    toast.error('Error while creating playlist 😕\n' + error)
+    toast.error(t('pages.home.toast.playlistError') + error)
     console.error(error)
   }
 }
@@ -337,12 +337,13 @@ onMounted(async () => {
             <label for="podcastUrl" class="block"
               ><span class="block">{{ t('pages.home.form.podcastUrl') }}</span>
               <input
-                type="text"
+                type="url"
                 id="podcastUrl"
                 name="podcastUrl"
                 class="w-full"
                 v-model="podcastUrl"
                 :disabled="isScrapePending"
+                required
               />
             </label>
           </div>
@@ -387,6 +388,7 @@ onMounted(async () => {
                 name="playlistName"
                 class="w-full"
                 v-model="formPlaylist.name"
+                required
             /></label>
             <label for="playlistDescription" class="block"
               ><span class="block">{{ t('pages.home.form.playlistDescription') }}</span>
@@ -396,6 +398,7 @@ onMounted(async () => {
                 name="playlistDescription"
                 class="w-full"
                 v-model="formPlaylist.description"
+                required
             /></label>
           </div>
           <div class="mt-4 flex items-center gap-y-4">

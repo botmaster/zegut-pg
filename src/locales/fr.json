@@ -35,7 +35,13 @@
       "podcastInfos": "Infos du podcast",
       "quote": "Mais nan ! Les playlists de Zégut ne sont pas sur Spotify ?!\nOk j'ai compris, je m'en occupe.",
       "title": "Zégut PG",
-      "userProfil": "Profil utilisateur"
+      "userProfil": "Profil utilisateur",
+      "toast": {
+        "scrapSuccess": "Scraping de la page du podcast réussi !",
+        "scrapError": "Erreur lors du scraping de la page du podcast 😕\n",
+        "playlistCreated": "Playlist créée avec succès !",
+        "playlistError": "Erreur lors de la création de la playlist 😕\n"
+      }
     },
     "login": {
       "alreadyLogged": "Vous êtes déjà connecté à spotify 🤘",
