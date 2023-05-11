@@ -3,10 +3,12 @@ import { useAuthStore } from '@/stores/authStore'
 import { redirectToAuthCodeFlow } from '@/auth/authCodeWithPkce'
 import { Icon } from '@iconify/vue'
 import { storeToRefs } from 'pinia'
+import { useI18n } from 'vue-i18n'
 
 const authStore = useAuthStore()
 const { isAuthenticated } = storeToRefs(authStore)
 const client_id = import.meta.env.VITE_SPOTIFY_CLIENT_ID
+const { t } = useI18n()
 
 const initiateSpotifyLogin = () => {
   redirectToAuthCodeFlow(client_id)
@@ -27,20 +29,25 @@ const connectClickHandler = () => {
   <main>
     <div class="container mx-auto">
       <section class="prose lg:prose-xl max-w-prose pt-8 pb-14">
-        <h1>Sign in ZPG</h1>
+        <h1>{{ t('pages.login.title') }}</h1>
         <template v-if="!isAuthenticated">
           <p>
-            Let's connect to Spotify! <Icon icon="logos:spotify-icon" class="inline-block"></Icon>
+            {{ t('pages.login.letsConnect') }}
+            <Icon icon="logos:spotify-icon" class="inline-block"></Icon>
           </p>
           <p>
-            <button class="btn btn-primary" @click="connectClickHandler">Connect</button>
+            <button class="btn btn-primary" @click="connectClickHandler">
+              {{ t('common.login') }}
+            </button>
           </p>
         </template>
 
         <div v-else>
-          <p>You are already connected to Spotify 🤘</p>
+          <p>{{ t('pages.login.alreadyLogged') }}</p>
           <p>
-            <button class="btn btn-primary" @click="authStore.logout">Logout</button>
+            <button class="btn btn-primary" @click="authStore.logout">
+              {{ t('common.logout') }}
+            </button>
           </p>
         </div>
       </section>

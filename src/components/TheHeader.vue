@@ -2,6 +2,9 @@
 // UserStore
 import { useUserStore } from '@/stores/userStore'
 import { storeToRefs } from 'pinia'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const userStore = useUserStore()
 const { user } = storeToRefs(userStore)
@@ -27,7 +30,7 @@ const { user } = storeToRefs(userStore)
           class="rounded-full border"
         />
       </RouterLink>
-      <RouterLink v-if="!user" :to="{ name: 'login' }"> Login </RouterLink>
+      <RouterLink v-if="!user" :to="{ name: 'login' }"> {{ t('common.login') }} </RouterLink>
     </nav>
   </header>
 </template>

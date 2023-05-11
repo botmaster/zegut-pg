@@ -5,7 +5,9 @@ import { storeToRefs } from 'pinia'
 import { watchEffect } from 'vue'
 import { useTimeoutFn } from '@vueuse/core'
 import { Icon } from '@iconify/vue'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const router = useRouter()
 
 const authStore = useAuthStore()
@@ -39,18 +41,20 @@ watchEffect(() => {
   <main>
     <div class="container mx-auto">
       <section class="prose lg:prose-xl max-w-prose pt-8 pb-14">
-        <h1>Sign in ZPG in progress</h1>
+        <h1>{{ t('pages.redirect.title') }}</h1>
         <template v-if="hasError">
           <pre>Error: {{ authStore.hasError }}</pre>
         </template>
         <template v-else-if="isLoading">
           <p>
-            Please wait <Icon class="inline-block" icon="svg-spinners:pulse-rings-multiple"></Icon>
+            {{ t('common.pleaseWait') }}
+            <Icon class="inline-block" icon="svg-spinners:pulse-rings-multiple"></Icon>
           </p>
         </template>
         <template v-else>
           <p>
-            Successful login 💪. You will be redirected to the home page. Please wait.
+            {{ t('pages.redirect.loginSuccess') }}
+            {{ t('common.pleaseWait') }}.
             <Icon class="inline-block" icon="svg-spinners:pulse-rings-multiple"></Icon>
           </p>
         </template>
