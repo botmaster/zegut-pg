@@ -4,6 +4,7 @@ import { useAuthStore } from '@/stores/authStore'
 import { storeToRefs } from 'pinia'
 import { useUserStore } from '@/stores/userStore'
 import { onMounted } from 'vue'
+// @ts-ignore
 import { useI18n } from 'vue-i18n'
 // import { useRoute } from 'vue-router'
 

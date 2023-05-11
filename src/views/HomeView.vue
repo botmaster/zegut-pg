@@ -8,6 +8,7 @@ import { useUserStore } from '@/stores/userStore'
 import { Icon } from '@iconify/vue'
 import type { Playlist } from '@/types/types'
 import { useToast } from 'vue-toastification'
+// @ts-ignore
 import { useI18n } from 'vue-i18n'
 
 // i18n

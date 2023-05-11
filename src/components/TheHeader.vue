@@ -2,6 +2,7 @@
 // UserStore
 import { useUserStore } from '@/stores/userStore'
 import { storeToRefs } from 'pinia'
+// @ts-ignore
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()

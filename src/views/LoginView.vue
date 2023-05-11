@@ -3,6 +3,7 @@ import { useAuthStore } from '@/stores/authStore'
 import { redirectToAuthCodeFlow } from '@/auth/authCodeWithPkce'
 import { Icon } from '@iconify/vue'
 import { storeToRefs } from 'pinia'
+// @ts-ignore
 import { useI18n } from 'vue-i18n'
 
 const authStore = useAuthStore()

@@ -5,6 +5,7 @@ import { storeToRefs } from 'pinia'
 import { watchEffect } from 'vue'
 import { useTimeoutFn } from '@vueuse/core'
 import { Icon } from '@iconify/vue'
+// @ts-ignore
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
