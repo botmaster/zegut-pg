@@ -5,9 +5,9 @@ import { onMounted, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/authStore'
 import { useUserStore } from '@/stores/userStore'
-import type { Playlist } from '@/types/types'
 import { Icon } from '@iconify/vue'
-import { toast } from 'vue-sonner'
+import type { Playlist } from '@/types/types'
+import { useToast } from 'vue-toastification'
 
 // AuthStore
 const authStore = useAuthStore()
@@ -16,6 +16,9 @@ const { isAuthenticated, accessToken } = storeToRefs(authStore)
 // UserStore
 const userStore = useUserStore()
 const { user, isLoading: isUserLoading, hasError: hasUserError } = storeToRefs(userStore)
+
+// Toast
+const toast = useToast()
 
 // Reactive variables
 const playlistList = ref<Array<string>>([])
@@ -197,9 +200,7 @@ const submitPodcastUrlHandler = () => {
     })
     .catch((error) => {
       hasScrapeError.value = error
-      toast.error('Error while scraping podcast page', {
-        description: error
-      })
+      toast.error('Error while scraping podcast page 😕\n' + error)
     })
     .finally(() => {
       isScrapePending.value = false
@@ -231,9 +232,7 @@ const createPlaylistSubmitHandler = async () => {
 
     toast.success('Playlist created!')
   } catch (error) {
-    toast.error('Error while creating playlist', {
-      description: error
-    })
+    toast.error('Error while creating playlist 😕\n' + error)
     console.error(error)
   }
 }
