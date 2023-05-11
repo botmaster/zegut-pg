@@ -4,9 +4,13 @@ import { useAuthStore } from '@/stores/authStore'
 import { storeToRefs } from 'pinia'
 import { useUserStore } from '@/stores/userStore'
 import { onMounted } from 'vue'
+// @ts-ignore
+import { useI18n } from 'vue-i18n'
 // import { useRoute } from 'vue-router'
 
 // const route = useRoute()
+
+const { t } = useI18n()
 
 // AuthStore
 const authStore = useAuthStore()
@@ -37,7 +41,7 @@ onMounted(() => {
   <main>
     <div class="container mx-auto">
       <section class="prose lg:prose-xl max-w-prose pt-8 pb-14">
-        <h1>Profil</h1>
+        <h1>{{ t('pages.profil.title') }}</h1>
 
         <pre v-if="hasUserError">
             {{ hasUserError }}
@@ -58,9 +62,9 @@ onMounted(() => {
 
           <div v-else>
             <p v-if="user">
-              🤘 Connected as {{ user.display_name }}
+              {{ t('pages.profil.loggedAs', { name: user.display_name }) }}
               <button class="inline-flex btn btn-border" @click="logoutClickHandler">
-                Log me out
+                {{ t('common.logout') }}
               </button>
 
               <br /><img :src="user?.images[0]?.url" class="!m-0" width="80" alt="" />

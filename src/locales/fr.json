@@ -1,0 +1,64 @@
+{
+  "common": {
+    "here": "Ici",
+    "loading": "Chargement...",
+    "login": "Se connecter",
+    "logout": "Se déconnecter",
+    "moreInfo": "Plus d'infos",
+    "playlist": "Playlist",
+    "pleaseWait": "Veuillez patienter",
+    "podcast": "Podcast",
+    "submit": "Envoyer"
+  },
+  "footer": {
+    "codedWithLove": "Codé avec ❤️ par"
+  },
+  "helloworld": "Bonjour le monde",
+  "pages": {
+    "home": {
+      "calloutExtension": "En cas d'erreur (CORS), vous aurez besoin d'installer et d'activer cette {link}.",
+      "caption": "Pascal Achard",
+      "cite": "dans sa tête.",
+      "createPlaylist": "Créer la playlist",
+      "extension": "extension",
+      "fetchPlaylist": "Récupérer la playlist de Zégut depuis podCLoud",
+      "form": {
+        "ctaCreatePlaylist": "Créer la playlist",
+        "playlistDescription": "Description de la playlist",
+        "playlistName": "Nom de la playlist",
+        "podcastUrl": "Lien du podcast"
+      },
+      "fullPodcastList": "Tous les podcasts sont dispo sur {link}. Copiez l'url du podcast et collez-la dans le champ ci-dessous.",
+      "intro": "Zégut PG est une application web qui me permet de créer des playlist Spotify à partir des playlists de Zégut sur podCloud. C'est aussi un prétexte pour moi de faire mumuse avec Vue.js et l'API Spotify 🤓.",
+      "logMeIn": "Connecte moi !",
+      "notLogged": "😬 Vous devez être connecté à Spotify pour créer une playlist.",
+      "podcastInfos": "Infos du podcast",
+      "quote": "Mais nan ! Les playlists de Zégut ne sont pas sur Spotify ?!\nOk j'ai compris, je m'en occupe.",
+      "title": "Zégut PG",
+      "userProfil": "Profil utilisateur",
+      "toast": {
+        "scrapSuccess": "Scraping de la page du podcast réussi !",
+        "scrapError": "Erreur lors du scraping de la page du podcast 😕\n",
+        "playlistCreated": "Playlist créée avec succès !",
+        "playlistError": "Erreur lors de la création de la playlist 😕\n"
+      }
+    },
+    "login": {
+      "alreadyLogged": "Vous êtes déjà connecté à spotify 🤘",
+      "letsConnect": "Connectons nous à Spotify",
+      "title": "Se connecter à Zegut PG"
+    },
+    "notFound": {
+      "lost": "Zégut est tout perdu. Ramène le à la | maison",
+      "title": "404 "
+    },
+    "profil": {
+      "loggedAs": "Connecté en tant que {name}",
+      "title": "Profile"
+    },
+    "redirect": {
+      "loginSuccess": "Connexion réussi 💪. Vous allez être redirigé vers la page d'accueil.",
+      "title": "Connexion à Zégut PG en cours"
+    }
+  }
+}
