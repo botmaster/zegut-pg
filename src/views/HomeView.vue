@@ -1,15 +1,20 @@
 <script setup lang="ts">
-import * as cheerio from 'cheerio'
-import axios from 'axios'
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/authStore'
 import { useUserStore } from '@/stores/userStore'
 import { Icon } from '@iconify/vue'
-import type { Playlist } from '@/types/types'
+import type { Episode, Playlist } from '@/types/types'
 import { useToast } from 'vue-toastification'
 // @ts-ignore
 import { useI18n } from 'vue-i18n'
+import {
+  addTracksToPlaylist,
+  createPlaylist,
+  getPlaylist,
+  searchTracks
+} from '@/services/spotify.services'
+import { fetchAndParsePodcastPage } from '@/helpers/podcloudScraper'
 
 // i18n
 const { t } = useI18n()
@@ -26,15 +31,9 @@ const { user, isLoading: isUserLoading, hasError: hasUserError } = storeToRefs(u
 const toast = useToast()
 
 // Reactive variables
-const playlistList = ref<Array<string>>([])
+const episode = ref<Episode | null>(null)
 const podcastUrl = ref('')
 const playlist = ref<Playlist | null>(null)
-
-// Podcast infos
-const podcastInfos = ref({
-  title: '',
-  description: ''
-})
 
 // Playlist form
 const formPlaylist = ref<{ name: string; description: string; public: boolean }>({
@@ -51,142 +50,23 @@ const isCreatePlalistPending = ref(false)
 const hasCreatePlalistError = ref<boolean | any>(false)
 
 /**
+ * Computed
+ */
+const episodeTrackList = computed(() => {
+  return episode.value?.playlist || []
+})
+
+const podcastInfos = computed(() => {
+  return {
+    title: episode.value?.title || '',
+    description: episode.value?.description || '',
+    duration: episode.value?.duration || ''
+  }
+})
+
+/**
  * Methods
  */
-
-// Parse podCloud podcast page and get playlist.
-async function getPodcastTracks() {
-  try {
-    const response = await axios.get(podcastUrl.value)
-    //console.log(response.data)
-
-    const $ = cheerio.load(response.data)
-
-    // Get podcast infos
-    podcastInfos.value.title = $('.panel-heading h3').text()
-    podcastInfos.value.description = $('.panel-heading h4').text().split('\n').join(' ')
-
-    formPlaylist.value.name = `By Zégut 🤘 - ${podcastInfos.value.title}`
-    formPlaylist.value.description = podcastInfos.value.description
-
-    // Get playlist
-    let tracks: Array<string> = []
-    const selector = '.col-md-12.post-content p'
-
-    // Iterate over each track (p)
-    $(selector).each((i, e) => {
-      const content = $(e).text()
-      content.split('\n').forEach((track) => {
-        // console.log('track -->', track)
-
-        // Exclude "reprise" word. Zégut name some tracks as "La Reprise, L'original" but it's not a real track
-        if (track.toLowerCase().includes('reprise')) {
-          //console.log('reprise')
-          return
-        }
-        tracks.push(track)
-      })
-    })
-
-    return tracks
-  } catch (error) {
-    console.error(error)
-    throw error
-  }
-}
-
-// Create playlist
-const createPlaylist = async () => {
-  console.log('createPlaylist')
-
-  // Create playlist
-  const playlistEndpoint = `https://api.spotify.com/v1/users/${user.value?.id}/playlists`
-  const playlistName = formPlaylist.value.name || 'Zégut playlist'
-  const playlistDescription = formPlaylist.value.description || 'Zégut playlist'
-  const playlistPublic = false
-
-  const playlistData = await axios.post(
-    playlistEndpoint,
-    {
-      name: playlistName,
-      description: playlistDescription,
-      public: playlistPublic
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken.value}`,
-        'Content-Type': 'application/json'
-      }
-    }
-  )
-  console.log('playlistData', playlistData.data)
-  return playlistData.data
-}
-
-// Find track
-const findTrack = async (name: string) => {
-  console.log('findTrack', name)
-
-  const trackEndpoint = 'https://api.spotify.com/v1/search'
-  const trackName = name
-  const trackType = 'track'
-  const trackLimit = 5
-
-  const trackData = await axios.get(trackEndpoint, {
-    params: {
-      q: trackName,
-      type: trackType,
-      limit: trackLimit
-    },
-    headers: {
-      Authorization: `Bearer ${accessToken.value}`,
-      'Content-Type': 'application/json'
-    }
-  })
-  console.log('trackData', trackData.data)
-  return trackData.data
-}
-
-// Add tracks to playlist.
-const addTracksToPlaylist = async (playlistId: string = '', tracksIds: Array<string> = []) => {
-  console.log('addTracksToPlaylist', playlistId, tracksIds)
-
-  const addTracksEndpoint = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`
-  const uris = tracksIds.map((trackId) => `spotify:track:${trackId}`)
-  console.log('uris', uris)
-
-  await axios.post(
-    addTracksEndpoint,
-    {
-      uris: uris
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken.value}`,
-        'Content-Type': 'application/json'
-      }
-    }
-  )
-}
-
-// Get playlist by id (with tracks) - https://developer.spotify.com/documentation/web-api/reference/playlists/get-playlist/
-const getPlaylist = async (playlistId: string = '') => {
-  console.log('getPlaylist', playlistId)
-
-  const playlistEndpoint = `https://api.spotify.com/v1/playlists/${playlistId}`
-
-  const playlistData = await axios.get(playlistEndpoint, {
-    params: {
-      fields: 'name, description,tracks.items(track(name,href,album(name,href)))'
-    },
-    headers: {
-      Authorization: `Bearer ${accessToken.value}`,
-      'Content-Type': 'application/json'
-    }
-  })
-  console.log('playlistData', playlistData.data)
-  return playlistData.data as Playlist
-}
 
 /**
  * Event handlers
@@ -198,14 +78,16 @@ const submitPodcastUrlHandler = () => {
   hasScrapeError.value = false
   playlist.value = null
 
-  getPodcastTracks()
-    .then((tracks) => {
-      playlistList.value = tracks || []
+  fetchAndParsePodcastPage(podcastUrl.value)
+    .then((dataEpisode) => {
+      episode.value = dataEpisode
+      formPlaylist.value.name = dataEpisode.title
+      formPlaylist.value.description = dataEpisode.description
       toast.success(t('pages.home.toast.scrapSuccess').toString())
     })
     .catch((error) => {
       hasScrapeError.value = error
-      toast.error(t('pages.home.toast.error').toString() + error)
+      toast.error(t('pages.home.toast.scrapError').toString() + error)
     })
     .finally(() => {
       isScrapePending.value = false
@@ -216,24 +98,57 @@ const createPlaylistSubmitHandler = async () => {
   console.log('createPlaylistSubmitHandler')
 
   try {
+    // TODO: Create type for track
+
     // Search tracks in parallel
-    const tracksIds = await Promise.all(
-      playlistList.value.map(async (track) => {
-        const trackData = await findTrack(track)
-        return trackData['tracks']['items'][0]['id']
+    const tracks = await Promise.all(
+      episodeTrackList.value.map(async (trackItem) => {
+        const tracks = await searchTracks(accessToken.value || '', trackItem, 'track', 5, 0)
+        const track = tracks?.tracks?.items[0]
+        if (!track) {
+          return trackItem
+        }
+        return track
       })
     )
 
-    console.log('tracks', tracksIds)
+    // Get ids
+    let tracksIds = tracks.map((track) => track?.id)
+
+    // Get tracks without id
+    const tracksWithoutId = tracks.filter((track) => !track?.id)
+    console.log('Tracks not found!', tracksWithoutId)
+
+    // if no tracks found
+    if (tracksIds.length === 0) {
+      toast.error(t('pages.home.toast.playlistError') + Error(t('common.noTracksFound').toString()))
+      return
+    }
 
     // Create playlist
-    playlist.value = await createPlaylist()
+    const createPlaylistData = await createPlaylist(
+      String(user.value?.id),
+      accessToken.value || '',
+      {
+        name: formPlaylist.value.name,
+        description: formPlaylist.value.description,
+        isPublic: formPlaylist.value.public
+      }
+    )
+    playlist.value = createPlaylistData
 
     // Add tracks to playlist
-    await addTracksToPlaylist(playlist.value?.id, tracksIds)
+    const uris = tracksIds.map((trackId) => `spotify:track:${trackId}`)
+    console.log('uris', uris)
+    await addTracksToPlaylist(accessToken.value || '', playlist.value?.id || '', uris)
 
-    // Get playlist
-    playlist.value = await getPlaylist(playlist.value?.id)
+    const getPlaylistData = getPlaylist(
+      accessToken.value || '',
+      playlist.value?.id || '',
+      'name, description,tracks.items(track(name,href,album(name,href))), uri, external_urls.spotify'
+    )
+
+    playlist.value = getPlaylistData
 
     toast.success(t('pages.home.toast.playlistCreated'))
   } catch (error) {
@@ -363,20 +278,20 @@ onMounted(async () => {
 
       <section
         class="prose lg:prose-xl max-w-prose mt-14"
-        v-if="isAuthenticated && playlistList.length"
+        v-if="isAuthenticated && episodeTrackList.length"
       >
         <h2 class="">{{ t('common.podcast') }}</h2>
         <h3 class="">{{ t('pages.home.podcastInfos') }}</h3>
         <p>{{ podcastInfos.title }} <br />{{ podcastInfos.description }}</p>
         <h3 class="">{{ t('common.playlist') }}</h3>
         <ol class="not-prose text-sm max-h-64 overflow-auto bg-gray-100 list-inside !px-3 py-2">
-          <li v-for="(track, index) in playlistList" :key="index">{{ track }}</li>
+          <li v-for="(track, index) in episodeTrackList" :key="index">{{ track }}</li>
         </ol>
       </section>
 
       <section
         class="prose lg:prose-xl max-w-prose mt-14"
-        v-if="isAuthenticated && playlistList.length"
+        v-if="isAuthenticated && episodeTrackList.length"
       >
         <h2 class="">{{ t('pages.home.createPlaylist') }}</h2>
         <form @submit.prevent="createPlaylistSubmitHandler">

@@ -1,6 +1,6 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
-import { getAccessToken } from '@/auth/authCodeWithPkce'
+import { getAccessToken } from '@/helpers/auth/authCodeWithPkce'
 import { useRouter } from 'vue-router'
 import type { UserAuth } from '@/types/types'
 import { useUserStore } from '@/stores/userStore'

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/authStore'
-import { redirectToAuthCodeFlow } from '@/auth/authCodeWithPkce'
+import { redirectToAuthCodeFlow } from '@/helpers/auth/authCodeWithPkce'
 import { Icon } from '@iconify/vue'
 import { storeToRefs } from 'pinia'
 // @ts-ignore

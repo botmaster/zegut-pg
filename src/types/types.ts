@@ -56,3 +56,11 @@ export interface Playlist {
   type: string
   uri: string
 }
+
+export interface Episode {
+  title: string
+  description: string
+  duration?: string
+  author?: string
+  playlist: Array<string>
+}

@@ -8,7 +8,8 @@
     "playlist": "Playlist",
     "pleaseWait": "Please wait",
     "podcast": "Podcast",
-    "submit": "Submit"
+    "submit": "Submit",
+    "noTracksFound": "No tracks found"
   },
   "footer": {
     "codedWithLove": "Coded with ❤️ by"
