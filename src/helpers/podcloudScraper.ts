@@ -19,7 +19,11 @@ export const fetchAndParsePodcastPage = async (url: string): Promise<Episode> =>
 
   const title = $(episode).find('.panel-heading h3').text()
   const description = $(episode).find('.panel-heading h4').text().split('\n').join(' ').trim()
-  const duration = $(episode).find('.panel-heading h4.font-thin').text().split(':')[1].trim()
+  const duration = $(episode)
+    .find('.panel-heading h4.font-thin:not(.published_at_by)')
+    .text()
+    .split(' : ')[1]
+    .trim()
 
   const playlist = $(episode).find(selectorPlaylist)
   const playlistArray = Array.from(playlist)

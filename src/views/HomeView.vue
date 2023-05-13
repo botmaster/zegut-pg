@@ -81,7 +81,7 @@ const submitPodcastUrlHandler = () => {
   fetchAndParsePodcastPage(podcastUrl.value)
     .then((dataEpisode) => {
       episode.value = dataEpisode
-      formPlaylist.value.name = dataEpisode.title
+      formPlaylist.value.name = `By Zégut 🤘 - ${dataEpisode.title}`
       formPlaylist.value.description = dataEpisode.description
       toast.success(t('pages.home.toast.scrapSuccess').toString())
     })
@@ -103,7 +103,10 @@ const createPlaylistSubmitHandler = async () => {
     // Search tracks in parallel
     const tracks = await Promise.all(
       episodeTrackList.value.map(async (trackItem) => {
-        const tracks = await searchTracks(accessToken.value || '', trackItem, 'track', 5, 0)
+        const tracks = await searchTracks({
+          accessToken: accessToken.value || '',
+          query: trackItem
+        })
         const track = tracks?.tracks?.items[0]
         if (!track) {
           return trackItem
@@ -126,15 +129,13 @@ const createPlaylistSubmitHandler = async () => {
     }
 
     // Create playlist
-    const createPlaylistData = await createPlaylist(
-      String(user.value?.id),
-      accessToken.value || '',
-      {
-        name: formPlaylist.value.name,
-        description: formPlaylist.value.description,
-        isPublic: formPlaylist.value.public
-      }
-    )
+    const createPlaylistData = await createPlaylist({
+      accessToken: accessToken.value || '',
+      name: formPlaylist.value.name,
+      description: formPlaylist.value.description,
+      isPublic: formPlaylist.value.public,
+      userId: user.value?.id || ''
+    })
     playlist.value = createPlaylistData
 
     // Add tracks to playlist

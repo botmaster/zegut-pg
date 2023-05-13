@@ -6,20 +6,30 @@ import type { Playlist } from '@/types/types'
 
 const BASE_URL = 'https://api.spotify.com/v1'
 
+// Acceess Token
+const token = localStorage.getItem('access_token') || ''
+
 /**
- * Create playlist
- * @param userId
- * @param accessToken
- * @param name
- * @param description
- * @param isPublic
+ * Create a new playlist
+ *  @param userId
+ *  @param accessToken
+ *  @param name
+ *  @param description
+ *  @param isPublic
  */
-export const createPlaylist = async (
-  userId: string,
-  accessToken: string,
-  { name, description, isPublic }: { name: string; description: string; isPublic: boolean }
-) => {
-  console.log('createPlaylist', userId, name, description, isPublic)
+export const createPlaylist = async ({
+  userId,
+  accessToken = token,
+  name,
+  description,
+  isPublic
+}: {
+  userId: string
+  accessToken?: string
+  name: string
+  description: string
+  isPublic: boolean
+}) => {
   const url = `${BASE_URL}/users/${userId}/playlists`
   const headers = {
     Authorization: `Bearer ${accessToken}`,
@@ -48,13 +58,19 @@ export const createPlaylist = async (
  * @param limit
  * @param offset
  */
-export const searchTracks = async (
-  accessToken: string,
-  query: string,
-  type: string,
-  limit: number,
-  offset: number
-) => {
+export const searchTracks = async ({
+  accessToken = token,
+  query,
+  type = 'track',
+  limit = 5,
+  offset = 0
+}: {
+  accessToken?: string
+  query: string
+  type?: string
+  limit?: number
+  offset?: number
+}) => {
   const url = `${BASE_URL}/search`
   const headers = {
     Authorization: `Bearer ${accessToken}`,
