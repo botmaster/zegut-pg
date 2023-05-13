@@ -119,7 +119,7 @@ export const getPlaylist = async (accessToken: string, playlistId: string, field
     'Content-Type': 'application/json'
   }
 
-  const { data } = await axios.get(url, {
+  const { data } = await axios.get<Playlist>(url, {
     headers,
     params: {
       fields

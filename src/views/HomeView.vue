@@ -142,7 +142,7 @@ const createPlaylistSubmitHandler = async () => {
     console.log('uris', uris)
     await addTracksToPlaylist(accessToken.value || '', playlist.value?.id || '', uris)
 
-    const getPlaylistData = getPlaylist(
+    const getPlaylistData = await getPlaylist(
       accessToken.value || '',
       playlist.value?.id || '',
       'name, description,tracks.items(track(name,href,album(name,href))), uri, external_urls.spotify'
