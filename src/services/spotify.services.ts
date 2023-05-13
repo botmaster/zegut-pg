@@ -125,6 +125,5 @@ export const getPlaylist = async (accessToken: string, playlistId: string, field
       fields
     }
   })
-  debugger
   return data
 }
