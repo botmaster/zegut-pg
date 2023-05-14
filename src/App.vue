@@ -36,7 +36,7 @@ axios.interceptors.response.use(
 )
 
 useHead({
-  titleTemplate: (title?: string) => (!title ? 'Zégut PG 🤘' : `${title} - Zégut PG`)
+  titleTemplate: (title?: string) => (!title ? 'Zégut PG 🤘' : `${title} - Zégut PG 🤘`)
 })
 </script>
 

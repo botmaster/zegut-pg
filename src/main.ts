@@ -5,13 +5,13 @@ import { createPinia } from 'pinia'
 import { createHead } from '@vueuse/head'
 import Toast, { type PluginOptions } from 'vue-toastification'
 import 'vue-toastification/dist/index.css'
-// @ts-ignore
-import { usePreferredLanguages } from '@vueuse/core'
 import i18n from '@/plugins/i18n'
 
+// @ts-ignore
 import App from './App.vue'
 import router from './router'
 
+// Toast options
 const options: PluginOptions = {
   // You can set your default options here
 }
