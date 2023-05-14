@@ -21,19 +21,33 @@ const { user } = storeToRefs(userStore)
       </p>
     </div>
     <nav>
-      <RouterLink v-if="user" :to="{ name: 'profil', params: { id: user.id } }">
+      <RouterLink
+        v-if="user"
+        :to="{ name: 'profil', params: { id: user.id } }"
+        class="relative rounded-full border w-[40px] h-[40px] overflow-hidden flex items-center justify-center"
+      >
         <img
+          v-if="user?.images[0]?.url"
           :src="user?.images[0]?.url"
           :alt="user?.display_name"
           :title="user?.display_name"
           width="40"
           height="40"
-          class="rounded-full border"
+          class="absolute top-0 left-0 w-full h-full object-cover"
         />
+        <span v-else class="text-amber-500 text-2xl font-extrabold leading-none">
+          {{ user?.display_name?.charAt(0) }}
+        </span>
       </RouterLink>
-      <RouterLink v-if="!user" :to="{ name: 'login' }"> {{ t('common.login') }} </RouterLink>
+      <RouterLink class="router-link" v-if="!user" :to="{ name: 'login' }">
+        {{ t('common.login') }}
+      </RouterLink>
     </nav>
   </header>
 </template>
 
-<style scoped></style>
+<style scoped>
+.router-link.router-link-active {
+  display: none;
+}
+</style>

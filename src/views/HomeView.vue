@@ -204,8 +204,8 @@ onMounted(async () => {
           <p v-if="!isAuthenticated">
             {{ t('pages.home.notLogged') }}
             <RouterLink v-if="!isAuthenticated" :to="{ name: 'login' }"
-              >{{ t('pages.home.logMeIn') }}
-            </RouterLink>
+              >{{ t('pages.home.logMeIn') }} </RouterLink
+            >.
           </p>
 
           <div v-else>
@@ -332,7 +332,24 @@ onMounted(async () => {
         <div class="not-prose" v-if="hasCreatePlalistError">
           <p class="text-sm mt-2 text-red-600">Enable to create the Spotify playlist 😕.</p>
         </div>
-        <pre v-if="playlist" class="!text-xs max-h-64">{{ playlist }}</pre>
+        <template v-else>
+          <div v-if="playlist" class="">
+            <p class="">{{ t('pages.home.toast.playlistCreated') }}</p>
+            <p class="">
+              {{ t('pages.home.openPlaylistBrowser') }}&nbsp;<a
+                :href="playlist.external_urls.spotify"
+                target="_blank"
+              >
+                {{ t('common.here') }}</a
+              >
+              <br />{{ t('pages.home.openPlaylistSpotify') }}&nbsp;<a :href="playlist.uri">{{
+                t('common.here')
+              }}</a>
+            </p>
+
+            <pre class="!text-xs max-h-64">{{ playlist }}</pre>
+          </div>
+        </template>
       </section>
     </div>
   </main>

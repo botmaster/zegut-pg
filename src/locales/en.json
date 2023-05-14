@@ -29,7 +29,7 @@
       },
       "fullPodcastList": "The complete list of Zégut's podcasts can be found on {link}. Copy the url of the podcast and paste it in the field below.",
       "intro": "Zégut PG is a web application that allows me to create Spotify playlists from podCloud Zégut playlists. It's also an excuse for me to play around with Vue.js and the Spotify API 🤓.",
-      "logMeIn": "Log me in!",
+      "logMeIn": "Login",
       "meta": {
         "title": "Create Spotify playlists from Zegut's podcasts"
       },
@@ -38,16 +38,18 @@
       "quote": "Oh wait! Pop-Rock Station by Zégut's playlists are not on Spotify ?!\nOk I got it, I'll take care of it.",
       "title": "Zégut PG",
       "toast": {
-        "playlistCreated": "Playlist created!",
+        "playlistCreated": "🍻 Playlist created!",
         "playlistError": "Error while creating playlist 😕\n",
         "scrapError": "Error while scraping podcast page 😕\n",
         "scrapSuccess": "Podcast page scraped!"
       },
-      "userProfil": "User profil"
+      "userProfil": "User profil",
+      "openPlaylistBrowser": "Open the playlist in the browser",
+      "openPlaylistSpotify": "Open the playlist in the Spotify application:"
     },
     "login": {
       "alreadyLogged": "You are already logged to Spotify 🤘",
-      "letsConnect": "Let's connect to Spotify",
+      "letsConnect": "Continue with Spotify",
       "meta": {
         "title": "Sign in Zegut PG"
       },
