@@ -14,7 +14,6 @@
   "footer": {
     "codedWithLove": "Coded with ❤️ by"
   },
-  "helloworld": "Hello world",
   "pages": {
     "home": {
       "calloutExtension": "In case of error (CORS), you will need to install and activate this {link}.",
@@ -31,6 +30,9 @@
       "fullPodcastList": "The complete list of Zégut's podcasts can be found on {link}. Copy the url of the podcast and paste it in the field below.",
       "intro": "Zégut PG is a web application that allows me to create Spotify playlists from podCloud Zégut playlists. It's also an excuse for me to play around with Vue.js and the Spotify API 🤓.",
       "logMeIn": "Log me in!",
+      "meta": {
+        "title": "Create Spotify playlists from Zegut's podcasts"
+      },
       "notLogged": "😬 You must be logged in to Spotify to create a playlist.",
       "podcastInfos": "Podcast infos",
       "quote": "Oh wait! Pop-Rock Station by Zégut's playlists are not on Spotify ?!\nOk I got it, I'll take care of it.",
@@ -46,18 +48,30 @@
     "login": {
       "alreadyLogged": "You are already logged to Spotify 🤘",
       "letsConnect": "Let's connect to Spotify",
+      "meta": {
+        "title": "Sign in Zegut PG"
+      },
       "title": "Sign in Zegut PG"
     },
     "notFound": {
       "lost": "Zégut is completly lost. Bring him back at | home",
+      "meta": {
+        "title": "404 - Page not found"
+      },
       "title": "404 "
     },
     "profil": {
       "loggedAs": "Logged as {name}",
+      "meta": {
+        "title": "User profil"
+      },
       "title": "Profil"
     },
     "redirect": {
       "loginSuccess": "Successful login 💪. You will be redirected to the home page.",
+      "meta": {
+        "title": "Sign in Zégut PG in progress"
+      },
       "title": "Sign in Zégut PG in progress"
     }
   }

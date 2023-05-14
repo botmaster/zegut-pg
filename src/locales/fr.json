@@ -14,12 +14,8 @@
   "footer": {
     "codedWithLove": "Codé avec ❤️ par"
   },
-  "helloworld": "Bonjour le monde",
   "pages": {
     "home": {
-      "meta": {
-        "title": "Créer des playlists Spotify à partir des playlists de Zégut sur podCloud"
-      },
       "calloutExtension": "En cas d'erreur (CORS), vous aurez besoin d'installer et d'activer cette {link}.",
       "caption": "Pascal Achard",
       "cite": "dans sa tête.",
@@ -32,8 +28,11 @@
         "podcastUrl": "Lien du podcast"
       },
       "fullPodcastList": "Tous les podcasts sont dispo sur {link}. Copiez l'url du podcast et collez-la dans le champ ci-dessous.",
-      "intro": "Zégut PG est une application web qui me permet de créer des playlist Spotify à partir des playlists podCloud de Zégut. C'est aussi un prétexte pour moi de faire mumuse avec Vue.js et l'API Spotify 🤓.",
+      "intro": "Zégut PG est une application web qui me permet de créer des playlists Spotify à partir des playlists podCloud de Zégut. C'est aussi un prétexte pour moi de faire mumuse avec Vue.js et l'API Spotify 🤓.",
       "logMeIn": "Connecte moi !",
+      "meta": {
+        "title": "Créer des playlists Spotify à partir des playlists de Zégut sur podCloud"
+      },
       "notLogged": "😬 Vous devez être connecté à Spotify pour créer une playlist.",
       "podcastInfos": "Infos du podcast",
       "quote": "Mais nan ! Les playlists de Zégut ne sont pas sur Spotify ?!\nOk j'ai compris, je m'en occupe.",
@@ -49,31 +48,31 @@
     "login": {
       "alreadyLogged": "Vous êtes déjà connecté à spotify 🤘",
       "letsConnect": "Connectons nous à Spotify",
-      "title": "Se connecter à Zegut PG",
       "meta": {
         "title": "Se connecter à Zégut PG"
-      }
+      },
+      "title": "Se connecter à Zegut PG"
     },
     "notFound": {
       "lost": "Zégut est tout perdu. Ramène le à la | maison",
-      "title": "404 ",
-        "meta": {
-            "title": "404 - Page non trouvée"
-        }
+      "meta": {
+        "title": "404 - Page non trouvée"
+      },
+      "title": "404 "
     },
     "profil": {
       "loggedAs": "Connecté en tant que {name}",
-      "title": "Profil",
-        "meta": {
-            "title": "Profil utilisateur"
-        }
+      "meta": {
+        "title": "Profil utilisateur"
+      },
+      "title": "Profil"
     },
     "redirect": {
       "loginSuccess": "Connexion réussi 💪. Vous allez être redirigé vers la page d'accueil.",
-      "title": "Connexion à Zégut PG en cours",
-        "meta": {
-            "title": "Connexion à Zégut PG en cours"
-        }
+      "meta": {
+        "title": "Connexion à Zégut PG en cours"
+      },
+      "title": "Connexion à Zégut PG en cours"
     }
   }
 }

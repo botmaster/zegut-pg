@@ -73,7 +73,12 @@ const router = createRouter({
       component: () => import('@/views/AboutView.vue')
     },*/
     // will match everything and put it under `$route.params.pathMatch`
-    { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound }
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'NotFound',
+      component: NotFound,
+      meta: { head: { title: t('pages.notFound.meta.title') } }
+    }
   ]
 })
 
