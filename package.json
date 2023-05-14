@@ -15,6 +15,7 @@
   "dependencies": {
     "@intlify/unplugin-vue-i18n": "^0.10.0",
     "@vueuse/core": "^10.1.2",
+    "@vueuse/head": "^1.1.26",
     "axios": "^1.4.0",
     "cheerio": "1.0.0-rc.12",
     "got-scraping": "^3.2.13",

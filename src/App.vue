@@ -4,6 +4,7 @@ import axios from 'axios'
 import { useAuthStore } from '@/stores/authStore'
 import TheHeader from '@/components/TheHeader.vue'
 import TheFooter from '@/components/TheFooter.vue'
+import { useHead } from '@vueuse/head'
 
 axios.interceptors.request.use(
   (config) => {
@@ -33,6 +34,10 @@ axios.interceptors.response.use(
     return Promise.reject(error)
   }
 )
+
+useHead({
+  titleTemplate: (title?: string) => (!title ? 'Zégut PG 🤘' : `${title} - Zégut PG`)
+})
 </script>
 
 <template>

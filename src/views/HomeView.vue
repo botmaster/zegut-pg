@@ -294,7 +294,7 @@ onMounted(async () => {
         class="prose lg:prose-xl max-w-prose mt-14"
         v-if="isAuthenticated && episodeTrackList.length"
       >
-        <h2 class="">{{ t('pages.home.createPlaylist') }}</h2>
+        <h2 class="">{{ t('pages.home.form.ctaCreatePlaylist') }}</h2>
         <form @submit.prevent="createPlaylistSubmitHandler">
           <div class="flex flex-col gap-y-2">
             <label for="playlistName" class="block"
