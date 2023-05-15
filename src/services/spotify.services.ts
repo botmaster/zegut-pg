@@ -6,8 +6,22 @@ import type { Playlist } from '@/types/types'
 
 const BASE_URL = 'https://api.spotify.com/v1'
 
-// Acceess Token
+// Access Token
 const token = localStorage.getItem('access_token') || ''
+
+/**
+ * Get the current user's profile
+ * @param accessToken
+ */
+export const getCurrentUserProfile = async ({ accessToken = token }: { accessToken?: string }) => {
+  const url = `${BASE_URL}/me`
+  const headers = {
+    Authorization: `Bearer ${accessToken}`
+  }
+  const { data: userData } = await axios.get(url, { headers })
+
+  return userData
+}
 
 /**
  * Create a new playlist

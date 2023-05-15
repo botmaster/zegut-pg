@@ -8,7 +8,7 @@ import { useHead } from '@vueuse/head'
 
 axios.interceptors.request.use(
   (config) => {
-    console.log('axios request', config)
+    // console.log('axios request', config)
     return config
   },
   (error) => {
@@ -20,16 +20,16 @@ axios.interceptors.request.use(
 // Intercept axios responses
 axios.interceptors.response.use(
   (response) => {
-    console.log('axios response', response)
+    // console.log('Axios interceptors response', response)
     return response
   },
   (error) => {
-    console.error('axios response error', error)
+    console.error('Axios interceptors response error', error)
 
     // If token is expired, logout
-    if (error.response?.status === 401) {
-      const authStore = useAuthStore()
-      authStore.logout()
+    if (error.response.status === 401) {
+      console.warn('Http 401 error, logging out')
+      useAuthStore().logout()
     }
     return Promise.reject(error)
   }

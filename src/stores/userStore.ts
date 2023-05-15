@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import axios from 'axios'
 import type { UserProfile } from '@/types/types'
+import { getCurrentUserProfile } from '@/services/spotify.services'
 
 export const useUserStore = defineStore('userStore', () => {
   const user = ref<UserProfile | null>(null)
@@ -12,12 +12,7 @@ export const useUserStore = defineStore('userStore', () => {
     isLoading.value = true
     hasError.value = false
     try {
-      const { data } = await axios.get('https://api.spotify.com/v1/me', {
-        headers: {
-          Authorization: `Bearer ${accessToken}`
-        }
-      })
-      console.log(data)
+      const { data } = await getCurrentUserProfile({ accessToken })
       user.value = data
     } catch (error) {
       hasError.value = error

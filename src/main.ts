@@ -5,6 +5,7 @@ import { createPinia } from 'pinia'
 import { createHead } from '@vueuse/head'
 import Toast, { type PluginOptions } from 'vue-toastification'
 import 'vue-toastification/dist/index.css'
+import prettyConsole from '@/plugins/pretty-console'
 import i18n from '@/plugins/i18n'
 
 // @ts-ignore
@@ -17,6 +18,7 @@ const options: PluginOptions = {
 }
 
 const app = createApp(App)
+app.use(prettyConsole)
 app.use(createPinia())
 app.use(createHead())
 app.use(router)
