@@ -10,8 +10,6 @@ import { usePreferredLanguages } from '@vueuse/core'
 
 const languages = usePreferredLanguages()
 
-console.log('Preferred Languages', languages.value)
-
 const i18n = createI18n({
   legacy: false,
   locale: languages.value[0].split('-')[0],

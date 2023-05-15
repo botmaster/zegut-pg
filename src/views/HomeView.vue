@@ -163,7 +163,7 @@ const createPlaylistSubmitHandler = async () => {
  */
 
 onMounted(async () => {
-  console.log('mounted')
+  console.log('HomeView mounted')
 
   // fetch current user
   if (accessToken.value) {
