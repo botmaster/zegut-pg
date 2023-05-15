@@ -13,7 +13,7 @@ import {
   createPlaylist,
   getPlaylist,
   searchTracks
-} from '@/services/spotify.services'
+} from '@/services/spotify.service'
 import { fetchAndParsePodcastPage } from '@/helpers/podcloudScraper'
 
 // i18n
@@ -104,7 +104,6 @@ const createPlaylistSubmitHandler = async () => {
     const tracks = await Promise.all(
       episodeTrackList.value.map(async (trackItem) => {
         const tracks = await searchTracks({
-          accessToken: accessToken.value || '',
           query: trackItem
         })
         const track = tracks?.tracks?.items[0]
@@ -130,7 +129,6 @@ const createPlaylistSubmitHandler = async () => {
 
     // Create playlist
     const createPlaylistData = await createPlaylist({
-      accessToken: accessToken.value || '',
       name: formPlaylist.value.name,
       description: formPlaylist.value.description,
       isPublic: formPlaylist.value.public,
@@ -141,10 +139,9 @@ const createPlaylistSubmitHandler = async () => {
     // Add tracks to playlist
     const uris = tracksIds.map((trackId) => `spotify:track:${trackId}`)
     console.log('uris', uris)
-    await addTracksToPlaylist(accessToken.value || '', playlist.value?.id || '', uris)
+    await addTracksToPlaylist(playlist.value?.id || '', uris)
 
     const getPlaylistData = await getPlaylist(
-      accessToken.value || '',
       playlist.value?.id || '',
       'name, description,tracks.items(track(name,href,album(name,href))), uri, external_urls.spotify'
     )
@@ -167,7 +164,7 @@ onMounted(async () => {
 
   // fetch current user
   if (accessToken.value) {
-    await userStore.fetchUserCurrentUser(accessToken.value)
+    await userStore.fetchUserCurrentUser()
   }
 })
 </script>
