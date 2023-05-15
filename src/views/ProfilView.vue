@@ -32,7 +32,7 @@ onMounted(() => {
   // Get user profile
   // userStore.getUserProfile(id)
   if (!user?.value) {
-    userStore.fetchUserCurrentUser(accessToken.value || '')
+    userStore.fetchUserCurrentUser()
   }
 })
 </script>
