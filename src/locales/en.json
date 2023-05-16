@@ -32,7 +32,7 @@
       "intro": "Zégut PG is a web application that allows me to create Spotify playlists from podCloud Zégut playlists. It's also an excuse for me to play around with Vue.js and the Spotify API 🤓.",
       "logMeIn": "@:common:login",
       "meta": {
-        "title": "Create Spotify playlists from Zegut's podcasts"
+        "title": "Create Spotify playlists"
       },
       "notLogged": "😬 You must be logged in to Spotify to create a playlist.",
       "openPlaylistBrowser": "Open the playlist in the browser",
