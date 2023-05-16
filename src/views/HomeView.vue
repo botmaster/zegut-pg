@@ -3,7 +3,6 @@ import { computed, onMounted, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/authStore'
 import { useUserStore } from '@/stores/userStore'
-import { Icon } from '@iconify/vue'
 import type { Episode, Playlist } from '@/types/types'
 import { useToast } from 'vue-toastification'
 // @ts-ignore
@@ -15,6 +14,7 @@ import {
   searchTracks
 } from '@/services/spotify.service'
 import { fetchAndParsePodcastPage } from '@/helpers/podcloudScraper'
+import AppLoader from '@/components/AppLoader.vue'
 
 // i18n
 const { t } = useI18n()
@@ -191,7 +191,14 @@ onMounted(async () => {
             — {{ t('pages.home.caption') }}, <cite>{{ t('pages.home.cite') }}</cite>
           </figcaption>
         </figure>
-        <p>{{ t('pages.home.intro') }}</p>
+
+        <i18n-t keypath="pages.home.intro" tag="p" scope="global">
+          <template #link>
+            <a href="https://nuxtjs.org" target="_blank" ref="noopener">{{
+              t('common.rtl2PopRockStation ')
+            }}</a>
+          </template>
+        </i18n-t>
 
         <h2 class="">{{ t('pages.home.userProfil') }}</h2>
 
@@ -230,7 +237,7 @@ onMounted(async () => {
 
         <p class="border-l-4 border-amber-200 px-4 py-3 bg-amber-200/20 text-base">
           <span class="inline-block mr-2">📢</span>
-          <i18n-t tag="span" class="" keypath="pages.home.calloutExtension">
+          <i18n-t tag="span" class="" keypath="pages.home.calloutExtension" scope="global">
             <template #link>
               <a
                 href="https://chrome.google.com/webstore/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf"
@@ -242,7 +249,7 @@ onMounted(async () => {
           </i18n-t>
         </p>
 
-        <i18n-t tag="p" class="" keypath="pages.home.fullPodcastList">
+        <i18n-t tag="p" class="" keypath="pages.home.fullPodcastList" scope="global">
           <template #link>
             <a
               href="https://podcloud.fr/podcast/rtl2-pop-rock-station-by-zegut"
@@ -270,13 +277,8 @@ onMounted(async () => {
           </div>
           <div class="mt-4">
             <button class="btn btn-primary" :disabled="isScrapePending" type="submit">
-              {{ t('common.submit') }}
+              {{ t('common.submit') }} <AppLoader class="ml-2" v-if="isScrapePending" />
             </button>
-            <Icon
-              v-if="isScrapePending"
-              class="inline-block ml-4"
-              icon="svg-spinners:pulse-rings-multiple"
-            ></Icon>
           </div>
         </form>
       </section>
@@ -330,12 +332,8 @@ onMounted(async () => {
               class="btn btn-primary"
             >
               {{ t('pages.home.form.ctaCreatePlaylist') }}
+              <AppLoader class="ml-2" v-if="isCreatePlaylistPending" />
             </button>
-            <Icon
-              v-if="isCreatePlaylistPending"
-              class="inline-block ml-4"
-              icon="svg-spinners:pulse-rings-multiple"
-            ></Icon>
           </div>
         </form>
         <div class="not-prose" v-if="hasCreatePlaylistError">

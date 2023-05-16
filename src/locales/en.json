@@ -9,6 +9,7 @@
     "playlist": "Playlist",
     "pleaseWait": "Please wait",
     "podcast": "Podcast",
+    "rtl2PopRockStation ": "RTL2 Pop-Rock Station",
     "submit": "Submit"
   },
   "footer": {
@@ -29,7 +30,7 @@
         "podcastUrl": "Podcast link"
       },
       "fullPodcastList": "The complete list of Zégut's podcasts can be found on {link}. Copy the url of the podcast and paste it in the field below.",
-      "intro": "Zégut PG is a web application that allows me to create Spotify playlists from podCloud Zégut playlists. It's also an excuse for me to play around with Vue.js and the Spotify API 🤓.",
+      "intro": "Zégut PG is a web application that allows me to create Spotify playlists from the podCloud podcasts taken from the {link} show presented by Francis Zégut & Marjorie Hache. It's also an excuse for me to play around with Vue.js and the Spotify API \uD83E\uDD13.",
       "logMeIn": "@:common:login",
       "meta": {
         "title": "Create Spotify playlists"
