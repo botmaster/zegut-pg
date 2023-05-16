@@ -3,7 +3,6 @@ import { computed, onMounted, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/authStore'
 import { useUserStore } from '@/stores/userStore'
-import { Icon } from '@iconify/vue'
 import type { Episode, Playlist } from '@/types/types'
 import { useToast } from 'vue-toastification'
 // @ts-ignore
@@ -15,6 +14,7 @@ import {
   searchTracks
 } from '@/services/spotify.service'
 import { fetchAndParsePodcastPage } from '@/helpers/podcloudScraper'
+import AppLoader from '@/components/AppLoader.vue'
 
 // i18n
 const { t } = useI18n()
@@ -272,11 +272,7 @@ onMounted(async () => {
             <button class="btn btn-primary" :disabled="isScrapePending" type="submit">
               {{ t('common.submit') }}
             </button>
-            <Icon
-              v-if="isScrapePending"
-              class="inline-block ml-4"
-              icon="svg-spinners:pulse-rings-multiple"
-            ></Icon>
+            <AppLoader class="ml-4" v-if="isScrapePending" />
           </div>
         </form>
       </section>
@@ -331,11 +327,7 @@ onMounted(async () => {
             >
               {{ t('pages.home.form.ctaCreatePlaylist') }}
             </button>
-            <Icon
-              v-if="isCreatePlaylistPending"
-              class="inline-block ml-4"
-              icon="svg-spinners:pulse-rings-multiple"
-            ></Icon>
+            <AppLoader class="ml-4" v-if="isCreatePlaylistPending" />
           </div>
         </form>
         <div class="not-prose" v-if="hasCreatePlaylistError">

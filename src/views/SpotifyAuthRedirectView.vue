@@ -4,9 +4,9 @@ import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { watchEffect } from 'vue'
 import { useTimeoutFn } from '@vueuse/core'
-import { Icon } from '@iconify/vue'
 // @ts-ignore
 import { useI18n } from 'vue-i18n'
+import AppLoader from '@/components/AppLoader.vue'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -49,14 +49,15 @@ watchEffect(() => {
         <template v-else-if="isLoading">
           <p>
             {{ t('common.pleaseWait') }}
-            <Icon class="inline-block" icon="svg-spinners:pulse-rings-multiple"></Icon>
+
+            <AppLoader class="ml-4" />
           </p>
         </template>
         <template v-else>
           <p>
             {{ t('pages.redirect.loginSuccess') }}
             {{ t('common.pleaseWait') }}.
-            <Icon class="inline-block" icon="svg-spinners:pulse-rings-multiple"></Icon>
+            <AppLoader class="ml-4" />
           </p>
         </template>
       </section>
