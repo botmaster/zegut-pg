@@ -14,7 +14,7 @@ const { t } = useI18n()
 
 // AuthStore
 const authStore = useAuthStore()
-const { isAuthenticated, accessToken } = storeToRefs(authStore)
+const { isAuthenticated } = storeToRefs(authStore)
 
 // UserStore
 const userStore = useUserStore()
@@ -49,15 +49,15 @@ onMounted(() => {
         >
 
         <template v-else-if="isUserLoading">
-          <p>Loading...</p>
+          <p>{{ t('common.loading') }}</p>
         </template>
 
         <template v-else>
           <p v-if="!isAuthenticated">
-            😬 You must be logged in to Spotify to create a playlist.
-            <RouterLink v-if="!isAuthenticated" :to="{ name: 'login' }" class="btn btn-primary"
-              >Log me in
-            </RouterLink>
+            {{ t('pages.profil.youMustBeLoggedInToSpotifyToCreateAPlaylist') }}
+            <RouterLink v-if="!isAuthenticated" :to="{ name: 'login' }" class="btn btn-primary">{{
+              t('common.login')
+            }}</RouterLink>
           </p>
 
           <div v-else>

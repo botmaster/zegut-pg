@@ -46,8 +46,8 @@ const formPlaylist = ref<{ name: string; description: string; public: boolean }>
 const isScrapePending = ref(false)
 const hasScrapeError = ref<boolean | any>(false)
 
-const isCreatePlalistPending = ref(false)
-const hasCreatePlalistError = ref<boolean | any>(false)
+const isCreatePlaylistPending = ref(false)
+const hasCreatePlaylistError = ref<boolean | any>(false)
 
 /**
  * Computed
@@ -207,7 +207,7 @@ onMounted(async () => {
 
           <div v-else>
             <p v-if="user">
-              🤘 {{ t('pages.profil.loggedAs', { name: user.display_name }) }}.
+              {{ t('pages.profil.loggedAs', { name: user.display_name }) }}
               {{ t('common.moreInfo') }}
               <RouterLink :to="{ name: 'profil', params: { id: user.id } }">{{
                 t('common.here').toLowerCase()
@@ -219,7 +219,7 @@ onMounted(async () => {
       </section>
 
       <section v-if="isAuthenticated" class="prose lg:prose-xl max-w-prose mt-14">
-        <h2 class="">{{ t('pages.home.fetchPlaylist') }}</h2>
+        <h2 class="">{{ $t('pages.home.fetchPlaylist') }}</h2>
 
         <p class="border-l-4 border-amber-200 px-4 py-3 bg-amber-200/20 text-base">
           <span class="inline-block mr-2">📢</span>
@@ -295,7 +295,7 @@ onMounted(async () => {
         <form @submit.prevent="createPlaylistSubmitHandler">
           <div class="flex flex-col gap-y-2">
             <label for="playlistName" class="block"
-              ><span class="block">{{ t('pages.home.form.playlistName') }}</span>
+              ><span class="block">{{ $t('pages.home.form.playlistName') }}</span>
               <input
                 type="text"
                 id="playlistName"
@@ -320,14 +320,16 @@ onMounted(async () => {
               {{ t('pages.home.form.ctaCreatePlaylist') }}
             </button>
             <Icon
-              v-if="isCreatePlalistPending"
+              v-if="isCreatePlaylistPending"
               class="inline-block ml-4"
               icon="svg-spinners:pulse-rings-multiple"
             ></Icon>
           </div>
         </form>
-        <div class="not-prose" v-if="hasCreatePlalistError">
-          <p class="text-sm mt-2 text-red-600">Enable to create the Spotify playlist 😕.</p>
+        <div class="not-prose" v-if="hasCreatePlaylistError">
+          <p class="text-sm mt-2 text-red-600">
+            {{ t('pages.home.enableToCreateTheSpotifyPlaylist') }}
+          </p>
         </div>
         <template v-else>
           <div v-if="playlist" class="">

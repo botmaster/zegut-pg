@@ -19,6 +19,7 @@
       "calloutExtension": "In case of error (CORS), you will need to install and activate this {link}.",
       "caption": "Pascal Achard",
       "cite": "in his mind.",
+      "enableToCreateTheSpotifyPlaylist": "Unable to create Spotify playlist 😕.",
       "extension": "extension",
       "fetchPlaylist": "Fetch Zégut playlist on podCloud",
       "form": {
@@ -29,11 +30,13 @@
       },
       "fullPodcastList": "The complete list of Zégut's podcasts can be found on {link}. Copy the url of the podcast and paste it in the field below.",
       "intro": "Zégut PG is a web application that allows me to create Spotify playlists from podCloud Zégut playlists. It's also an excuse for me to play around with Vue.js and the Spotify API 🤓.",
-      "logMeIn": "Login",
+      "logMeIn": "@:common:login",
       "meta": {
         "title": "Create Spotify playlists from Zegut's podcasts"
       },
       "notLogged": "😬 You must be logged in to Spotify to create a playlist.",
+      "openPlaylistBrowser": "Open the playlist in the browser",
+      "openPlaylistSpotify": "Open the playlist in the Spotify application:",
       "podcastInfos": "Podcast infos",
       "quote": "Oh wait! Pop-Rock Station by Zégut's playlists are not on Spotify ?!\nOk I got it, I'll take care of it.",
       "title": "Zégut PG",
@@ -43,15 +46,13 @@
         "scrapError": "Error while scraping podcast page 😕\n",
         "scrapSuccess": "Podcast page scraped!"
       },
-      "userProfil": "User profil",
-      "openPlaylistBrowser": "Open the playlist in the browser",
-      "openPlaylistSpotify": "Open the playlist in the Spotify application:"
+      "userProfil": "User profil"
     },
     "login": {
       "alreadyLogged": "You are already logged to Spotify 🤘",
       "letsConnect": "Continue with Spotify",
       "meta": {
-        "title": "Sign in Zegut PG"
+        "title": "@:pages.login.title"
       },
       "title": "Sign in Zegut PG"
     },
@@ -63,16 +64,17 @@
       "title": "404 "
     },
     "profil": {
-      "loggedAs": "Logged as {name}",
+      "loggedAs": "🤘 Logged as {name}.",
       "meta": {
-        "title": "User profil"
+        "title": "@:pages.home.userProfil"
       },
+      "notLoggedIn": "@:pages.home.notLogged",
       "title": "Profil"
     },
     "redirect": {
       "loginSuccess": "Successful login 💪. You will be redirected to the home page.",
       "meta": {
-        "title": "Sign in Zégut PG in progress"
+        "title": "@:pages.redirect.title"
       },
       "title": "Sign in Zégut PG in progress"
     }
