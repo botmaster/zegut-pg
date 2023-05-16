@@ -219,7 +219,7 @@ onMounted(async () => {
       </section>
 
       <section v-if="isAuthenticated" class="prose lg:prose-xl max-w-prose mt-14">
-        <h2 class="">{{ $t('pages.home.fetchPlaylist') }}</h2>
+        <h2 class="">{{ t('pages.home.fetchPlaylist') }}</h2>
 
         <p class="border-l-4 border-amber-200 px-4 py-3 bg-amber-200/20 text-base">
           <span class="inline-block mr-2">📢</span>
@@ -295,7 +295,7 @@ onMounted(async () => {
         <form @submit.prevent="createPlaylistSubmitHandler">
           <div class="flex flex-col gap-y-2">
             <label for="playlistName" class="block"
-              ><span class="block">{{ $t('pages.home.form.playlistName') }}</span>
+              ><span class="block">{{ t('pages.home.form.playlistName') }}</span>
               <input
                 type="text"
                 id="playlistName"
