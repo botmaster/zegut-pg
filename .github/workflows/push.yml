@@ -17,9 +17,8 @@ jobs:
           ref: ${{ github.ref }}
       - name: 'cat package.json'
         run: cat ./package.json
-      - name: 'Automated Version Bump'
-        id: version-bump
-        uses: 'phips28/gh-action-bump-version@master'
+      - name: Automated Version Bump
+        uses: phips28/gh-action-bump-version@v9.1.4
         with:
           tag-prefix: 'v'
         env:
