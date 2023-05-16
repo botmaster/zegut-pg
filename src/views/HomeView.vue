@@ -194,9 +194,12 @@ onMounted(async () => {
 
         <i18n-t keypath="pages.home.intro" tag="p" scope="global">
           <template #link>
-            <a href="https://nuxtjs.org" target="_blank" ref="noopener">{{
-              t('common.rtl2PopRockStation ')
-            }}</a>
+            <a
+              href="https://www.rtl2.fr/programmes/poprockstation"
+              target="_blank"
+              ref="noopener"
+              >{{ t('common.rtl2PopRockStation ') }}</a
+            >
           </template>
         </i18n-t>
 
