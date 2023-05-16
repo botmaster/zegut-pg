@@ -292,7 +292,18 @@ onMounted(async () => {
       >
         <h2 class="">{{ t('common.podcast') }}</h2>
         <h3 class="">{{ t('pages.home.podcastInfos') }}</h3>
-        <p>{{ podcastInfos.title }} <br />{{ podcastInfos.description }}</p>
+        <div class="md:flex">
+          <img
+            v-if="episode?.image"
+            :src="episode.image.url"
+            :alt="episode.image.alt"
+            :width="episode.image.width"
+            :height="episode.image.height"
+            class="w-full md:w-1/4 md:h-1/4 md:mr-6 md:!my-0 shrink-0"
+            :title="episode.image.alt"
+          />
+          <p class="grow">{{ podcastInfos.title }} <br />{{ podcastInfos.description }}</p>
+        </div>
         <h3 class="">{{ t('common.playlist') }}</h3>
         <ol class="not-prose text-sm max-h-64 overflow-auto bg-gray-100 list-inside !px-3 py-2">
           <li v-for="(track, index) in episodeTrackList" :key="index">{{ track }}</li>
@@ -303,7 +314,7 @@ onMounted(async () => {
         class="prose lg:prose-xl max-w-prose mt-14"
         v-if="isAuthenticated && episodeTrackList.length"
       >
-        <h2 class="">{{ t('pages.home.form.ctaCreatePlaylist') }}</h2>
+        <h2 class="">{{ t('pages.home.createSpotifyPlaylist') }}</h2>
         <form @submit.prevent="createPlaylistSubmitHandler">
           <div class="flex flex-col gap-y-2">
             <label for="playlistName" class="block"

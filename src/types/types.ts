@@ -63,4 +63,9 @@ export interface Episode {
   duration?: string
   author?: string
   playlist: Array<string>
+  image?: ImageEpisode
+}
+
+interface ImageEpisode extends Image {
+  alt?: string
 }

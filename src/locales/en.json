@@ -20,6 +20,7 @@
       "calloutExtension": "In case of error (CORS), you will need to install and activate this {link}.",
       "caption": "Pascal Achard",
       "cite": "in his mind.",
+      "createSpotifyPlaylist": "Create Spotify playlist",
       "enableToCreateTheSpotifyPlaylist": "Unable to create Spotify playlist 😕.",
       "extension": "extension",
       "fetchPlaylist": "Fetch Zégut playlist on podCloud",
@@ -30,7 +31,7 @@
         "podcastUrl": "Podcast link"
       },
       "fullPodcastList": "The complete list of Zégut's podcasts can be found on {link}. Copy the url of the podcast and paste it in the field below.",
-      "intro": "Zégut PG is a web application that allows me to create Spotify playlists from the podCloud podcasts taken from the {link} show presented by Francis Zégut & Marjorie Hache. It's also an excuse for me to play around with Vue.js and the Spotify API \uD83E\uDD13.",
+      "intro": "Zégut PG is a web application that allows me to create Spotify playlists from the podCloud podcasts taken from the {link} show presented by Francis Zégut & Marjorie Hache. It's also an excuse for me to play around with Vue.js and the Spotify API 🤓.",
       "logMeIn": "@:common:login",
       "meta": {
         "title": "Create Spotify playlists"
