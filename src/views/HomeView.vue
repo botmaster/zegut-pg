@@ -100,6 +100,10 @@ const createPlaylistSubmitHandler = async () => {
   try {
     // TODO: Create type for track
 
+    // Set pending, error.
+    isCreatePlaylistPending.value = true
+    hasCreatePlaylistError.value = false
+
     // Search tracks in parallel
     const tracks = await Promise.all(
       episodeTrackList.value.map(async (trackItem) => {
@@ -150,8 +154,11 @@ const createPlaylistSubmitHandler = async () => {
 
     toast.success(t('pages.home.toast.playlistCreated'))
   } catch (error) {
+    hasCreatePlaylistError.value = error
     toast.error(t('pages.home.toast.playlistError') + error)
     console.error(error)
+  } finally {
+    isCreatePlaylistPending.value = false
   }
 }
 
@@ -316,7 +323,12 @@ onMounted(async () => {
             /></label>
           </div>
           <div class="mt-4 flex items-center gap-y-4">
-            <button v-if="!playlist" type="submit" class="btn btn-primary">
+            <button
+              v-if="!playlist"
+              type="submit"
+              :disabled="isCreatePlaylistPending"
+              class="btn btn-primary"
+            >
               {{ t('pages.home.form.ctaCreatePlaylist') }}
             </button>
             <Icon

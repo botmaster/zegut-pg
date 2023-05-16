@@ -20,11 +20,11 @@ const { user } = storeToRefs(userStore)
         <RouterLink to="/">Zegut PG</RouterLink>
       </p>
     </div>
-    <nav>
+    <nav class="text-xs">
       <RouterLink
         v-if="user"
         :to="{ name: 'profil', params: { id: user.id } }"
-        class="relative rounded-full border w-[40px] h-[40px] overflow-hidden flex items-center justify-center"
+        class="relative rounded-full bg-black border-2 border-black w-8 h-8 overflow-hidden flex items-center justify-center"
       >
         <img
           v-if="user?.images[0]?.url"
@@ -35,7 +35,7 @@ const { user } = storeToRefs(userStore)
           height="40"
           class="absolute top-0 left-0 w-full h-full object-cover"
         />
-        <span v-else class="text-amber-500 text-2xl font-extrabold leading-none">
+        <span v-else class="text-amber-500 text-lg text-white font-extrabold leading-none">
           {{ user?.display_name?.charAt(0) }}
         </span>
       </RouterLink>
