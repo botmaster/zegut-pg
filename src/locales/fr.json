@@ -49,7 +49,7 @@
       "userProfil": "Profil utilisateur"
     },
     "login": {
-      "alreadyLogged": "Vous êtes déjà connecté à spotify 🤘",
+      "alreadyLogged": "Vous êtes déjà connecté à spotify 💪",
       "letsConnect": "Continuer avec Spotify",
       "meta": {
         "title": "@:pages.login.title"
