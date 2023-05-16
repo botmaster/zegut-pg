@@ -20,6 +20,7 @@
       "calloutExtension": "En cas d'erreur (CORS), vous aurez besoin d'installer et d'activer cette {link}.",
       "caption": "Pascal Achard",
       "cite": "dans sa tête.",
+      "createSpotifyPlaylist": "Créer la playlist Spotify",
       "enableToCreateTheSpotifyPlaylist": "Impossible de créer la playlist Spotify 😕.",
       "extension": "extension",
       "fetchPlaylist": "Récupérer la playlist de Zégut depuis podCLoud",

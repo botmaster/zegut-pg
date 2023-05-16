@@ -15,18 +15,19 @@ export const fetchAndParsePodcastPage = async (url: string): Promise<Episode> =>
   const $ = cheerio.load(response.data)
   const selectorPlaylist = '.col-md-12.post-content p'
   const selectorEpisode = '.episode'
-  const episode = $(selectorEpisode)
+  const selectorImage = 'img.cover-256'
+  const $episode = $(selectorEpisode)
 
-  const title = $(episode).find('.panel-heading h3').text()
-  const description = $(episode).find('.panel-heading h4').text().split('\n').join(' ').trim()
-  const duration = $(episode)
+  const title = $($episode).find('.panel-heading h3').text()
+  const description = $($episode).find('.panel-heading h4').text().split('\n').join(' ').trim()
+  const duration = $($episode)
     .find('.panel-heading h4.font-thin:not(.published_at_by)')
     .text()
     .split(' : ')[1]
     .trim()
 
-  const playlist = $(episode).find(selectorPlaylist)
-  const playlistArray = Array.from(playlist)
+  const $playlist = $($episode).find(selectorPlaylist)
+  const playlistArray = Array.from($playlist)
   const playlistData: Array<string> = []
   playlistArray.forEach((item) => {
     const content = $(item).text()
@@ -42,10 +43,19 @@ export const fetchAndParsePodcastPage = async (url: string): Promise<Episode> =>
     })
   })
 
+  const $image = $(selectorImage)
+  const image = {
+    height: 256,
+    width: 256,
+    url: $($image).attr('src') || '',
+    alt: $($image).attr('alt') || ''
+  }
+
   return {
     title,
     description,
     duration,
-    playlist: playlistData || []
+    playlist: playlistData || [],
+    image
   }
 }
