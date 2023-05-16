@@ -270,9 +270,8 @@ onMounted(async () => {
           </div>
           <div class="mt-4">
             <button class="btn btn-primary" :disabled="isScrapePending" type="submit">
-              {{ t('common.submit') }}
+              {{ t('common.submit') }} <AppLoader class="ml-2" v-if="isScrapePending" />
             </button>
-            <AppLoader class="ml-4" v-if="isScrapePending" />
           </div>
         </form>
       </section>
@@ -326,8 +325,8 @@ onMounted(async () => {
               class="btn btn-primary"
             >
               {{ t('pages.home.form.ctaCreatePlaylist') }}
+              <AppLoader class="ml-2" v-if="isCreatePlaylistPending" />
             </button>
-            <AppLoader class="ml-4" v-if="isCreatePlaylistPending" />
           </div>
         </form>
         <div class="not-prose" v-if="hasCreatePlaylistError">
