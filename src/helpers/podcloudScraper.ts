@@ -15,7 +15,7 @@ export const fetchAndParsePodcastPage = async (url: string): Promise<Episode> =>
   const $ = cheerio.load(response.data)
   const selectorPlaylist = '.col-md-12.post-content p'
   const selectorEpisode = '.episode'
-  const selectorImage = 'img.cover-256'
+  const selectorImage = '.panel-heading img.img-full'
   const $episode = $(selectorEpisode)
 
   const title = $($episode).find('.panel-heading h3').text()
@@ -23,8 +23,9 @@ export const fetchAndParsePodcastPage = async (url: string): Promise<Episode> =>
   const duration = $($episode)
     .find('.panel-heading h4.font-thin:not(.published_at_by)')
     .text()
-    .split(' : ')[1]
-    .trim()
+    .split(' : ')
+    .at(-1)
+    ?.trim()
 
   const $playlist = $($episode).find(selectorPlaylist)
   const playlistArray = Array.from($playlist)

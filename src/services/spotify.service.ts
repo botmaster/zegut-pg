@@ -2,7 +2,7 @@
  * Spotify Services
  */
 
-import http from './api'
+import http from './spotify.api'
 import type { Playlist } from '@/types/types'
 
 /**

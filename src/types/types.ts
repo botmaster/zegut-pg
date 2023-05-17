@@ -69,3 +69,42 @@ export interface Episode {
 interface ImageEpisode extends Image {
   alt?: string
 }
+
+/**
+ * Podcast
+ */
+export interface Podcast {
+  items: PodcastItem[]
+  title: string
+  description: string
+  link: string
+  category: string
+  image: string
+}
+
+export interface PodcastItem {
+  title: string
+  id: string
+  description: string
+  url: string
+  link: string
+  published: number
+  created: number
+  category: any[]
+  content: string
+  content_encoded: string
+  itunes_subtitle: string
+  itunes_summary: string
+  itunes_author: string
+  itunes_explicit: string
+  itunes_duration: string
+  itunes_episode_type: string
+  itunes_image: string
+  enclosures: Enclosure[]
+}
+
+export interface Enclosure {
+  url: string
+  length: string
+  type: 'string'
+}
