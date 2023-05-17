@@ -6,7 +6,7 @@ import { useUserStore } from '@/stores/userStore'
 import type { Episode, Playlist } from '@/types/types'
 import { useToast } from 'vue-toastification'
 // @ts-ignore
-import { useI18n } from 'vue-i18n'
+import { DateTimeOptions, useI18n } from 'vue-i18n'
 import {
   addTracksToPlaylist,
   createPlaylist,
@@ -19,7 +19,7 @@ import { usePreferredLanguages } from '@vueuse/core'
 
 // Preferred language
 const languages = usePreferredLanguages()
-const longDateOptions = {
+const longDateOptions: DateTimeOptions = {
   weekday: 'long',
   year: 'numeric',
   month: 'long',
@@ -94,7 +94,7 @@ const podcastInfos = computed(() => {
 })
 
 const lastEpisodeDate = computed(() => {
-  const date = new Date(rss.value?.items[0].published || '').toLocaleDateString(
+  const date = new Date(rss.value?.items[0]?.published || '').toLocaleDateString(
     languages.value,
     longDateOptions
   )
