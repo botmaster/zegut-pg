@@ -1,25 +1,45 @@
-# zegut-pg
+# Zegut-pg
 
-This template should help get you started developing with Vue 3 in Vite.
+Zégut PG is a web application that allows me to create Spotify playlists from the podcast episodes of the [**RTL2 Pop-Rock Station**](https://www.rtl2.fr/programmes/poprockstation) show presented by Francis Zégut & Marjorie Hache. It's also an excuse for me to play around with Vue.js and the Spotify API 🤓.
 
-## Recommended IDE Setup
+## Demo
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+[https://zegut-pg.netlify.app/](https://zegut-pg.netlify.app/)
 
-## Type Support for `.vue` Imports in TS
+## Features
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+- [x] Display the podacst information
+- [x] Select an episode
+- [x] Login with Spotify
+- [x] Display the list of tracks for each episode
+- [x] Create a Spotify playlist from the tracks of an episode
+- [ ] Display the created playlist
+- [ ] Display user Spotify profile
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+## Tech Stack
 
-1. Disable the built-in TypeScript Extension
-    1) Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-    2) Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+- [Vue.js](https://vuejs.org/)
+- [Tailwindcss](https://tailwindcss.com/)
+- [Spotify API](https://developer.spotify.com/documentation/web-api/)
+- [Vite](https://vitejs.dev/)
+- [ESLint](https://eslint.org/)
+- [Prettier](https://prettier.io/)
+- [Pinia](https://pinia.esm.dev/)
+- [pnpm](https://pnpm.io/)
+- [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
+- [Github Actions Bump Version](https://github.com/marketplace/actions/automated-version-bump)
+- [Netlify](https://www.netlify.com/)
 
-## Customize configuration
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+## Spotify API
+
+Grant type: [Authorization Code with PKCE Flow](https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow)
+
+### Documentation
+- [Authorization Guide](https://developer.spotify.com/documentation/general/guides/authorization-guide/)
+- [Authorization Scopes](https://developer.spotify.com/documentation/general/guides/scopes/)
+
+
 
 ## Project Setup
 
