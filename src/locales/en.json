@@ -23,6 +23,7 @@
       "createSpotifyPlaylist": "Create Spotify playlist",
       "ctaFetchPodcast": "Fetch",
       "enableToCreateTheSpotifyPlaylist": "Unable to create Spotify playlist 😕.",
+      "episodesCount": "No episodes | One episode | {count} episodes",
       "extension": "extension",
       "fetchPlaylist": "Fetch Zégut playlist on podCloud",
       "form": {
@@ -33,6 +34,7 @@
       },
       "fullPodcastList": "The complete list of Zégut's podcasts can be found on {link}. Copy the url of the podcast and paste it in the field below.",
       "intro": "Zégut PG is a web application that allows me to create Spotify playlists from the podCloud podcasts taken from the {link} show presented by Francis Zégut & Marjorie Hache. It's also an excuse for me to play around with Vue.js and the Spotify API 🤓.",
+      "lastUpdate": "Last episode published on {date}",
       "logMeIn": "@:common.login",
       "meta": {
         "title": "Create Spotify playlists"

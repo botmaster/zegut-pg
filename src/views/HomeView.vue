@@ -15,6 +15,18 @@ import {
 } from '@/services/spotify.service'
 import AppLoader from '@/components/AppLoader.vue'
 import { usePodcastStore } from '@/stores/podcastStore'
+import { usePreferredLanguages } from '@vueuse/core'
+
+// Preferred language
+const languages = usePreferredLanguages()
+const longDateOptions = {
+  weekday: 'long',
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  hour: 'numeric',
+  minute: 'numeric'
+}
 
 // i18n
 const { t } = useI18n()
@@ -30,6 +42,7 @@ const { user, isLoading: isUserLoading, hasError: hasUserError } = storeToRefs(u
 // PodcastStore
 const podcastStore = usePodcastStore()
 const {
+  rss,
   episodes,
   currentEpisode,
   isLoading: isPodcastLoading,
@@ -66,14 +79,10 @@ const episodeTrackList = computed(() => {
 })
 
 const podcastInfos = computed(() => {
-  const date = new Date(currentEpisode.value?.published || '').toLocaleDateString('fr-FR', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric'
-  })
+  const date = new Date(currentEpisode.value?.published || '').toLocaleDateString(
+    languages.value,
+    longDateOptions
+  )
 
   const author = currentEpisode.value?.itunes_author || ''
 
@@ -82,6 +91,15 @@ const podcastInfos = computed(() => {
     description: date && author ? t('pages.home.publishedDateByAuth', { date, author }) : '',
     duration: currentEpisode.value?.itunes_duration || ''
   }
+})
+
+const lastEpisodeDate = computed(() => {
+  const date = new Date(rss.value?.items[0].published || '').toLocaleDateString(
+    languages.value,
+    longDateOptions
+  )
+
+  return date
 })
 
 /**
@@ -201,7 +219,7 @@ onMounted(async () => {
 <template>
   <main>
     <div class="container mx-auto pt-8 pb-14">
-      <section class="prose lg:prose-xl max-w-prose">
+      <section class="prose lg:prose-lg max-w-prose">
         <h1 class="mb-8">{{ t('pages.home.title') }}</h1>
         <figure>
           <blockquote>
@@ -227,7 +245,7 @@ onMounted(async () => {
       </section>
 
       <!-- Podcast   -->
-      <section class="prose lg:prose-xl max-w-prose mt-14">
+      <section class="prose lg:prose-lg max-w-prose mt-14">
         <h2 class="">{{ t('common.podcast', 1) }}</h2>
         <template v-if="hasPodcastError">
           <p>{{ t('pages.home.podcastError') }}</p>
@@ -237,22 +255,31 @@ onMounted(async () => {
           <p>{{ t('common.loading') }}</p>
         </template>
         <template v-else>
+          <p class="font-bold">
+            {{ rss?.title }}
+          </p>
           <p>
-            {{ podcastStore.rss?.title }}
+            {{ rss?.description.replace(/<[^>]+>/g, '') }}
+          </p>
+          <p>
+            {{ t('pages.home.episodesCount', rss?.items?.length) }}.
+            {{ t('pages.home.lastUpdate', { date: lastEpisodeDate }) }}.
           </p>
 
           <form>
-            <label for="episodes" class="block mt-4">{{ t('pages.home.selectEpisode') }}</label>
-            <select
-              :disabled="!currentEpisode"
-              v-model="currentEpisode"
-              id="episodes"
-              class="block w-full mt-1 border-gray-300 focus:border-amber-300 focus:ring focus:ring-amber-200 focus:ring-opacity-50 rounded-md shadow-sm"
+            <label for="episodes" class="mt-4"
+              ><span>{{ t('pages.home.selectEpisode') }}</span>
+              <select
+                :disabled="!currentEpisode"
+                v-model="currentEpisode"
+                id="episodes"
+                class="form-input"
+              >
+                <option v-for="episode in episodes" :key="episode.id" :value="episode">
+                  {{ episode.title }}
+                </option>
+              </select></label
             >
-              <option v-for="episode in episodes" :key="episode.id" :value="episode">
-                {{ episode.title }}
-              </option>
-            </select>
           </form>
 
           <h3 class="">{{ t('common.episode') }}</h3>
@@ -268,10 +295,12 @@ onMounted(async () => {
               :title="podcastInfos.description"
               loading="lazy"
             />
-            <p class="grow">
-              {{ podcastInfos.title }}. <br />{{ podcastInfos.description }}.<br />Durée :
-              {{ podcastInfos.duration }}
-            </p>
+            <div>
+              <p class="grow">{{ podcastInfos.title }}.</p>
+              <p class="text-sm">
+                {{ podcastInfos.description }}.<br />Durée : {{ podcastInfos.duration }}
+              </p>
+            </div>
           </div>
           <h4 class="">{{ t('pages.home.podcastTrackList') }}</h4>
           <ol class="not-prose text-sm max-h-64 overflow-auto bg-gray-100 list-inside !px-3 py-2">
@@ -281,7 +310,7 @@ onMounted(async () => {
       </section>
 
       <!-- User Profil       -->
-      <section class="prose lg:prose-xl max-w-prose mt-14">
+      <section class="prose lg:prose-lg max-w-prose mt-14">
         <h2 class="">{{ t('pages.home.userProfil') }}</h2>
 
         <pre v-if="hasUserError">
@@ -316,7 +345,7 @@ onMounted(async () => {
 
       <!-- Create Spotify Playlist       -->
       <section
-        class="prose lg:prose-xl max-w-prose mt-14"
+        class="prose lg:prose-lg max-w-prose mt-14"
         v-if="isAuthenticated && episodeTrackList.length"
       >
         <h2 class="">{{ t('pages.home.createSpotifyPlaylist') }}</h2>
@@ -328,7 +357,7 @@ onMounted(async () => {
                 type="text"
                 id="playlistName"
                 name="playlistName"
-                class="w-full"
+                class="form-input"
                 v-model="formPlaylist.name"
                 required
             /></label>
@@ -338,7 +367,7 @@ onMounted(async () => {
                 type="text"
                 id="playlistDescription"
                 name="playlistDescription"
-                class="w-full"
+                class="form-input"
                 v-model="formPlaylist.description"
                 required
             /></label>
