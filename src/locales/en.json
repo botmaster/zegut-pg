@@ -1,14 +1,14 @@
 {
   "common": {
+    "episode": "Episode",
     "here": "Here",
     "loading": "Loading...",
-    "login": "login",
+    "login": "Login",
     "logout": "Logout",
     "moreInfo": "More info",
     "noTracksFound": "No tracks found",
-    "playlist": "Playlist",
     "pleaseWait": "Please wait",
-    "podcast": "Podcast",
+    "podcast": "Podcast | Podcasts",
     "rtl2PopRockStation ": "RTL2 Pop-Rock Station",
     "submit": "Submit"
   },
@@ -21,6 +21,7 @@
       "caption": "Pascal Achard",
       "cite": "in his mind.",
       "createSpotifyPlaylist": "Create Spotify playlist",
+      "ctaFetchPodcast": "Fetch",
       "enableToCreateTheSpotifyPlaylist": "Unable to create Spotify playlist 😕.",
       "extension": "extension",
       "fetchPlaylist": "Fetch Zégut playlist on podCloud",
@@ -32,7 +33,7 @@
       },
       "fullPodcastList": "The complete list of Zégut's podcasts can be found on {link}. Copy the url of the podcast and paste it in the field below.",
       "intro": "Zégut PG is a web application that allows me to create Spotify playlists from the podCloud podcasts taken from the {link} show presented by Francis Zégut & Marjorie Hache. It's also an excuse for me to play around with Vue.js and the Spotify API 🤓.",
-      "logMeIn": "@:common:login",
+      "logMeIn": "@:common.login",
       "meta": {
         "title": "Create Spotify playlists"
       },
@@ -40,9 +41,14 @@
       "openPlaylistBrowser": "Open the playlist in the browser",
       "openPlaylistSpotify": "Open the playlist in the Spotify application:",
       "podcastInfos": "Podcast infos",
+      "podcastTrackList": "Episode track list",
+      "publishedDateByAuth": "Publiée le {date} par {author}",
       "quote": "Oh wait! Pop-Rock Station by Zégut's playlists are not on Spotify ?!\nOk I got it, I'll take care of it.",
+      "selectEpisode": "Select an episode",
       "title": "Zégut PG",
       "toast": {
+        "fetchPodcastError": "Error while retrieving the podcast 😕\n",
+        "fetchPodcastSuccess": "Successful recovery of the podcast!",
         "playlistCreated": "🍻 Playlist created!",
         "playlistError": "Error while creating playlist 😕\n",
         "scrapError": "Error while scraping podcast page 😕\n",

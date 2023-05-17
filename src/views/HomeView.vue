@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/authStore'
 import { useUserStore } from '@/stores/userStore'
@@ -13,8 +13,8 @@ import {
   getPlaylist,
   searchTracks
 } from '@/services/spotify.service'
-import { fetchAndParsePodcastPage } from '@/helpers/podcloudScraper'
 import AppLoader from '@/components/AppLoader.vue'
+import { usePodcastStore } from '@/stores/podcastStore'
 
 // i18n
 const { t } = useI18n()
@@ -27,18 +27,26 @@ const { isAuthenticated, accessToken } = storeToRefs(authStore)
 const userStore = useUserStore()
 const { user, isLoading: isUserLoading, hasError: hasUserError } = storeToRefs(userStore)
 
+// PodcastStore
+const podcastStore = usePodcastStore()
+const {
+  episodes,
+  currentEpisode,
+  isLoading: isPodcastLoading,
+  hasError: hasPodcastError
+} = storeToRefs(podcastStore)
+
 // Toast
 const toast = useToast()
 
 // Reactive variables
 const episode = ref<Episode | null>(null)
-const podcastUrl = ref('')
-const playlist = ref<Playlist | null>(null)
+const spotifyPlaylist = ref<Playlist | null>(null)
 
 // Playlist form
-const formPlaylist = ref<{ name: string; description: string; public: boolean }>({
+const formPlaylist = reactive<{ name: string; description: string; public: boolean }>({
   name: 'Zégut playlist',
-  description: 'Zégut playlist',
+  description: 'Zégut playlist description',
   public: false
 })
 
@@ -53,49 +61,50 @@ const hasCreatePlaylistError = ref<boolean | any>(false)
  * Computed
  */
 const episodeTrackList = computed(() => {
-  return episode.value?.playlist || []
+  const content = currentEpisode.value?.content.split('\n') || []
+  return content.filter((track) => !track.toLowerCase().includes('reprise') && track !== '')
 })
 
 const podcastInfos = computed(() => {
+  const date = new Date(currentEpisode.value?.published || '').toLocaleDateString('fr-FR', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric'
+  })
+
+  const author = currentEpisode.value?.itunes_author || ''
+
   return {
-    title: episode.value?.title || '',
-    description: episode.value?.description || '',
-    duration: episode.value?.duration || ''
+    title: currentEpisode.value?.title || '',
+    description: date && author ? t('pages.home.publishedDateByAuth', { date, author }) : '',
+    duration: currentEpisode.value?.itunes_duration || ''
   }
 })
 
 /**
- * Methods
+ * Events handlers
  */
 
-/**
- * Event handlers
- */
+const fetchPodcast = async () => {
+  // console.log('fetchPodcast')
 
-const submitPodcastUrlHandler = () => {
-  console.log('submitHandler', podcastUrl.value)
-  isScrapePending.value = true
-  hasScrapeError.value = false
-  playlist.value = null
-
-  fetchAndParsePodcastPage(podcastUrl.value)
-    .then((dataEpisode) => {
-      episode.value = dataEpisode
-      formPlaylist.value.name = `By Zégut 🤘 - ${dataEpisode.title}`
-      formPlaylist.value.description = dataEpisode.description
-      toast.success(t('pages.home.toast.scrapSuccess').toString())
-    })
-    .catch((error) => {
-      hasScrapeError.value = error
-      toast.error(t('pages.home.toast.scrapError').toString() + error)
-    })
-    .finally(() => {
-      isScrapePending.value = false
-    })
+  try {
+    // Fetch podcast
+    await podcastStore.fetchPodcast()
+    toast.success(t('pages.home.toast.fetchPodcastSuccess'))
+  } catch (error) {
+    toast.error(t('pages.home.fetchPodcastError') + error)
+    console.error(error)
+  } finally {
+    isPodcastLoading.value = false
+  }
 }
 
 const createPlaylistSubmitHandler = async () => {
-  console.log('createPlaylistSubmitHandler')
+  // console.log('createPlaylistSubmitHandler')
 
   try {
     // TODO: Create type for track
@@ -133,24 +142,24 @@ const createPlaylistSubmitHandler = async () => {
 
     // Create playlist
     const createPlaylistData = await createPlaylist({
-      name: formPlaylist.value.name,
-      description: formPlaylist.value.description,
-      isPublic: formPlaylist.value.public,
+      name: formPlaylist.name,
+      description: formPlaylist.description,
+      isPublic: formPlaylist.public,
       userId: user.value?.id || ''
     })
-    playlist.value = createPlaylistData
+    spotifyPlaylist.value = createPlaylistData
 
     // Add tracks to playlist
     const uris = tracksIds.map((trackId) => `spotify:track:${trackId}`)
     console.log('uris', uris)
-    await addTracksToPlaylist(playlist.value?.id || '', uris)
+    await addTracksToPlaylist(spotifyPlaylist.value?.id || '', uris)
 
     const getPlaylistData = await getPlaylist(
-      playlist.value?.id || '',
+      spotifyPlaylist.value?.id || '',
       'name, description,tracks.items(track(name,href,album(name,href))), uri, external_urls.spotify'
     )
 
-    playlist.value = getPlaylistData
+    spotifyPlaylist.value = getPlaylistData
 
     toast.success(t('pages.home.toast.playlistCreated'))
   } catch (error) {
@@ -163,6 +172,16 @@ const createPlaylistSubmitHandler = async () => {
 }
 
 /**
+ * Vue watch
+ */
+
+watch(currentEpisode, (value) => {
+  // console.log('currentEpisode changed', value)
+  formPlaylist.name = value?.title ? `By Zégut 🤘 ${value.title}` : ''
+  formPlaylist.description = podcastInfos.value.description || ''
+})
+
+/**
  * Vue lifecycle
  */
 
@@ -173,6 +192,9 @@ onMounted(async () => {
   if (accessToken.value) {
     await userStore.fetchUserCurrentUser()
   }
+
+  // Fetch podcast
+  await fetchPodcast()
 })
 </script>
 
@@ -202,7 +224,64 @@ onMounted(async () => {
             >
           </template>
         </i18n-t>
+      </section>
 
+      <!-- Podcast   -->
+      <section class="prose lg:prose-xl max-w-prose mt-14">
+        <h2 class="">{{ t('common.podcast', 1) }}</h2>
+        <template v-if="hasPodcastError">
+          <p>{{ t('pages.home.podcastError') }}</p>
+          <pre>{{ hasPodcastError }}</pre>
+        </template>
+        <template v-else-if="isPodcastLoading">
+          <p>{{ t('common.loading') }}</p>
+        </template>
+        <template v-else>
+          <p>
+            {{ podcastStore.rss?.title }}
+          </p>
+
+          <form>
+            <label for="episodes" class="block mt-4">{{ t('pages.home.selectEpisode') }}</label>
+            <select
+              :disabled="!currentEpisode"
+              v-model="currentEpisode"
+              id="episodes"
+              class="block w-full mt-1 border-gray-300 focus:border-amber-300 focus:ring focus:ring-amber-200 focus:ring-opacity-50 rounded-md shadow-sm"
+            >
+              <option v-for="episode in episodes" :key="episode.id" :value="episode">
+                {{ episode.title }}
+              </option>
+            </select>
+          </form>
+
+          <h3 class="">{{ t('common.episode') }}</h3>
+
+          <div class="md:flex">
+            <img
+              v-if="currentEpisode?.itunes_image"
+              :src="currentEpisode.itunes_image"
+              :alt="podcastInfos.description"
+              :width="500"
+              :height="500"
+              class="w-full md:w-1/4 md:h-1/4 md:mr-6 md:!my-0 shrink-0"
+              :title="podcastInfos.description"
+              loading="lazy"
+            />
+            <p class="grow">
+              {{ podcastInfos.title }}. <br />{{ podcastInfos.description }}.<br />Durée :
+              {{ podcastInfos.duration }}
+            </p>
+          </div>
+          <h4 class="">{{ t('pages.home.podcastTrackList') }}</h4>
+          <ol class="not-prose text-sm max-h-64 overflow-auto bg-gray-100 list-inside !px-3 py-2">
+            <li v-for="(track, index) in episodeTrackList" :key="index">{{ track }}</li>
+          </ol>
+        </template>
+      </section>
+
+      <!-- User Profil       -->
+      <section class="prose lg:prose-xl max-w-prose mt-14">
         <h2 class="">{{ t('pages.home.userProfil') }}</h2>
 
         <pre v-if="hasUserError">
@@ -235,81 +314,7 @@ onMounted(async () => {
         </template>
       </section>
 
-      <section v-if="isAuthenticated" class="prose lg:prose-xl max-w-prose mt-14">
-        <h2 class="">{{ t('pages.home.fetchPlaylist') }}</h2>
-
-        <p class="border-l-4 border-amber-200 px-4 py-3 bg-amber-200/20 text-base">
-          <span class="inline-block mr-2">📢</span>
-          <i18n-t tag="span" class="" keypath="pages.home.calloutExtension" scope="global">
-            <template #link>
-              <a
-                href="https://chrome.google.com/webstore/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf"
-                target="_blank"
-                rel="noopener noreferrer"
-                >{{ t('pages.home.extension') }}</a
-              >
-            </template>
-          </i18n-t>
-        </p>
-
-        <i18n-t tag="p" class="" keypath="pages.home.fullPodcastList" scope="global">
-          <template #link>
-            <a
-              href="https://podcloud.fr/podcast/rtl2-pop-rock-station-by-zegut"
-              target="_blank"
-              rel="noopener noreferrer"
-              >podCloud</a
-            >
-          </template>
-        </i18n-t>
-
-        <form class="" @submit.prevent="submitPodcastUrlHandler">
-          <div class="flex flex-col gap-y-4">
-            <label for="podcastUrl" class="block"
-              ><span class="block">{{ t('pages.home.form.podcastUrl') }}</span>
-              <input
-                type="url"
-                id="podcastUrl"
-                name="podcastUrl"
-                class="w-full"
-                v-model="podcastUrl"
-                :disabled="isScrapePending"
-                required
-              />
-            </label>
-          </div>
-          <div class="mt-4">
-            <button class="btn btn-primary" :disabled="isScrapePending" type="submit">
-              {{ t('common.submit') }} <AppLoader class="ml-2" v-if="isScrapePending" />
-            </button>
-          </div>
-        </form>
-      </section>
-
-      <section
-        class="prose lg:prose-xl max-w-prose mt-14"
-        v-if="isAuthenticated && episodeTrackList.length"
-      >
-        <h2 class="">{{ t('common.podcast') }}</h2>
-        <h3 class="">{{ t('pages.home.podcastInfos') }}</h3>
-        <div class="md:flex">
-          <img
-            v-if="episode?.image"
-            :src="episode.image.url"
-            :alt="episode.image.alt"
-            :width="episode.image.width"
-            :height="episode.image.height"
-            class="w-full md:w-1/4 md:h-1/4 md:mr-6 md:!my-0 shrink-0"
-            :title="episode.image.alt"
-          />
-          <p class="grow">{{ podcastInfos.title }} <br />{{ podcastInfos.description }}</p>
-        </div>
-        <h3 class="">{{ t('common.playlist') }}</h3>
-        <ol class="not-prose text-sm max-h-64 overflow-auto bg-gray-100 list-inside !px-3 py-2">
-          <li v-for="(track, index) in episodeTrackList" :key="index">{{ track }}</li>
-        </ol>
-      </section>
-
+      <!-- Create Spotify Playlist       -->
       <section
         class="prose lg:prose-xl max-w-prose mt-14"
         v-if="isAuthenticated && episodeTrackList.length"
@@ -340,7 +345,7 @@ onMounted(async () => {
           </div>
           <div class="mt-4 flex items-center gap-y-4">
             <button
-              v-if="!playlist"
+              v-if="!spotifyPlaylist"
               type="submit"
               :disabled="isCreatePlaylistPending"
               class="btn btn-primary"
@@ -356,21 +361,21 @@ onMounted(async () => {
           </p>
         </div>
         <template v-else>
-          <div v-if="playlist" class="">
+          <div v-if="spotifyPlaylist" class="">
             <p class="">{{ t('pages.home.toast.playlistCreated') }}</p>
             <p class="">
               {{ t('pages.home.openPlaylistBrowser') }}&nbsp;<a
-                :href="playlist.external_urls.spotify"
+                :href="spotifyPlaylist.external_urls.spotify"
                 target="_blank"
               >
                 {{ t('common.here') }}</a
               >
-              <br />{{ t('pages.home.openPlaylistSpotify') }}&nbsp;<a :href="playlist.uri">{{
+              <br />{{ t('pages.home.openPlaylistSpotify') }}&nbsp;<a :href="spotifyPlaylist.uri">{{
                 t('common.here')
               }}</a>
             </p>
 
-            <pre class="!text-xs max-h-64">{{ playlist }}</pre>
+            <pre class="!text-xs max-h-64">{{ spotifyPlaylist }}</pre>
           </div>
         </template>
       </section>
