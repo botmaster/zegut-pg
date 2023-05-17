@@ -207,12 +207,14 @@ onMounted(async () => {
   console.log('HomeView mounted')
 
   // fetch current user
-  if (accessToken.value) {
+  if (isAuthenticated.value && !user.value) {
     await userStore.fetchUserCurrentUser()
   }
 
-  // Fetch podcast
-  await fetchPodcast()
+  // Fetch podcast if not already fetched
+  if (!rss.value) {
+    await fetchPodcast()
+  }
 })
 </script>
 
@@ -319,7 +321,7 @@ onMounted(async () => {
         >
 
         <template v-else-if="isUserLoading">
-          <p>{{ t('common.loading') }}</p>
+          <p><AppLoader /></p>
         </template>
 
         <template v-else>
