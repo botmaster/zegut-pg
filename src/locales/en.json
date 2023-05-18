@@ -63,6 +63,8 @@
     },
     "login": {
       "alreadyLogged": "You are already logged to Spotify 💪",
+      "callout": "Spotify has not yet allowed everyone to access this application. Send me a message so I can add you to the list of authorized users.",
+      "calloutTitle": "😬 Oops",
       "letsConnect": "Continue with Spotify",
       "meta": {
         "title": "@:pages.login.title"
