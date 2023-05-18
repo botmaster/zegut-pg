@@ -5,7 +5,7 @@
 
 import { defineStore } from 'pinia'
 import { fetchRss } from '@/services/rss.service'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import type { Podcast, PodcastItem } from '@/types/types'
 
 export const usePodcastStore = defineStore('podcastStore', () => {
@@ -16,6 +16,10 @@ export const usePodcastStore = defineStore('podcastStore', () => {
   const isLoading = ref<boolean>(false)
   const hasError = ref<boolean | any>(false)
 
+  const episodesTypeIntegral = computed(() => {
+    return episodes.value.filter((episode) => episode.title.toLowerCase().includes('intégrale'))
+  })
+
   const fetchPodcast = async () => {
     isLoading.value = true
     try {
@@ -24,6 +28,8 @@ export const usePodcastStore = defineStore('podcastStore', () => {
       if (rss.value) {
         episodes.value = rss.value.items
         currentEpisode.value = rss.value.items[0]
+      } else {
+        hasError.value = 'No podcast found'
       }
     } catch (error) {
       console.log(error)
@@ -36,6 +42,7 @@ export const usePodcastStore = defineStore('podcastStore', () => {
   return {
     rss,
     episodes,
+    episodesTypeIntegral,
     currentEpisode,
     isLoading,
     hasError,
