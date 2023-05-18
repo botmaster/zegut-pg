@@ -195,6 +195,7 @@ watch(currentEpisode, (value) => {
   // console.log('currentEpisode changed', value)
   formPlaylist.name = value?.title ? `By Zégut 🤘 ${value.title}` : ''
   formPlaylist.description = podcastInfos.value.description || ''
+  spotifyPlaylist.value = null
 })
 
 /**
@@ -309,7 +310,10 @@ onMounted(async () => {
             </div>
           </div>
           <h4 class="">{{ t('pages.home.podcastTrackList') }}</h4>
-          <ol class="not-prose text-sm max-h-64 overflow-auto bg-gray-100 list-inside !px-3 py-2">
+          <ol
+            class="not-prose text-sm max-h-64 overflow-auto bg-gray-100 list-inside !px-3 py-2"
+            tabindex="0"
+          >
             <li v-for="(track, index) in episodeTrackList" :key="index">{{ track }}</li>
           </ol>
         </template>

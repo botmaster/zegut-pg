@@ -9,7 +9,7 @@
 
 @layer components {
     .btn {
-        @apply inline-flex px-[1em] py-[0.5em] rounded-md text-white text-base font-normal no-underline;
+        @apply inline-flex items-center px-[1em] py-[0.5em] rounded-md text-white text-base font-normal no-underline;
     }
 
     .btn.btn-primary {
