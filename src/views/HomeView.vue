@@ -43,7 +43,7 @@ const { user, isLoading: isUserLoading, hasError: hasUserError } = storeToRefs(u
 const podcastStore = usePodcastStore()
 const {
   rss,
-  episodes,
+  episodesTypeIntegral,
   currentEpisode,
   isLoading: isPodcastLoading,
   hasError: hasPodcastError
@@ -59,12 +59,10 @@ const spotifyPlaylist = ref<Playlist | null>(null)
 const formPlaylist = reactive<{ name: string; description: string; public: boolean }>({
   name: 'Zégut playlist',
   description: 'Zégut playlist description',
-  public: false
+  public: true
 })
 
-// Local state
-const hasScrapeError = ref<boolean | any>(false)
-
+// Local store
 const isCreatePlaylistPending = ref(false)
 const hasCreatePlaylistError = ref<boolean | any>(false)
 
@@ -254,13 +252,13 @@ onMounted(async () => {
           /></transition>
         </h2>
         <template v-if="hasPodcastError">
-          <p>{{ t('pages.home.podcastError') }}</p>
+          <p>{{ t('pages.home.toast.fetchPodcastError') }}</p>
           <pre>{{ hasPodcastError }}</pre>
         </template>
         <template v-else-if="isPodcastLoading">
           <p>{{ t('common.loading') }}</p>
         </template>
-        <template v-else-if="!isPodcastLoading && !hasScrapeError">
+        <template v-else-if="!isPodcastLoading && !hasPodcastError">
           <p class="font-bold">
             {{ rss?.title }}
           </p>
@@ -281,7 +279,7 @@ onMounted(async () => {
                 id="episodes"
                 class="form-input"
               >
-                <option v-for="episode in episodes" :key="episode.id" :value="episode">
+                <option v-for="episode in episodesTypeIntegral" :key="episode.id" :value="episode">
                   {{ episode.title }}
                 </option>
               </select></label
