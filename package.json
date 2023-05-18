@@ -1,6 +1,6 @@
 {
   "name": "zegut-pg",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "private": true,
   "author": "Pascal Achard",
   "description": "Zegut PG is a web app to create Spotify playlists from Zégut podcasts.",
