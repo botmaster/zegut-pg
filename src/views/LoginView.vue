@@ -34,6 +34,14 @@ const connectClickHandler = () => {
       <section class="prose lg:prose-xl max-w-prose pt-8 pb-14">
         <h1>{{ t('pages.login.title') }}</h1>
         <template v-if="!isAuthenticated">
+          <div
+            class="border-l-4 border-amber-200 mb-8 py-3 pl-8 bg-amber-200/20 not-prose text-base"
+          >
+            <p class="mb-2 font-bold">{{ t('pages.login.calloutTitle') }}</p>
+            <p class="leading-snug my-0">
+              {{ t('pages.login.callout') }}
+            </p>
+          </div>
           <p>
             {{ t('pages.login.letsConnect') }}
             <Icon icon="logos:spotify-icon" class="inline-block"></Icon>
