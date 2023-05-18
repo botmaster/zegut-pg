@@ -1,6 +1,9 @@
 {
   "common": {
+    "cancel": "Cancel",
+    "duration": "Duration",
     "episode": "Episode",
+    "goBackHome": "Go back home",
     "here": "Here",
     "loading": "Loading...",
     "login": "Login",
@@ -67,7 +70,7 @@
       "title": "Sign in Zegut PG"
     },
     "notFound": {
-      "lost": "Zégut is completly lost. Bring him back at | home",
+      "lost": "Zégut is completely lost. Bring him back at | home",
       "meta": {
         "title": "404 - Page not found"
       },

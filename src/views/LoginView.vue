@@ -5,11 +5,13 @@ import { Icon } from '@iconify/vue'
 import { storeToRefs } from 'pinia'
 // @ts-ignore
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 
 const authStore = useAuthStore()
 const { isAuthenticated } = storeToRefs(authStore)
 const client_id = import.meta.env.VITE_SPOTIFY_CLIENT_ID
 const { t } = useI18n()
+const router = useRouter()
 
 const initiateSpotifyLogin = () => {
   redirectToAuthCodeFlow(client_id)
@@ -36,9 +38,12 @@ const connectClickHandler = () => {
             {{ t('pages.login.letsConnect') }}
             <Icon icon="logos:spotify-icon" class="inline-block"></Icon>
           </p>
-          <p>
+          <p class="flex gap-4">
             <button class="btn btn-primary" @click="connectClickHandler">
               {{ t('common.login') }}
+            </button>
+            <button class="btn btn-border" @click="router.push({ name: 'home' })">
+              {{ t('common.cancel') }}
             </button>
           </p>
         </template>

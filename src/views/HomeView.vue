@@ -3,7 +3,7 @@ import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/authStore'
 import { useUserStore } from '@/stores/userStore'
-import type { Episode, Playlist } from '@/types/types'
+import type { Playlist } from '@/types/types'
 import { useToast } from 'vue-toastification'
 // @ts-ignore
 import { DateTimeOptions, useI18n } from 'vue-i18n'
@@ -33,7 +33,7 @@ const { t } = useI18n()
 
 // AuthStore
 const authStore = useAuthStore()
-const { isAuthenticated, accessToken } = storeToRefs(authStore)
+const { isAuthenticated } = storeToRefs(authStore)
 
 // UserStore
 const userStore = useUserStore()
@@ -53,7 +53,6 @@ const {
 const toast = useToast()
 
 // Reactive variables
-const episode = ref<Episode | null>(null)
 const spotifyPlaylist = ref<Playlist | null>(null)
 
 // Playlist form
@@ -64,7 +63,6 @@ const formPlaylist = reactive<{ name: string; description: string; public: boole
 })
 
 // Local state
-const isScrapePending = ref(false)
 const hasScrapeError = ref<boolean | any>(false)
 
 const isCreatePlaylistPending = ref(false)
@@ -112,9 +110,9 @@ const fetchPodcast = async () => {
   try {
     // Fetch podcast
     await podcastStore.fetchPodcast()
-    toast.success(t('pages.home.toast.fetchPodcastSuccess'))
+    //toast.success(t('pages.home.toast.fetchPodcastSuccess'))
   } catch (error) {
-    toast.error(t('pages.home.fetchPodcastError') + error)
+    toast.error(t('pages.home.toast.fetchPodcastError') + error)
     console.error(error)
   } finally {
     isPodcastLoading.value = false
@@ -248,7 +246,12 @@ onMounted(async () => {
 
       <!-- Podcast   -->
       <section class="prose lg:prose-lg max-w-prose mt-14">
-        <h2 class="">{{ t('common.podcast', 1) }}</h2>
+        <h2 class="">
+          {{ t('common.podcast', 1)
+          }}<transition name="fade" mode="out-in"
+            ><AppLoader v-if="isPodcastLoading" class="inline-block ml-4"
+          /></transition>
+        </h2>
         <template v-if="hasPodcastError">
           <p>{{ t('pages.home.podcastError') }}</p>
           <pre>{{ hasPodcastError }}</pre>
@@ -256,7 +259,7 @@ onMounted(async () => {
         <template v-else-if="isPodcastLoading">
           <p>{{ t('common.loading') }}</p>
         </template>
-        <template v-else>
+        <template v-else-if="!isPodcastLoading && !hasScrapeError">
           <p class="font-bold">
             {{ rss?.title }}
           </p>
@@ -300,7 +303,8 @@ onMounted(async () => {
             <div>
               <p class="grow">{{ podcastInfos.title }}.</p>
               <p class="text-sm">
-                {{ podcastInfos.description }}.<br />Durée : {{ podcastInfos.duration }}
+                {{ podcastInfos.description }}.<br />{{ t('common.duration') }} :
+                {{ podcastInfos.duration }}
               </p>
             </div>
           </div>
@@ -334,7 +338,12 @@ onMounted(async () => {
 
           <div v-else>
             <p v-if="user">
-              {{ t('pages.profil.loggedAs', { name: user.display_name }) }}
+              <i18n-t keypath="pages.profil.loggedAs" tag="span" scope="global">
+                <template #name>
+                  <span class="font-bold">{{ user.display_name }}</span>
+                </template>
+              </i18n-t>
+
               {{ t('common.moreInfo') }}
               <RouterLink :to="{ name: 'profil', params: { id: user.id } }">{{
                 t('common.here').toLowerCase()
@@ -413,3 +422,5 @@ onMounted(async () => {
     </div>
   </main>
 </template>
+
+<style scoped></style>
