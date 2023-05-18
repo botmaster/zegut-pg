@@ -45,6 +45,11 @@ watchEffect(() => {
         <h1>{{ t('pages.redirect.title') }}</h1>
         <template v-if="hasError">
           <pre>Error: {{ authStore.hasError }}</pre>
+          <p class="flex gap-4">
+            <button class="btn btn-primary" @click="router.push({ name: 'home' })">
+              {{ t('common.goBackHome') }}
+            </button>
+          </p>
         </template>
         <template v-else-if="isLoading">
           <p>

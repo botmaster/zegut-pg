@@ -54,20 +54,30 @@ onMounted(() => {
 
         <template v-else>
           <p v-if="!isAuthenticated">
-            {{ t('pages.profil.youMustBeLoggedInToSpotifyToCreateAPlaylist') }}
+            {{ t('pages.profil.notLoggedIn') }}
             <RouterLink v-if="!isAuthenticated" :to="{ name: 'login' }" class="btn btn-primary">{{
               t('common.login')
             }}</RouterLink>
           </p>
 
           <div v-else>
-            <p v-if="user">
-              {{ t('pages.profil.loggedAs', { name: user.display_name }) }}
+            <p v-if="user" class="flex gap-4 items-center">
+              <span class="block grow"
+                ><i18n-t keypath="pages.profil.loggedAs" tag="span" scope="global">
+                  <template #name>
+                    <span class="font-bold">{{ user.display_name }}</span>
+                  </template>
+                </i18n-t>
+                <img
+                  v-if="user?.images[0]?.url"
+                  :src="user?.images[0]?.url"
+                  class="!m-0 inline-block"
+                  width="80"
+                  alt=""
+              /></span>
               <button class="inline-flex btn btn-border" @click="logoutClickHandler">
                 {{ t('common.logout') }}
               </button>
-
-              <br /><img :src="user?.images[0]?.url" class="!m-0" width="80" alt="" />
             </p>
             <pre v-if="user" class="!text-xs">{{ user }}</pre>
           </div>

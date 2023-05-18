@@ -1,6 +1,9 @@
 {
   "common": {
+    "cancel": "Annuler",
+    "duration": "Durée",
     "episode": "Épisode",
+    "goBackHome": "Retour à la homepage",
     "here": "Ici",
     "loading": "Chargement...",
     "login": "Se connecter",
