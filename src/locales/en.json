@@ -6,14 +6,16 @@
     "goBackHome": "Go back home",
     "here": "Here",
     "loading": "Loading...",
-    "login": "Login",
-    "logout": "Logout",
+    "login": "Log in",
+    "logout": "Log out",
     "moreInfo": "More info",
     "noTracksFound": "No tracks found",
     "pleaseWait": "Please wait",
     "podcast": "Podcast | Podcasts",
     "rtl2PopRockStation ": "RTL2 Pop-Rock Station",
-    "submit": "Submit"
+    "submit": "Submit",
+    "continue": "Continue",
+    "signIn": "Sign in"
   },
   "footer": {
     "codedWithLove": "Coded with 🖤 by"
@@ -42,7 +44,7 @@
       "meta": {
         "title": "Create Spotify playlists"
       },
-      "notLogged": "😬 You must be logged in to Spotify to create a playlist.",
+      "notLogged": "😬 You must sign in to your Spotify account to create a playlist.",
       "openPlaylistBrowser": "Open the playlist in the browser",
       "openPlaylistSpotify": "Open the playlist in the Spotify application:",
       "podcastInfos": "Podcast infos",
@@ -65,11 +67,12 @@
       "alreadyLogged": "You are already logged to Spotify 💪",
       "callout": "Spotify has not yet allowed everyone to access this application. Send me a message so I can add you to the list of authorized users.",
       "calloutTitle": "😬 Oops",
-      "letsConnect": "Continue with Spotify",
+      "letsConnect": "Continue with",
       "meta": {
         "title": "@:pages.login.title"
       },
-      "title": "Sign in Zegut PG"
+      "title": "Log in",
+      "intro": "Zegut PG must request permission from spotify to display your profile info and create playlists."
     },
     "notFound": {
       "lost": "Zégut is completely lost. Bring him back at | home",
@@ -91,7 +94,7 @@
       "meta": {
         "title": "@:pages.redirect.title"
       },
-      "title": "Sign in Zégut PG in progress"
+      "title": "Sign in in progress"
     }
   }
 }

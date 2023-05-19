@@ -6,6 +6,7 @@ import { useUserStore } from '@/stores/userStore'
 import { onMounted } from 'vue'
 // @ts-ignore
 import { useI18n } from 'vue-i18n'
+import { Icon } from '@iconify/vue'
 // import { useRoute } from 'vue-router'
 
 // const route = useRoute()
@@ -41,7 +42,7 @@ onMounted(() => {
   <main>
     <div class="container mx-auto">
       <section class="prose lg:prose-xl max-w-prose pt-8 pb-14">
-        <h1>{{ t('pages.profil.title') }}</h1>
+        <h1>{{ t('pages.profil.title') }} <Icon class="inline-block text-2xl align-baseline" icon="logos:spotify-icon"></Icon></h1>
 
         <pre v-if="hasUserError">
             {{ hasUserError }}

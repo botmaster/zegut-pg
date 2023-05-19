@@ -35,7 +35,7 @@ export const useAuthStore = defineStore('authStore', () => {
   const logout = () => {
     userAuth.value = null
     localStorage.removeItem('userAuth')
-    router.push({ name: 'login' }).then()
+    router.push({ name: 'home' }).then()
 
     // Reset the user store
     useUserStore().reset()
