@@ -37,7 +37,7 @@ const { isAuthenticated } = storeToRefs(authStore)
 
 // UserStore
 const userStore = useUserStore()
-const { user, isLoading: isUserLoading, hasError: hasUserError } = storeToRefs(userStore)
+const { user } = storeToRefs(userStore)
 
 // PodcastStore
 const podcastStore = usePodcastStore()
@@ -90,12 +90,10 @@ const podcastInfos = computed(() => {
 })
 
 const lastEpisodeDate = computed(() => {
-  const date = new Date(rss.value?.items[0]?.published || '').toLocaleDateString(
+  return new Date(rss.value?.items[0]?.published || '').toLocaleDateString(
     languages.value,
     longDateOptions
   )
-
-  return date
 })
 
 /**
@@ -318,42 +316,30 @@ onMounted(async () => {
       </section>
 
       <!-- User Profil       -->
-      <section class="prose lg:prose-lg max-w-prose mt-14">
+      <section class="prose lg:prose-lg max-w-prose mt-14" v-if="!isAuthenticated">
         <h2 class="">{{ t('pages.home.userProfil') }}</h2>
+        <p v-if="!isAuthenticated">
+          {{ t('pages.home.notLogged') }}
+          <RouterLink v-if="!isAuthenticated" :to="{ name: 'login' }">{{
+            t('common.signIn')
+          }}</RouterLink
+          >.
+        </p>
+        <div v-else>
+          <p v-if="user">
+            <i18n-t keypath="pages.profil.loggedAs" tag="span" scope="global">
+              <template #name>
+                <span class="font-bold">{{ user.display_name }}</span>
+              </template>
+            </i18n-t>
 
-        <pre v-if="hasUserError">
-            {{ hasUserError }}
-          </pre
-        >
-
-        <template v-else-if="isUserLoading">
-          <p><AppLoader /></p>
-        </template>
-
-        <template v-else>
-          <p v-if="!isAuthenticated">
-            {{ t('pages.home.notLogged') }}
-            <RouterLink v-if="!isAuthenticated" :to="{ name: 'login' }"
-              >{{ t('pages.home.logMeIn') }} </RouterLink
-            >.
+            {{ t('common.moreInfo') }}
+            <RouterLink :to="{ name: 'profil', params: { id: user.id } }">{{
+              t('common.here').toLowerCase()
+            }}</RouterLink
+            >. <br /><img :src="user?.images[0]?.url" class="!m-0" width="80" alt="" />
           </p>
-
-          <div v-else>
-            <p v-if="user">
-              <i18n-t keypath="pages.profil.loggedAs" tag="span" scope="global">
-                <template #name>
-                  <span class="font-bold">{{ user.display_name }}</span>
-                </template>
-              </i18n-t>
-
-              {{ t('common.moreInfo') }}
-              <RouterLink :to="{ name: 'profil', params: { id: user.id } }">{{
-                t('common.here').toLowerCase()
-              }}</RouterLink
-              >. <br /><img :src="user?.images[0]?.url" class="!m-0" width="80" alt="" />
-            </p>
-          </div>
-        </template>
+        </div>
       </section>
 
       <!-- Create Spotify Playlist       -->

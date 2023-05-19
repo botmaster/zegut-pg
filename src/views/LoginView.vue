@@ -42,13 +42,14 @@ const connectClickHandler = () => {
               {{ t('pages.login.callout') }}
             </p>
           </div>
+          <p>{{ t('pages.login.intro') }}</p>
           <p>
             {{ t('pages.login.letsConnect') }}
-            <Icon icon="logos:spotify-icon" class="inline-block"></Icon>
+            <Icon icon="logos:spotify" class="inline-block ml-1"></Icon>
           </p>
           <p class="flex gap-4">
             <button class="btn btn-primary" @click="connectClickHandler">
-              {{ t('common.login') }}
+              {{ t('common.continue') }}
             </button>
             <button class="btn btn-border" @click="router.push({ name: 'home' })">
               {{ t('common.cancel') }}
