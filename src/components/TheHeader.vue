@@ -4,6 +4,7 @@ import { useUserStore } from '@/stores/userStore'
 import { storeToRefs } from 'pinia'
 // @ts-ignore
 import { useI18n } from 'vue-i18n'
+import { Icon } from '@iconify/vue'
 
 const { t } = useI18n()
 
@@ -13,7 +14,7 @@ const { user } = storeToRefs(userStore)
 
 <template>
   <header
-    class="min-h-[--header-height] flex items-center justify-between border-b border-gray-100 backdrop-blur-sm bg-white/95 fixed top-0 w-full px-8"
+    class="min-h-[--header-height] flex items-center justify-between border-b border-gray-100 backdrop-blur-sm bg-white/95 fixed top-0 w-full px-4 md:px-8"
   >
     <div class="">
       <p class="text-amber-500 text-2xl font-extrabold">
@@ -40,7 +41,7 @@ const { user } = storeToRefs(userStore)
         </span>
       </RouterLink>
       <RouterLink class="router-link" v-if="!user" :to="{ name: 'login' }">
-        {{ t('common.signIn') }}
+        {{ t('common.signIn') }} <Icon class="inline-block" icon="logos:spotify-icon"></Icon>
       </RouterLink>
     </nav>
   </header>

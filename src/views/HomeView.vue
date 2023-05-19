@@ -220,7 +220,7 @@ onMounted(async () => {
         <h1 class="mb-8">{{ t('pages.home.title') }}</h1>
         <figure>
           <blockquote>
-            <p class="whitespace-pre">
+            <p class="whitespace-pre-line">
               {{ t('pages.home.quote') }}
             </p>
           </blockquote>
@@ -275,7 +275,7 @@ onMounted(async () => {
                 :disabled="!currentEpisode"
                 v-model="currentEpisode"
                 id="episodes"
-                class="form-input"
+                class="form-input form-select"
               >
                 <option v-for="episode in episodesTypeIntegral" :key="episode.id" :value="episode">
                   {{ episode.title }}
