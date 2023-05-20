@@ -16,6 +16,7 @@ import {
 import AppLoader from '@/components/AppLoader.vue'
 import { usePodcastStore } from '@/stores/podcastStore'
 import { usePreferredLanguages } from '@vueuse/core'
+import { useRouteQuery } from "@vueuse/router";
 
 // Preferred language
 const languages = usePreferredLanguages()
@@ -65,6 +66,7 @@ const formPlaylist = reactive<{ name: string; description: string; public: boole
 // Local store
 const isCreatePlaylistPending = ref(false)
 const hasCreatePlaylistError = ref<boolean | any>(false)
+const currentEpisodeId = useRouteQuery('id')
 
 /**
  * Computed
@@ -74,7 +76,7 @@ const episodeTrackList = computed(() => {
   return content.filter((track) => !track.toLowerCase().includes('reprise') && track !== '')
 })
 
-const podcastInfos = computed(() => {
+const episodeInfos = computed(() => {
   const date = new Date(currentEpisode.value?.published || '').toLocaleDateString(
     languages.value,
     longDateOptions
@@ -189,10 +191,24 @@ const createPlaylistSubmitHandler = async () => {
 
 watch(currentEpisode, (value) => {
   // console.log('currentEpisode changed', value)
+  if( !value) {
+    return
+  }
+
   formPlaylist.name = value?.title ? `By Zégut 🤘 ${value.title}` : ''
-  formPlaylist.description = podcastInfos.value.description || ''
+  formPlaylist.description = episodeInfos.value.description || ''
   spotifyPlaylist.value = null
-})
+
+}, { immediate: true })
+
+watch(currentEpisodeId, (value) => {
+  if(!value && !rss.value) {
+    fetchPodcast()
+    return
+  }
+
+  podcastStore.setCurrentEpisodeById(String(value))
+}, {immediate: true})
 
 /**
  * Vue lifecycle
@@ -208,7 +224,7 @@ onMounted(async () => {
 
   // Fetch podcast if not already fetched
   if (!rss.value) {
-    await fetchPodcast()
+    //await fetchPodcast()
   }
 })
 </script>
@@ -265,53 +281,57 @@ onMounted(async () => {
           </p>
           <p>
             {{ t('pages.home.episodesCount', rss?.items?.length) }}.
-            {{ t('pages.home.lastUpdate', { date: lastEpisodeDate }) }}.
+            {{ t('pages.home.lastUpdate', { 'date': lastEpisodeDate }) }}.
           </p>
 
           <form>
             <label for="episodes" class="mt-4"
               ><span>{{ t('pages.home.selectEpisode') }}</span>
               <select
-                :disabled="!currentEpisode"
-                v-model="currentEpisode"
+                :disabled="!episodesTypeIntegral"
+                v-model="currentEpisodeId"
                 id="episodes"
                 class="form-input form-select"
+
               >
-                <option v-for="episode in episodesTypeIntegral" :key="episode.id" :value="episode">
+                <option disabled :value="undefined">Please select one</option>
+                <option v-for="episode in episodesTypeIntegral" :key="episode.id" :value="episode.id">
                   {{ episode.title }}
                 </option>
               </select></label
             >
           </form>
 
-          <h3 class="">{{ t('common.episode') }}</h3>
+          <template v-if="currentEpisode">
+            <h3 class="">{{ t('common.episode') }}</h3>
 
-          <div class="md:flex">
-            <img
-              v-if="currentEpisode?.itunes_image"
-              :src="currentEpisode.itunes_image"
-              :alt="podcastInfos.description"
-              :width="500"
-              :height="500"
-              class="w-full md:w-1/4 md:h-1/4 md:mr-6 md:!my-0 shrink-0"
-              :title="podcastInfos.description"
-              loading="lazy"
-            />
-            <div>
-              <p class="grow">{{ podcastInfos.title }}.</p>
-              <p class="text-sm">
-                {{ podcastInfos.description }}.<br />{{ t('common.duration') }} :
-                {{ podcastInfos.duration }}
-              </p>
+            <div class="md:flex">
+              <img
+                v-if="currentEpisode?.itunes_image"
+                :src="currentEpisode.itunes_image"
+                :alt="episodeInfos.description"
+                :width="500"
+                :height="500"
+                class="w-full md:w-1/4 md:h-1/4 md:mr-6 md:!my-0 shrink-0"
+                :title="episodeInfos.description"
+                loading="lazy"
+              />
+              <div>
+                <p class="grow">{{ episodeInfos.title }}.</p>
+                <p class="text-sm">
+                  {{ episodeInfos.description }}.<br />{{ t('common.duration') }} :
+                  {{ episodeInfos.duration }}
+                </p>
+              </div>
             </div>
-          </div>
-          <h4 class="">{{ t('pages.home.podcastTrackList') }}</h4>
-          <ol
-            class="not-prose text-sm max-h-64 overflow-auto bg-gray-100 list-inside !px-3 py-2"
-            tabindex="0"
-          >
-            <li v-for="(track, index) in episodeTrackList" :key="index">{{ track }}</li>
-          </ol>
+            <h4 class="">{{ t('pages.home.podcastTrackList') }}</h4>
+            <ol
+              class="not-prose text-sm max-h-64 overflow-auto bg-gray-100 list-inside !px-3 py-2"
+              tabindex="0"
+            >
+              <li v-for="(track, index) in episodeTrackList" :key="index">{{ track }}</li>
+            </ol>
+          </template>
         </template>
       </section>
 
