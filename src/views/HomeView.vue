@@ -16,7 +16,7 @@ import {
 import AppLoader from '@/components/AppLoader.vue'
 import { usePodcastStore } from '@/stores/podcastStore'
 import { usePreferredLanguages } from '@vueuse/core'
-import { useRouteQuery } from "@vueuse/router";
+import { useRouteQuery } from '@vueuse/router'
 
 // Preferred language
 const languages = usePreferredLanguages()
@@ -148,32 +148,51 @@ const createPlaylistSubmitHandler = async () => {
     const tracksWithoutId = tracks.filter((track) => !track?.id)
     console.log('Tracks not found!', tracksWithoutId)
 
+    // Remove tracks without id
+    tracksIds = tracksIds.filter((trackId) => trackId)
+
     // if no tracks found
     if (tracksIds.length === 0) {
-      toast.error(t('pages.home.toast.playlistError') + Error(t('common.noTracksFound').toString()))
+      toast.warning(
+        t('pages.home.toast.playlistError') + Error(t('common.noTracksFound').toString())
+      )
       return
     }
 
+    // Ask user to add tracks without id
+    if (tracksWithoutId.length > 0) {
+      const tracksWithoutIdToString = tracksWithoutId.map((track) => track).join(', ')
+
+      const confirm = window.confirm(
+        tracksWithoutIdToString +
+          '\n' +
+          "Ces titres n'ont pas été trouvés sur Spotify. Continuer la création de la playlist ?"
+      )
+      if (!confirm) {
+        toast.error(
+          t('pages.home.toast.playlistError') + Error(t('common.someTracksNotFound').toString())
+        )
+        return
+      }
+    }
+
     // Create playlist
-    const createPlaylistData = await createPlaylist({
+    spotifyPlaylist.value = await createPlaylist({
       name: formPlaylist.name,
       description: formPlaylist.description,
       isPublic: formPlaylist.public,
       userId: user.value?.id || ''
     })
-    spotifyPlaylist.value = createPlaylistData
 
     // Add tracks to playlist
     const uris = tracksIds.map((trackId) => `spotify:track:${trackId}`)
     console.log('uris', uris)
     await addTracksToPlaylist(spotifyPlaylist.value?.id || '', uris)
 
-    const getPlaylistData = await getPlaylist(
+    spotifyPlaylist.value = await getPlaylist(
       spotifyPlaylist.value?.id || '',
       'name, description,tracks.items(track(name,href,album(name,href))), uri, external_urls.spotify'
     )
-
-    spotifyPlaylist.value = getPlaylistData
 
     toast.success(t('pages.home.toast.playlistCreated'))
   } catch (error) {
@@ -189,26 +208,33 @@ const createPlaylistSubmitHandler = async () => {
  * Vue watch
  */
 
-watch(currentEpisode, (value) => {
-  // console.log('currentEpisode changed', value)
-  if( !value) {
-    return
-  }
+watch(
+  currentEpisode,
+  (value) => {
+    // console.log('currentEpisode changed', value)
+    if (!value) {
+      return
+    }
 
-  formPlaylist.name = value?.title ? `By Zégut 🤘 ${value.title}` : ''
-  formPlaylist.description = episodeInfos.value.description || ''
-  spotifyPlaylist.value = null
+    formPlaylist.name = value?.title ? `By Zégut 🤘 ${value.title}` : ''
+    formPlaylist.description = episodeInfos.value.description || ''
+    spotifyPlaylist.value = null
+  },
+  { immediate: true }
+)
 
-}, { immediate: true })
+watch(
+  currentEpisodeId,
+  (value) => {
+    if (!value && !rss.value) {
+      fetchPodcast()
+      return
+    }
 
-watch(currentEpisodeId, (value) => {
-  if(!value && !rss.value) {
-    fetchPodcast()
-    return
-  }
-
-  podcastStore.setCurrentEpisodeById(String(value))
-}, {immediate: true})
+    podcastStore.setCurrentEpisodeById(String(value))
+  },
+  { immediate: true }
+)
 
 /**
  * Vue lifecycle
@@ -281,7 +307,7 @@ onMounted(async () => {
           </p>
           <p>
             {{ t('pages.home.episodesCount', rss?.items?.length) }}.
-            {{ t('pages.home.lastUpdate', { 'date': lastEpisodeDate }) }}.
+            {{ t('pages.home.lastUpdate', { date: lastEpisodeDate }) }}.
           </p>
 
           <form>
@@ -292,10 +318,13 @@ onMounted(async () => {
                 v-model="currentEpisodeId"
                 id="episodes"
                 class="form-input form-select"
-
               >
                 <option disabled :value="undefined">Please select one</option>
-                <option v-for="episode in episodesTypeIntegral" :key="episode.id" :value="episode.id">
+                <option
+                  v-for="episode in episodesTypeIntegral"
+                  :key="episode.id"
+                  :value="episode.id"
+                >
                   {{ episode.title }}
                 </option>
               </select></label

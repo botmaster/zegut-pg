@@ -39,11 +39,11 @@ export const usePodcastStore = defineStore('podcastStore', () => {
     }
   }
 
-  const setCurrentEpisodeById = async (id: string) => {
-    if(!rss.value) {
+  const fetchEpisodeById = async (id: string) => {
+    if (!rss.value) {
       await fetchPodcast()
     }
-    currentEpisode.value = episodes.value.find(item => item.id === id) || null
+    currentEpisode.value = episodes.value.find((item) => item.id === id) || null
   }
 
   return {
@@ -54,6 +54,6 @@ export const usePodcastStore = defineStore('podcastStore', () => {
     isLoading,
     hasError,
     fetchPodcast,
-    setCurrentEpisodeById
+    setCurrentEpisodeById: fetchEpisodeById
   }
 })

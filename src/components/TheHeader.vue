@@ -21,11 +21,36 @@ const { user } = storeToRefs(userStore)
         <RouterLink to="/">Zegut PG</RouterLink>
       </p>
     </div>
-    <nav class="text-xs">
+    <nav class="flex gap-x-3 items-center text-sm">
+      <a
+        href="https://github.com/botmaster/zegut-pg"
+        target="_blank"
+        ref="noopener"
+        title="Github - Source code"
+      >
+        <Icon class="inline-block text-2xl" icon="ph:github-logo" /><span class="sr-only"
+          >Github - Source code</span
+        >
+      </a>
+      <!--      <a
+        href="#"
+        class="relative rounded-full bg-black border-2 border-black w-8 h-8 overflow-hidden flex items-center justify-center font-medium text-white"
+      >
+        <Icon class="inline-block text-2xl" icon="mdi:github" />
+      </a>-->
       <RouterLink
-        v-if="user"
+        v-if="!user"
+        class="router-link relative flex items-center justify-center px-4 h-8 rounded-full bg-black border-2 border-black font-medium text-white overflow-hidden"
+        :to="{ name: 'login' }"
+      >
+        <Icon class="inline-block text-base mr-2" icon="material-symbols:login" />
+        <span> {{ t('common.signIn') }}</span>
+        <!--<Icon class="inline-block" icon="logos:spotify-icon"
+        />--> </RouterLink
+      ><RouterLink
+        v-else
         :to="{ name: 'profil', params: { id: user.id } }"
-        class="relative rounded-full bg-black border-2 border-black w-8 h-8 overflow-hidden flex items-center justify-center"
+        class="relative rounded-full bg-white w-8 h-8 overflow-hidden flex items-center justify-center"
       >
         <img
           v-if="user?.images[0]?.url"
@@ -39,9 +64,6 @@ const { user } = storeToRefs(userStore)
         <span v-else class="text-amber-500 text-lg font-extrabold leading-none">
           {{ user?.display_name?.charAt(0) }}
         </span>
-      </RouterLink>
-      <RouterLink class="router-link" v-if="!user" :to="{ name: 'login' }">
-        {{ t('common.signIn') }} <Icon class="inline-block" icon="logos:spotify-icon"></Icon>
       </RouterLink>
     </nav>
   </header>
