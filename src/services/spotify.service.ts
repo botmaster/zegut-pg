@@ -52,7 +52,7 @@ export const createPlaylist = async ({
 export const searchTracks = async ({
   query,
   type = 'track',
-  limit = 5,
+  limit = 1,
   offset = 0
 }: {
   query: string
