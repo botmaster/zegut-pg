@@ -67,6 +67,9 @@ const formPlaylist = reactive<{ name: string; description: string; public: boole
 const isCreatePlaylistPending = ref(false)
 const hasCreatePlaylistError = ref<boolean | any>(false)
 const currentEpisodeId = useRouteQuery('id')
+const spotifySearchResultList = ref<Array<any>>([])
+const isSearchPending = ref(false)
+const hasSearchError = ref<boolean | any>(false)
 
 /**
  * Computed
@@ -99,11 +102,42 @@ const lastEpisodeDate = computed(() => {
 })
 
 /**
+ * Methods
+ */
+
+// Search tracks in paralell
+const searchTracksInParallel = async () => {
+  // console.log('searchTracksInParallel')
+
+  // Search tracks in parallel
+  try {
+    isSearchPending.value = true
+    spotifySearchResultList.value = await Promise.all(
+      episodeTrackList.value.map(async (trackItem) => {
+        const tracks = await searchTracks({
+          query: trackItem
+        })
+        const track = tracks?.tracks?.items[0]
+        if (!track) {
+          return trackItem
+        }
+        return track
+      })
+    )
+  } catch (error) {
+    toast.error(t('pages.home.toast.searchTracksError') + error)
+    console.error(error)
+  } finally {
+    isSearchPending.value = false
+  }
+}
+
+/**
  * Events handlers
  */
 
 const fetchPodcast = async () => {
-  // console.log('fetchPodcast')
+  console.log('fetchPodcast')
 
   try {
     // Fetch podcast
@@ -127,25 +161,11 @@ const createPlaylistSubmitHandler = async () => {
     isCreatePlaylistPending.value = true
     hasCreatePlaylistError.value = false
 
-    // Search tracks in parallel
-    const tracks = await Promise.all(
-      episodeTrackList.value.map(async (trackItem) => {
-        const tracks = await searchTracks({
-          query: trackItem
-        })
-        const track = tracks?.tracks?.items[0]
-        if (!track) {
-          return trackItem
-        }
-        return track
-      })
-    )
-
     // Get ids
-    let tracksIds = tracks.map((track) => track?.id)
+    let tracksIds = spotifySearchResultList.value.map((track) => track?.id)
 
     // Get tracks without id
-    const tracksWithoutId = tracks.filter((track) => !track?.id)
+    const tracksWithoutId = spotifySearchResultList.value.filter((track) => !track?.id)
     console.log('Tracks not found!', tracksWithoutId)
 
     // Remove tracks without id
@@ -225,13 +245,16 @@ watch(
 
 watch(
   currentEpisodeId,
-  (value) => {
+  async (value) => {
     if (!value && !rss.value) {
-      fetchPodcast()
+      await fetchPodcast()
       return
     }
 
-    podcastStore.setCurrentEpisodeById(String(value))
+    await podcastStore.fetchEpisodeById(String(value))
+    if (isAuthenticated.value) {
+      await searchTracksInParallel()
+    }
   },
   { immediate: true }
 )
@@ -353,13 +376,36 @@ onMounted(async () => {
                 </p>
               </div>
             </div>
-            <h4 class="">{{ t('pages.home.podcastTrackList') }}</h4>
-            <ol
-              class="not-prose text-sm max-h-64 overflow-auto bg-gray-100 list-inside !px-3 py-2"
-              tabindex="0"
-            >
-              <li v-for="(track, index) in episodeTrackList" :key="index">{{ track }}</li>
-            </ol>
+            <div class="md:flex gap-x-4">
+              <div class="flex-1">
+                <h4 class="">
+                  {{ t('pages.home.podcastTrackList') }} ({{ episodeTrackList.length }})
+                </h4>
+                <ol
+                  class="not-prose text-sm max-h-64 overflow-auto bg-gray-100 list-inside !px-3 py-2"
+                  tabindex="0"
+                >
+                  <li v-for="(track, index) in episodeTrackList" :key="index">{{ track }}</li>
+                </ol>
+              </div>
+              <div v-if="isAuthenticated" class="flex-1">
+                <h4 class="">
+                  Pistes trouvées sur Spotify (<AppLoader v-if="isSearchPending" /><span v-else>{{
+                    spotifySearchResultList?.length
+                  }}</span
+                  >)
+                </h4>
+                <ol
+                  class="not-prose text-sm max-h-64 overflow-auto bg-gray-100 list-inside !px-3 py-2"
+                  tabindex="0"
+                  v-if="!isSearchPending && !hasSearchError"
+                >
+                  <li v-for="(item, index) in spotifySearchResultList" :key="index">
+                    {{ item.artists[0].name }} - {{ item.name }}
+                  </li>
+                </ol>
+              </div>
+            </div>
           </template>
         </template>
       </section>
@@ -420,6 +466,7 @@ onMounted(async () => {
                 required
             /></label>
           </div>
+
           <div class="mt-4 flex items-center gap-y-4">
             <button
               v-if="!spotifyPlaylist"

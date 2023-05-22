@@ -54,6 +54,6 @@ export const usePodcastStore = defineStore('podcastStore', () => {
     isLoading,
     hasError,
     fetchPodcast,
-    setCurrentEpisodeById: fetchEpisodeById
+    fetchEpisodeById
   }
 })
