@@ -9,13 +9,15 @@
     "login": "Se connecter",
     "logout": "Se déconnecter",
     "moreInfo": "Plus d'infos",
-    "noTracksFound": "No tracks found",
+    "noTracksFound": "Aucune piste trouvée",
+    "someTracksNotFound": "Certaines pistes n'ont pas été trouvées",
     "pleaseWait": "Veuillez patienter",
     "podcast": "Podcast | Podcasts",
     "rtl2PopRockStation ": "RTL2 Pop-Rock Station",
     "submit": "Envoyer",
     "continue": "Continuer",
-    "signIn": "S'identifier"
+    "signIn": "S'identifier",
+    "commonError": "Une erreur est survenue 😕"
   },
   "footer": {
     "codedWithLove": "Codé avec 🖤 par"
@@ -26,28 +28,22 @@
       "caption": "Pascal Achard",
       "cite": "dans sa tête.",
       "createSpotifyPlaylist": "Créer la playlist Spotify",
-      "ctaFetchPodcast": "Charger",
       "enableToCreateTheSpotifyPlaylist": "Impossible de créer la playlist Spotify 😕.",
       "episodesCount": "No episodes | Un épisode | {count} épisodes",
-      "extension": "extension",
-      "fetchPlaylist": "Récupérer la playlist de Zégut depuis podCLoud",
       "form": {
         "ctaCreatePlaylist": "Créer la playlist",
         "playlistDescription": "Description de la playlist",
-        "playlistName": "Nom de la playlist",
-        "podcastUrl": "Lien du podcast"
+        "playlistName": "Nom de la playlist"
       },
       "fullPodcastList": "Tous les podcasts sont dispo sur {link}. Copiez l'url du podcast et collez-la dans le champ ci-dessous.",
       "intro": "Zégut PG est une application web qui me permet de créer des playlists Spotify à partir des épisode du podcast de l'émission {link} présentée par Francis Zégut & Marjorie Hache. C'est aussi un prétexte pour moi de faire mumuse avec Vue.js et l'API Spotify 🤓.",
       "lastUpdate": "Dernier épisode publié le {date}",
-      "logMeIn": "@:common.login",
       "meta": {
         "title": "Créer la playlist Spotify"
       },
       "notLogged": "😬 Vous devez vous identifier à votre compte Spotify pour pouvoir créer une playlist.",
       "openPlaylistBrowser": "Ouvrir la playlist dans le navigateur :",
       "openPlaylistSpotify": "Ouvrir la playlist dans l'application Spotify :",
-      "podcastInfos": "Infos du podcast",
       "podcastTrackList": "Liste des pistes de l'épisode",
       "publishedDateByAuth": "Publiée le {date} par {author}",
       "quote": "Mais nan ! Les playlists de Zégut ne sont pas sur Spotify ?!\nOk j'ai compris, je m'en occupe.",
@@ -58,14 +54,13 @@
         "fetchPodcastSuccess": "Récupération du podcast réussi !",
         "playlistCreated": "🍻 Playlist créée avec succès !",
         "playlistError": "Erreur lors de la création de la playlist 😕\n",
-        "scrapError": "Erreur lors du scraping de la page du podcast 😕\n",
-        "scrapSuccess": "Scraping de la page du podcast réussi !"
+        "searchTracksError": "Erreur lors de la recherche des pistes 😕\n"
       },
       "userProfil": "Profil utilisateur"
     },
     "login": {
       "alreadyLogged": "Vous êtes déjà connecté à spotify 💪",
-      "callout": "Spotify n'a pas encore autorisé l'accès pour tous à cette application. Envoie moi un message pour que je t'ajoute à la liste des utilisateurs autorisés.",
+      "callout": "Spotify n'a pas encore autorisé l'accès pour tous à cette application. Envoie moi un message {link} pour que je t'ajoute à la liste des utilisateurs autorisés.",
       "calloutTitle": "😬 Oups",
       "letsConnect": "Continuer avec",
       "meta": {

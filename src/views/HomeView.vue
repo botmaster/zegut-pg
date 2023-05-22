@@ -16,6 +16,7 @@ import {
 import AppLoader from '@/components/AppLoader.vue'
 import { usePodcastStore } from '@/stores/podcastStore'
 import { usePreferredLanguages } from '@vueuse/core'
+import { useRouteQuery } from '@vueuse/router'
 
 // Preferred language
 const languages = usePreferredLanguages()
@@ -65,6 +66,10 @@ const formPlaylist = reactive<{ name: string; description: string; public: boole
 // Local store
 const isCreatePlaylistPending = ref(false)
 const hasCreatePlaylistError = ref<boolean | any>(false)
+const currentEpisodeId = useRouteQuery('id')
+const spotifySearchResultList = ref<Array<any>>([])
+const isSearchPending = ref(false)
+const hasSearchError = ref<boolean | any>(false)
 
 /**
  * Computed
@@ -74,7 +79,7 @@ const episodeTrackList = computed(() => {
   return content.filter((track) => !track.toLowerCase().includes('reprise') && track !== '')
 })
 
-const podcastInfos = computed(() => {
+const episodeInfos = computed(() => {
   const date = new Date(currentEpisode.value?.published || '').toLocaleDateString(
     languages.value,
     longDateOptions
@@ -97,11 +102,42 @@ const lastEpisodeDate = computed(() => {
 })
 
 /**
+ * Methods
+ */
+
+// Search tracks in paralell
+const searchTracksInParallel = async () => {
+  // console.log('searchTracksInParallel')
+
+  // Search tracks in parallel
+  try {
+    isSearchPending.value = true
+    spotifySearchResultList.value = await Promise.all(
+      episodeTrackList.value.map(async (trackItem) => {
+        const tracks = await searchTracks({
+          query: trackItem
+        })
+        const track = tracks?.tracks?.items[0]
+        if (!track) {
+          return trackItem
+        }
+        return track
+      })
+    )
+  } catch (error) {
+    toast.error(t('pages.home.toast.searchTracksError') + error)
+    console.error(error)
+  } finally {
+    isSearchPending.value = false
+  }
+}
+
+/**
  * Events handlers
  */
 
 const fetchPodcast = async () => {
-  // console.log('fetchPodcast')
+  console.log('fetchPodcast')
 
   try {
     // Fetch podcast
@@ -125,53 +161,58 @@ const createPlaylistSubmitHandler = async () => {
     isCreatePlaylistPending.value = true
     hasCreatePlaylistError.value = false
 
-    // Search tracks in parallel
-    const tracks = await Promise.all(
-      episodeTrackList.value.map(async (trackItem) => {
-        const tracks = await searchTracks({
-          query: trackItem
-        })
-        const track = tracks?.tracks?.items[0]
-        if (!track) {
-          return trackItem
-        }
-        return track
-      })
-    )
-
     // Get ids
-    let tracksIds = tracks.map((track) => track?.id)
+    let tracksIds = spotifySearchResultList.value.map((track) => track?.id)
 
     // Get tracks without id
-    const tracksWithoutId = tracks.filter((track) => !track?.id)
+    const tracksWithoutId = spotifySearchResultList.value.filter((track) => !track?.id)
     console.log('Tracks not found!', tracksWithoutId)
+
+    // Remove tracks without id
+    tracksIds = tracksIds.filter((trackId) => trackId)
 
     // if no tracks found
     if (tracksIds.length === 0) {
-      toast.error(t('pages.home.toast.playlistError') + Error(t('common.noTracksFound').toString()))
+      toast.warning(
+        t('pages.home.toast.playlistError') + Error(t('common.noTracksFound').toString())
+      )
       return
     }
 
+    // Ask user to add tracks without id
+    if (tracksWithoutId.length > 0) {
+      const tracksWithoutIdToString = tracksWithoutId.map((track) => track).join(', ')
+
+      const confirm = window.confirm(
+        tracksWithoutIdToString +
+          '\n' +
+          "Ces titres n'ont pas été trouvés sur Spotify. Continuer la création de la playlist ?"
+      )
+      if (!confirm) {
+        toast.error(
+          t('pages.home.toast.playlistError') + Error(t('common.someTracksNotFound').toString())
+        )
+        return
+      }
+    }
+
     // Create playlist
-    const createPlaylistData = await createPlaylist({
+    spotifyPlaylist.value = await createPlaylist({
       name: formPlaylist.name,
       description: formPlaylist.description,
       isPublic: formPlaylist.public,
       userId: user.value?.id || ''
     })
-    spotifyPlaylist.value = createPlaylistData
 
     // Add tracks to playlist
     const uris = tracksIds.map((trackId) => `spotify:track:${trackId}`)
     console.log('uris', uris)
     await addTracksToPlaylist(spotifyPlaylist.value?.id || '', uris)
 
-    const getPlaylistData = await getPlaylist(
+    spotifyPlaylist.value = await getPlaylist(
       spotifyPlaylist.value?.id || '',
       'name, description,tracks.items(track(name,href,album(name,href))), uri, external_urls.spotify'
     )
-
-    spotifyPlaylist.value = getPlaylistData
 
     toast.success(t('pages.home.toast.playlistCreated'))
   } catch (error) {
@@ -187,12 +228,36 @@ const createPlaylistSubmitHandler = async () => {
  * Vue watch
  */
 
-watch(currentEpisode, (value) => {
-  // console.log('currentEpisode changed', value)
-  formPlaylist.name = value?.title ? `By Zégut 🤘 ${value.title}` : ''
-  formPlaylist.description = podcastInfos.value.description || ''
-  spotifyPlaylist.value = null
-})
+watch(
+  currentEpisode,
+  (value) => {
+    // console.log('currentEpisode changed', value)
+    if (!value) {
+      return
+    }
+
+    formPlaylist.name = value?.title ? `By Zégut 🤘 ${value.title}` : ''
+    formPlaylist.description = episodeInfos.value.description || ''
+    spotifyPlaylist.value = null
+  },
+  { immediate: true }
+)
+
+watch(
+  currentEpisodeId,
+  async (value) => {
+    if (!value && !rss.value) {
+      await fetchPodcast()
+      return
+    }
+
+    await podcastStore.fetchEpisodeById(String(value))
+    if (isAuthenticated.value) {
+      await searchTracksInParallel()
+    }
+  },
+  { immediate: true }
+)
 
 /**
  * Vue lifecycle
@@ -208,7 +273,7 @@ onMounted(async () => {
 
   // Fetch podcast if not already fetched
   if (!rss.value) {
-    await fetchPodcast()
+    //await fetchPodcast()
   }
 })
 </script>
@@ -272,46 +337,76 @@ onMounted(async () => {
             <label for="episodes" class="mt-4"
               ><span>{{ t('pages.home.selectEpisode') }}</span>
               <select
-                :disabled="!currentEpisode"
-                v-model="currentEpisode"
+                :disabled="!episodesTypeIntegral"
+                v-model="currentEpisodeId"
                 id="episodes"
                 class="form-input form-select"
               >
-                <option v-for="episode in episodesTypeIntegral" :key="episode.id" :value="episode">
+                <option disabled :value="undefined">Please select one</option>
+                <option
+                  v-for="episode in episodesTypeIntegral"
+                  :key="episode.id"
+                  :value="episode.id"
+                >
                   {{ episode.title }}
                 </option>
               </select></label
             >
           </form>
 
-          <h3 class="">{{ t('common.episode') }}</h3>
+          <template v-if="currentEpisode">
+            <h3 class="">{{ t('common.episode') }}</h3>
 
-          <div class="md:flex">
-            <img
-              v-if="currentEpisode?.itunes_image"
-              :src="currentEpisode.itunes_image"
-              :alt="podcastInfos.description"
-              :width="500"
-              :height="500"
-              class="w-full md:w-1/4 md:h-1/4 md:mr-6 md:!my-0 shrink-0"
-              :title="podcastInfos.description"
-              loading="lazy"
-            />
-            <div>
-              <p class="grow">{{ podcastInfos.title }}.</p>
-              <p class="text-sm">
-                {{ podcastInfos.description }}.<br />{{ t('common.duration') }} :
-                {{ podcastInfos.duration }}
-              </p>
+            <div class="md:flex">
+              <img
+                v-if="currentEpisode?.itunes_image"
+                :src="currentEpisode.itunes_image"
+                :alt="episodeInfos.description"
+                :width="500"
+                :height="500"
+                class="w-full md:w-1/4 md:h-1/4 md:mr-6 md:!my-0 shrink-0"
+                :title="episodeInfos.description"
+                loading="lazy"
+              />
+              <div>
+                <p class="grow">{{ episodeInfos.title }}.</p>
+                <p class="text-sm">
+                  {{ episodeInfos.description }}.<br />{{ t('common.duration') }} :
+                  {{ episodeInfos.duration }}
+                </p>
+              </div>
             </div>
-          </div>
-          <h4 class="">{{ t('pages.home.podcastTrackList') }}</h4>
-          <ol
-            class="not-prose text-sm max-h-64 overflow-auto bg-gray-100 list-inside !px-3 py-2"
-            tabindex="0"
-          >
-            <li v-for="(track, index) in episodeTrackList" :key="index">{{ track }}</li>
-          </ol>
+            <div class="md:flex gap-x-4">
+              <div class="flex-1">
+                <h4 class="">
+                  {{ t('pages.home.podcastTrackList') }} ({{ episodeTrackList.length }})
+                </h4>
+                <ol
+                  class="not-prose text-sm max-h-64 overflow-auto bg-gray-100 list-inside !px-3 py-2"
+                  tabindex="0"
+                >
+                  <li v-for="(track, index) in episodeTrackList" :key="index">{{ track }}</li>
+                </ol>
+              </div>
+              <div v-if="isAuthenticated" class="flex-1">
+                <h4 class="">
+                  Pistes trouvées sur Spotify (<AppLoader v-if="isSearchPending" /><span v-else>{{
+                    spotifySearchResultList?.length
+                  }}</span
+                  >)
+                </h4>
+                <ol
+                  class="not-prose text-sm max-h-64 overflow-auto bg-gray-100 list-inside !px-3 py-2"
+                  tabindex="0"
+                  v-if="!isSearchPending && !hasSearchError"
+                >
+                  <li v-for="(item, index) in spotifySearchResultList" :key="index">
+                    {{ item.artists[0].name }} - {{ item.name }}
+                  </li>
+                </ol>
+              </div>
+            </div>
+          </template>
         </template>
       </section>
 
@@ -371,6 +466,7 @@ onMounted(async () => {
                 required
             /></label>
           </div>
+
           <div class="mt-4 flex items-center gap-y-4">
             <button
               v-if="!spotifyPlaylist"

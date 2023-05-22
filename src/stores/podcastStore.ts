@@ -27,7 +27,7 @@ export const usePodcastStore = defineStore('podcastStore', () => {
 
       if (rss.value) {
         episodes.value = rss.value.items
-        currentEpisode.value = rss.value.items[0]
+        //currentEpisode.value = rss.value.items[0]
       } else {
         hasError.value = 'No podcast found'
       }
@@ -39,6 +39,13 @@ export const usePodcastStore = defineStore('podcastStore', () => {
     }
   }
 
+  const fetchEpisodeById = async (id: string) => {
+    if (!rss.value) {
+      await fetchPodcast()
+    }
+    currentEpisode.value = episodes.value.find((item) => item.id === id) || null
+  }
+
   return {
     rss,
     episodes,
@@ -46,6 +53,7 @@ export const usePodcastStore = defineStore('podcastStore', () => {
     currentEpisode,
     isLoading,
     hasError,
-    fetchPodcast
+    fetchPodcast,
+    fetchEpisodeById
   }
 })

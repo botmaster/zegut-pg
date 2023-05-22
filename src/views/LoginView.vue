@@ -35,12 +35,17 @@ const connectClickHandler = () => {
         <h1>{{ t('pages.login.title') }}</h1>
         <template v-if="!isAuthenticated">
           <div
-            class="border-l-4 border-amber-200 mb-8 py-3 pl-8 bg-amber-200/20 not-prose text-base"
+            class="border-l-4 border-amber-200 mb-8 py-3 pl-8 pr-6 bg-amber-200/20 not-prose text-base"
           >
             <p class="mb-2 font-bold">{{ t('pages.login.calloutTitle') }}</p>
-            <p class="leading-snug my-0">
+            <!--            <p class="leading-snug my-0">
               {{ t('pages.login.callout') }}
-            </p>
+            </p>-->
+            <i18n-t tag="p" class="leading-snug my-0" keypath="pages.login.callout">
+              <template #link>
+                <a href="mailto:pascal.achard@gmail.com" class="underline">ici</a>
+              </template>
+            </i18n-t>
           </div>
           <p>{{ t('pages.login.intro') }}</p>
           <p>
