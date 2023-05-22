@@ -3,7 +3,8 @@
  */
 
 import http from './spotify.api'
-import type { Playlist } from '@/types/types'
+
+import type { Playlist } from '@/types/spotify'
 
 /**
  * Get the current user's profile

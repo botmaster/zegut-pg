@@ -2,9 +2,9 @@ import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { getAccessToken } from '@/helpers/auth/authCodeWithPkce'
 import { useRouter } from 'vue-router'
-import type { UserAuth } from '@/types/types'
 import { useUserStore } from '@/stores/userStore'
 import { useToast } from 'vue-toastification'
+import type { UserAuth } from '@/types/spotify'
 
 export const useAuthStore = defineStore('authStore', () => {
   const userAuth = ref<UserAuth | null>(JSON.parse(localStorage.getItem('userAuth') || 'null'))

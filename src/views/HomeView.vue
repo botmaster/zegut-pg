@@ -3,7 +3,6 @@ import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/authStore'
 import { useUserStore } from '@/stores/userStore'
-import type { Playlist } from '@/types/types'
 import { useToast } from 'vue-toastification'
 // @ts-ignore
 import { DateTimeOptions, useI18n } from 'vue-i18n'
@@ -17,6 +16,7 @@ import AppLoader from '@/components/AppLoader.vue'
 import { usePodcastStore } from '@/stores/podcastStore'
 import { usePreferredLanguages } from '@vueuse/core'
 import { useRouteQuery } from '@vueuse/router'
+import type { Playlist } from '@/types/spotify'
 
 // Preferred language
 const languages = usePreferredLanguages()

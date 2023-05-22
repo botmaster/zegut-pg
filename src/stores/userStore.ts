@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import type { UserProfile } from '@/types/types'
 import { getCurrentUserProfile } from '@/services/spotify.service'
+import type { UserProfile } from '@/types/spotify'
 
 export const useUserStore = defineStore('userStore', () => {
   const user = ref<UserProfile | null>(null)

@@ -6,7 +6,7 @@
 import { defineStore } from 'pinia'
 import { fetchRss } from '@/services/rss.service'
 import { computed, ref } from 'vue'
-import type { Podcast, PodcastItem } from '@/types/types'
+import type { Podcast, PodcastItem } from '@/types/podcast'
 
 export const usePodcastStore = defineStore('podcastStore', () => {
   const url = 'https://www.rtl2.fr/podcast/pop-rock-station.xml'
