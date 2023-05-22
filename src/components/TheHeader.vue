@@ -32,12 +32,6 @@ const { user } = storeToRefs(userStore)
           >Github - Source code</span
         >
       </a>
-      <!--      <a
-        href="#"
-        class="relative rounded-full bg-black border-2 border-black w-8 h-8 overflow-hidden flex items-center justify-center font-medium text-white"
-      >
-        <Icon class="inline-block text-2xl" icon="mdi:github" />
-      </a>-->
       <RouterLink
         v-if="!user"
         class="router-link relative flex items-center justify-center px-4 h-8 rounded-full bg-black border-2 border-black font-medium text-white overflow-hidden"
@@ -50,7 +44,7 @@ const { user } = storeToRefs(userStore)
       ><RouterLink
         v-else
         :to="{ name: 'profil', params: { id: user.id } }"
-        class="relative rounded-full bg-white w-8 h-8 overflow-hidden flex items-center justify-center"
+        class="relative rounded-full bg-white/50 w-6 h-6 overflow-hidden flex items-center justify-center border-2 border-current"
       >
         <img
           v-if="user?.images[0]?.url"
@@ -61,7 +55,7 @@ const { user } = storeToRefs(userStore)
           height="40"
           class="absolute top-0 left-0 w-full h-full object-cover"
         />
-        <span v-else class="text-amber-500 text-lg font-extrabold leading-none">
+        <span v-else class="text-base font-extrabold leading-none">
           {{ user?.display_name?.charAt(0) }}
         </span>
       </RouterLink>
