@@ -3,9 +3,9 @@
  * @see https://pinia.esm.dev/
  */
 
+import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { fetchRss } from '@/services/rss.service'
-import { computed, ref } from 'vue'
 import type { Podcast, PodcastItem } from '@/types/podcast'
 
 export const usePodcastStore = defineStore('podcastStore', () => {
