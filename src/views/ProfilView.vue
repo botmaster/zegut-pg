@@ -42,7 +42,10 @@ onMounted(() => {
   <main>
     <div class="container mx-auto">
       <section class="prose lg:prose-xl max-w-prose pt-8 pb-14">
-        <h1>{{ t('pages.profil.title') }} <Icon class="inline-block text-2xl align-baseline" icon="logos:spotify-icon"></Icon></h1>
+        <h1>
+          {{ t('pages.profil.title') }}
+          <Icon class="inline-block text-2xl align-baseline" icon="logos:spotify-icon"></Icon>
+        </h1>
 
         <pre v-if="hasUserError">
             {{ hasUserError }}
@@ -70,7 +73,7 @@ onMounted(() => {
                   </template>
                 </i18n-t>
                 <img
-                  v-if="user?.images[0]?.url"
+                  v-if="user?.images"
                   :src="user?.images[0]?.url"
                   class="!m-0 inline-block"
                   width="80"
