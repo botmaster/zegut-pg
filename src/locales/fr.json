@@ -33,7 +33,9 @@
       "form": {
         "ctaCreatePlaylist": "Créer la playlist",
         "playlistDescription": "Description de la playlist",
-        "playlistName": "Nom de la playlist"
+        "playlistName": "Nom de la playlist",
+        "public": "Publique",
+        "onProfil": "Visible sur le profile."
       },
       "fullPodcastList": "Tous les podcasts sont dispo sur {link}. Copiez l'url du podcast et collez-la dans le champ ci-dessous.",
       "intro": "Zégut PG est une application web qui me permet de créer des playlists Spotify à partir des épisode du podcast de l'émission {link} présentée par Francis Zégut & Marjorie Hache. C'est aussi un prétexte pour moi de faire mumuse avec Vue.js et l'API Spotify 🤓.",

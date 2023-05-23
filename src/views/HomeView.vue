@@ -61,7 +61,7 @@ const spotifyPlaylist = ref<SpotifyApi.PlaylistObjectFull | null>(null)
 const formPlaylist = reactive<{ name: string; description: string; public: boolean }>({
   name: 'Zégut playlist',
   description: 'Zégut playlist description',
-  public: true
+  public: false
 })
 
 // Local store
@@ -191,8 +191,8 @@ const createPlaylistSubmitHandler = async () => {
 
       const confirm = window.confirm(
         tracksWithoutIdToString +
-          '\n' +
-          "Ces titres n'ont pas été trouvés sur Spotify. Continuer la création de la playlist ?"
+        '\n' +
+        "Ces titres n'ont pas été trouvés sur Spotify. Continuer la création de la playlist ?"
       )
       if (!confirm) {
         toast.error(
@@ -252,8 +252,9 @@ watch(
 watch(
   currentEpisodeId,
   async (value) => {
-    if (!value && !podcast.value) {
+    if (!value) {
       await fetchPodcast()
+      currentEpisodeId.value = episodesTypeIntegral.value[0].id
       return
     }
 
@@ -302,12 +303,8 @@ onMounted(async () => {
 
         <i18n-t keypath="pages.home.intro" tag="p" scope="global">
           <template #link>
-            <a
-              href="https://www.rtl2.fr/programmes/poprockstation"
-              target="_blank"
-              ref="noopener"
-              >{{ t('common.rtl2PopRockStation ') }}</a
-            >
+            <a href="https://www.rtl2.fr/programmes/poprockstation" target="_blank" ref="noopener">{{
+              t('common.rtl2PopRockStation ') }}</a>
           </template>
         </i18n-t>
       </section>
@@ -339,25 +336,16 @@ onMounted(async () => {
             {{ t('pages.home.lastUpdate', { date: lastEpisodeDate }) }}.
           </p>
 
-          <EpisodeSelector
-            :episodes="episodesTypeIntegral"
-            v-model="currentEpisodeId"
-          ></EpisodeSelector>
+          <EpisodeSelector :episodes="episodesTypeIntegral" v-model="currentEpisodeId"></EpisodeSelector>
 
           <template v-if="currentEpisode">
             <h3 class="">{{ t('common.episode') }}</h3>
 
             <div class="md:flex">
-              <img
-                v-if="currentEpisode?.itunes_image"
-                :src="currentEpisode.itunes_image"
-                :alt="episodeInfos.description"
-                :width="500"
-                :height="500"
+              <img v-if="currentEpisode?.itunes_image" :src="currentEpisode.itunes_image" :alt="episodeInfos.description"
+                :width="500" :height="500"
                 class="w-full md:w-1/4 md:h-1/4 md:mr-6 md:!my-0 shrink-0 border border-zinc-100"
-                :title="episodeInfos.description"
-                loading="lazy"
-              />
+                :title="episodeInfos.description" loading="lazy" />
               <div>
                 <p class="grow leading-snug">{{ episodeInfos.title }}.</p>
                 <p class="text-sm">
@@ -372,10 +360,7 @@ onMounted(async () => {
                 <h4 class="">
                   {{ t('pages.home.podcastTrackList') }} ({{ episodeTrackList.length }})
                 </h4>
-                <ol
-                  class="not-prose text-sm max-h-64 overflow-auto bg-zinc-50 list-inside !px-3 py-2"
-                  tabindex="0"
-                >
+                <ol class="not-prose text-sm max-h-64 overflow-auto bg-zinc-50 list-inside !px-3 py-2" tabindex="0">
                   <li v-for="(track, index) in episodeTrackList" :key="index">{{ track }}</li>
                 </ol>
               </div>
@@ -385,14 +370,10 @@ onMounted(async () => {
                   Pistes trouvées sur Spotify (
                   <AppLoader v-if="isSearchPending" /><span v-else>{{
                     spotifySearchResultList?.length
-                  }}</span
-                  >)
+                  }}</span>)
                 </h4>
-                <ol
-                  class="not-prose text-sm max-h-64 overflow-auto bg-zinc-50 list-inside !px-3 py-2"
-                  tabindex="0"
-                  v-if="!isSearchPending && !hasSearchError"
-                >
+                <ol class="not-prose text-sm max-h-64 overflow-auto bg-zinc-50 list-inside !px-3 py-2" tabindex="0"
+                  v-if="!isSearchPending && !hasSearchError">
                   <li v-for="(item, index) in spotifySearchResultList" :key="index">
                     <span v-if="item.id">{{ item.artists[0].name }} - {{ item.name }}</span>
                     <span v-else>{{ item }}</span>
@@ -411,48 +392,42 @@ onMounted(async () => {
           {{ t('pages.home.notLogged') }}
           <RouterLink v-if="!isAuthenticated" :to="{ name: 'login' }">{{
             t('common.signIn')
-          }}</RouterLink
-          >.
+          }}</RouterLink>.
         </p>
       </section>
 
       <!-- Create Spotify Playlist       -->
-      <section
-        class="prose lg:prose-lg max-w-prose mt-14"
-        v-if="isAuthenticated && episodeTrackList.length"
-      >
+      <section class="prose lg:prose-lg max-w-prose mt-14" v-if="isAuthenticated && episodeTrackList.length">
         <h2 class="">{{ t('pages.home.createSpotifyPlaylist') }}</h2>
         <form @submit.prevent="createPlaylistSubmitHandler">
-          <div class="flex flex-col gap-y-2">
-            <label for="playlistName" class="block"
-              ><span class="block">{{ t('pages.home.form.playlistName') }}</span>
-              <input
-                type="text"
-                id="playlistName"
-                name="playlistName"
-                class="form-input"
-                v-model="formPlaylist.name"
-                required
-            /></label>
-            <label for="playlistDescription" class="block"
-              ><span class="block">{{ t('pages.home.form.playlistDescription') }}</span>
-              <input
-                type="text"
-                id="playlistDescription"
-                name="playlistDescription"
-                class="form-input"
-                v-model="formPlaylist.description"
-                required
-            /></label>
+          <div class="flex flex-col gap-y-3">
+            <label for="playlistName" class="block"><span class="block font-medium">{{ t('pages.home.form.playlistName')
+            }}</span>
+              <input type="text" id="playlistName" name="playlistName" class="form-input" v-model="formPlaylist.name"
+                required /></label>
+            <label for="playlistDescription" class="block"><span class="block font-medium">{{
+              t('pages.home.form.playlistDescription') }}</span>
+              <input type="text" id="playlistDescription" name="playlistDescription" class="form-input"
+                v-model="formPlaylist.description" required /></label>
+            <div class="relative flex items-start">
+              <div class="flex h-6 items-center">
+                <input v-model="formPlaylist.public" id="playlistPublic" aria-describedby="playlistPublic-description"
+                  name="playlistPublic" type="checkbox"
+                  class="h-4 w-4 rounded border-gray-300 text-amber-500 focus:ring-amber-500" />
+              </div>
+              <div class="ml-3 leading-6">
+                <label for="playlistPublic" class="font-medium">{{ t('pages.home.form.public')
+                }}.</label>
+                {{ ' ' }}
+                <span id="offers-description" class="text-gray-500"><span class="sr-only">{{ t('pages.home.form.public')
+                }}</span>{{ t('pages.home.form.onProfil') }}</span>
+              </div>
+            </div>
           </div>
 
           <div class="mt-4 flex items-center gap-y-4">
-            <button
-              v-if="!spotifyPlaylist"
-              type="submit"
-              :disabled="isCreatePlaylistPending || hasSearchError"
-              class="btn btn-primary"
-            >
+            <button v-if="!spotifyPlaylist" type="submit" :disabled="isCreatePlaylistPending || hasSearchError"
+              class="btn btn-primary">
               {{ t('pages.home.form.ctaCreatePlaylist') }}
               <AppLoader class="ml-2" v-if="isCreatePlaylistPending" />
             </button>
@@ -467,12 +442,9 @@ onMounted(async () => {
           <div v-if="spotifyPlaylist" class="">
             <p class="">{{ t('pages.home.toast.playlistCreated') }}</p>
             <p class="">
-              {{ t('pages.home.openPlaylistBrowser') }}&nbsp;<a
-                :href="spotifyPlaylist.external_urls.spotify"
-                target="_blank"
-              >
-                {{ t('common.here') }}</a
-              >
+              {{ t('pages.home.openPlaylistBrowser') }}&nbsp;<a :href="spotifyPlaylist.external_urls.spotify"
+                target="_blank">
+                {{ t('common.here') }}</a>
               <br />{{ t('pages.home.openPlaylistSpotify') }}&nbsp;<a :href="spotifyPlaylist.uri">{{
                 t('common.here')
               }}</a>

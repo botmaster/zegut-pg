@@ -24,6 +24,8 @@ export const useUserStore = defineStore('userStore', () => {
   // Reset the store when the user logs out
   const reset = () => {
     user.value = null
+    isLoading.value = false
+    hasError.value = false
   }
 
   return { user, isLoading, hasError, fetchUserCurrentUser, reset }
