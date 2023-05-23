@@ -114,6 +114,7 @@ const searchTracksInParallel = async () => {
   // Search tracks in parallel
   try {
     isSearchPending.value = true
+    hasSearchError.value = false
     spotifySearchResultList.value = await Promise.all(
       episodeTrackList.value.map(async (trackItem) => {
         const tracks = await searchTracks({
@@ -130,6 +131,7 @@ const searchTracksInParallel = async () => {
       })
     )
   } catch (error) {
+    hasSearchError.value = error
     toast.error(t('pages.home.toast.searchTracksError') + error)
     console.error(error)
   } finally {
@@ -381,6 +383,7 @@ onMounted(async () => {
             </div>
             <div class="md:flex gap-x-4">
               <div class="flex-1">
+                <!-- Podcast track list -->
                 <h4 class="">
                   {{ t('pages.home.podcastTrackList') }} ({{ episodeTrackList.length }})
                 </h4>
@@ -392,9 +395,9 @@ onMounted(async () => {
                 </ol>
               </div>
               <div v-if="isAuthenticated" class="flex-1">
+                <!-- Spotify track list -->
                 <h4 class="">
-                  Pistes trouvées sur Spotify (
-                  <AppLoader v-if="isSearchPending" /><span v-else>{{
+                  Pistes trouvées sur Spotify (<AppLoader v-if="isSearchPending" /><span v-else>{{
                     spotifySearchResultList?.length
                   }}</span
                   >)
@@ -461,7 +464,7 @@ onMounted(async () => {
             <button
               v-if="!spotifyPlaylist"
               type="submit"
-              :disabled="isCreatePlaylistPending"
+              :disabled="isCreatePlaylistPending || hasSearchError"
               class="btn btn-primary"
             >
               {{ t('pages.home.form.ctaCreatePlaylist') }}

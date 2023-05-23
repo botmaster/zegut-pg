@@ -7,9 +7,7 @@ import { onMounted } from 'vue'
 // @ts-ignore
 import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
-// import { useRoute } from 'vue-router'
-
-// const route = useRoute()
+import { useSeoMeta } from '@vueuse/head'
 
 const { t } = useI18n()
 
@@ -25,6 +23,15 @@ const logoutClickHandler = () => {
   console.log('logoutClickHandler')
   authStore.logout()
 }
+
+useSeoMeta({
+  title: 'About',
+  description: 'My about page',
+  ogDescription: 'Still about my about page',
+  ogTitle: 'About',
+  ogImage: 'https://example.com/image.png',
+  twitterCard: 'summary_large_image'
+})
 
 onMounted(() => {
   // Get user profile id from url params
