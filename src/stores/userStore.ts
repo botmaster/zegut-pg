@@ -1,10 +1,9 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import { getCurrentUserProfile } from '@/services/spotify.service'
-import type { UserProfile } from '@/types/spotify'
 
 export const useUserStore = defineStore('userStore', () => {
-  const user = ref<UserProfile | null>(null)
+  const user = ref<SpotifyApi.UserProfileResponse | null>(null)
   const isLoading = ref<boolean>(false)
   const hasError = ref<boolean | any>(false)
 

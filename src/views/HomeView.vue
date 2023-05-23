@@ -1,22 +1,22 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useAuthStore } from '@/stores/authStore'
-import { useUserStore } from '@/stores/userStore'
 import { useToast } from 'vue-toastification'
 // @ts-ignore
 import { DateTimeOptions, useI18n } from 'vue-i18n'
+import { usePreferredLanguages } from '@vueuse/core'
+import { useRouteQuery } from '@vueuse/router'
+
 import {
   addTracksToPlaylist,
   createPlaylist,
   getPlaylist,
   searchTracks
 } from '@/services/spotify.service'
-import AppLoader from '@/components/AppLoader.vue'
 import { usePodcastStore } from '@/stores/podcastStore'
-import { usePreferredLanguages } from '@vueuse/core'
-import { useRouteQuery } from '@vueuse/router'
-import type { Playlist } from '@/types/spotify'
+import { useAuthStore } from '@/stores/authStore'
+import { useUserStore } from '@/stores/userStore'
+import AppLoader from '@/components/AppLoader.vue'
 
 // Preferred language
 const languages = usePreferredLanguages()
@@ -43,7 +43,7 @@ const { user } = storeToRefs(userStore)
 // PodcastStore
 const podcastStore = usePodcastStore()
 const {
-  rss,
+  podcast,
   episodesTypeIntegral,
   currentEpisode,
   isLoading: isPodcastLoading,
@@ -54,7 +54,7 @@ const {
 const toast = useToast()
 
 // Reactive variables
-const spotifyPlaylist = ref<Playlist | null>(null)
+const spotifyPlaylist = ref<SpotifyApi.PlaylistObjectFull | null>(null)
 
 // Playlist form
 const formPlaylist = reactive<{ name: string; description: string; public: boolean }>({
@@ -67,7 +67,9 @@ const formPlaylist = reactive<{ name: string; description: string; public: boole
 const isCreatePlaylistPending = ref(false)
 const hasCreatePlaylistError = ref<boolean | any>(false)
 const currentEpisodeId = useRouteQuery('id')
-const spotifySearchResultList = ref<Array<any>>([])
+const spotifySearchResultList = ref<Array<SpotifyApi.TrackObjectFull | { id: null; name: string }>>(
+  []
+)
 const isSearchPending = ref(false)
 const hasSearchError = ref<boolean | any>(false)
 
@@ -95,7 +97,7 @@ const episodeInfos = computed(() => {
 })
 
 const lastEpisodeDate = computed(() => {
-  return new Date(rss.value?.items[0]?.published || '').toLocaleDateString(
+  return new Date(podcast.value?.items[0]?.published || '').toLocaleDateString(
     languages.value,
     longDateOptions
   )
@@ -119,7 +121,10 @@ const searchTracksInParallel = async () => {
         })
         const track = tracks?.tracks?.items[0]
         if (!track) {
-          return trackItem
+          return {
+            name: trackItem,
+            id: null
+          }
         }
         return track
       })
@@ -155,8 +160,6 @@ const createPlaylistSubmitHandler = async () => {
   // console.log('createPlaylistSubmitHandler')
 
   try {
-    // TODO: Create type for track
-
     // Set pending, error.
     isCreatePlaylistPending.value = true
     hasCreatePlaylistError.value = false
@@ -246,7 +249,7 @@ watch(
 watch(
   currentEpisodeId,
   async (value) => {
-    if (!value && !rss.value) {
+    if (!value && !podcast.value) {
       await fetchPodcast()
       return
     }
@@ -272,7 +275,7 @@ onMounted(async () => {
   }
 
   // Fetch podcast if not already fetched
-  if (!rss.value) {
+  if (!podcast.value) {
     //await fetchPodcast()
   }
 })
@@ -310,9 +313,9 @@ onMounted(async () => {
       <section class="prose lg:prose-lg max-w-prose mt-14">
         <h2 class="">
           {{ t('common.podcast', 1)
-          }}<transition name="fade" mode="out-in"
-            ><AppLoader v-if="isPodcastLoading" class="inline-block ml-4"
-          /></transition>
+          }}<transition name="fade" mode="out-in">
+            <AppLoader v-if="isPodcastLoading" class="inline-block ml-4" />
+          </transition>
         </h2>
         <template v-if="hasPodcastError">
           <p>{{ t('pages.home.toast.fetchPodcastError') }}</p>
@@ -323,13 +326,13 @@ onMounted(async () => {
         </template>
         <template v-else-if="!isPodcastLoading && !hasPodcastError">
           <p class="font-bold">
-            {{ rss?.title }}
+            {{ podcast?.title }}
           </p>
           <p>
-            {{ rss?.description.replace(/<[^>]+>/g, '') }}
+            {{ podcast?.description.replace(/<[^>]+>/g, '') }}
           </p>
           <p>
-            {{ t('pages.home.episodesCount', rss?.items?.length) }}.
+            {{ t('pages.home.episodesCount', podcast?.items?.length) }}.
             {{ t('pages.home.lastUpdate', { date: lastEpisodeDate }) }}.
           </p>
 
@@ -390,7 +393,8 @@ onMounted(async () => {
               </div>
               <div v-if="isAuthenticated" class="flex-1">
                 <h4 class="">
-                  Pistes trouvées sur Spotify (<AppLoader v-if="isSearchPending" /><span v-else>{{
+                  Pistes trouvées sur Spotify (
+                  <AppLoader v-if="isSearchPending" /><span v-else>{{
                     spotifySearchResultList?.length
                   }}</span
                   >)
@@ -401,7 +405,8 @@ onMounted(async () => {
                   v-if="!isSearchPending && !hasSearchError"
                 >
                   <li v-for="(item, index) in spotifySearchResultList" :key="index">
-                    {{ item.artists[0].name }} - {{ item.name }}
+                    <span v-if="item.id">{{ item.artists[0].name }} - {{ item.name }}</span>
+                    <span v-else>{{ item }}</span>
                   </li>
                 </ol>
               </div>
@@ -413,28 +418,13 @@ onMounted(async () => {
       <!-- User Profil       -->
       <section class="prose lg:prose-lg max-w-prose mt-14" v-if="!isAuthenticated">
         <h2 class="">{{ t('pages.home.userProfil') }}</h2>
-        <p v-if="!isAuthenticated">
+        <p>
           {{ t('pages.home.notLogged') }}
           <RouterLink v-if="!isAuthenticated" :to="{ name: 'login' }">{{
             t('common.signIn')
           }}</RouterLink
           >.
         </p>
-        <div v-else>
-          <p v-if="user">
-            <i18n-t keypath="pages.profil.loggedAs" tag="span" scope="global">
-              <template #name>
-                <span class="font-bold">{{ user.display_name }}</span>
-              </template>
-            </i18n-t>
-
-            {{ t('common.moreInfo') }}
-            <RouterLink :to="{ name: 'profil', params: { id: user.id } }">{{
-              t('common.here').toLowerCase()
-            }}</RouterLink
-            >. <br /><img :src="user?.images[0]?.url" class="!m-0" width="80" alt="" />
-          </p>
-        </div>
       </section>
 
       <!-- Create Spotify Playlist       -->

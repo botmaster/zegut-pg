@@ -4,14 +4,13 @@
 
 import http from './spotify.api'
 
-import type { Playlist } from '@/types/spotify'
 
 /**
  * Get the current user's profile
  */
 export const getCurrentUserProfile = async () => {
   const url = `/me`
-  const { data } = await http.get(url)
+  const { data } = await http.get<SpotifyApi.UserProfileResponse>(url)
   return data
 }
 
@@ -34,7 +33,7 @@ export const createPlaylist = async ({
   isPublic: boolean
 }) => {
   const url = `/users/${userId}/playlists`
-  const { data: playlistData } = await http.post<Playlist>(url, {
+  const { data: playlistData } = await http.post<SpotifyApi.PlaylistObjectFull>(url, {
     name,
     description,
     public: isPublic
@@ -63,7 +62,7 @@ export const searchTracks = async ({
 }) => {
   const url = `/search`
 
-  const { data } = await http.get(url, {
+  const { data } = await http.get<SpotifyApi.TrackSearchResponse>(url, {
     params: {
       q: query,
       type,
@@ -100,7 +99,7 @@ export const addTracksToPlaylist = async (playlistId: string, uris: string[]) =>
 export const getPlaylist = async (playlistId: string, fields: string) => {
   const url = `/playlists/${playlistId}`
 
-  const { data } = await http.get<Playlist>(url, {
+  const { data } = await http.get<SpotifyApi.PlaylistObjectFull>(url, {
     params: {
       fields
     }

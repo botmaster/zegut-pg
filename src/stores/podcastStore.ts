@@ -10,7 +10,7 @@ import type { Podcast, PodcastItem } from '@/types/podcast'
 
 export const usePodcastStore = defineStore('podcastStore', () => {
   const url = 'https://www.rtl2.fr/podcast/pop-rock-station.xml'
-  const rss = ref<Podcast | null>(null)
+  const podcast = ref<Podcast | null>(null)
   const episodes = ref<Array<PodcastItem>>([])
   const currentEpisode = ref<PodcastItem | null>(null)
   const isLoading = ref<boolean>(false)
@@ -23,11 +23,11 @@ export const usePodcastStore = defineStore('podcastStore', () => {
   const fetchPodcast = async () => {
     isLoading.value = true
     try {
-      rss.value = await fetchRss(url)
+      podcast.value = await fetchRss(url)
 
-      if (rss.value) {
-        episodes.value = rss.value.items
-        //currentEpisode.value = rss.value.items[0]
+      if (podcast.value) {
+        episodes.value = podcast.value.items
+        //currentEpisode.value = podcast.value.items[0]
       } else {
         hasError.value = 'No podcast found'
       }
@@ -40,14 +40,14 @@ export const usePodcastStore = defineStore('podcastStore', () => {
   }
 
   const fetchEpisodeById = async (id: string) => {
-    if (!rss.value) {
+    if (!podcast.value) {
       await fetchPodcast()
     }
     currentEpisode.value = episodes.value.find((item) => item.id === id) || null
   }
 
   return {
-    rss,
+    podcast,
     episodes,
     episodesTypeIntegral,
     currentEpisode,
