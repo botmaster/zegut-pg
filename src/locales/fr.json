@@ -58,7 +58,8 @@
         "playlistError": "Erreur lors de la création de la playlist 😕\n",
         "searchTracksError": "Erreur lors de la recherche des pistes 😕\n"
       },
-      "userProfil": "Profil utilisateur"
+      "userProfil": "Profil utilisateur",
+      "foundedSpotifyTracks": "Pistes trouvées sur Spotify"
     },
     "login": {
       "alreadyLogged": "Vous êtes déjà connecté à spotify 💪",
