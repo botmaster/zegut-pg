@@ -58,7 +58,8 @@
         "playlistError": "Error while creating playlist 😕\n",
         "searchTracksError": "Error while searching for tracks 😕\n"
       },
-      "userProfil": "User profil"
+      "userProfil": "User profil",
+      "foundedSpotifyTracks": "Tracks found on Spotify"
     },
     "login": {
       "alreadyLogged": "You are already logged to Spotify 💪",
