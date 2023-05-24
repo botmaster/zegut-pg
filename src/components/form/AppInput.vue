@@ -14,8 +14,8 @@ const emit = defineEmits<{
 
 const uuid = UniqueID().getID()
 
-const updateValue = (event) => {
-  let val = event.target.value
+const updateValue = (event: Event) => {
+  let val = (event.target as HTMLInputElement).value
   emit('update:modelValue', val)
 }
 </script>
@@ -33,7 +33,7 @@ const updateValue = (event) => {
     :id="uuid"
     :value="modelValue"
     :placeholder="label"
-    :aria-describedby="error ? `${uuid}-error` : null"
+    :aria-describedby="error ? `${uuid}-error` : undefined"
     :aria-invalid="!!error"
     :class="{ error }"
   />

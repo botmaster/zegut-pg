@@ -14,8 +14,8 @@ const emit = defineEmits<{
   (event: 'update:modelValue', payload: boolean): void
 }>()
 
-const updateValue = (event) => {
-  emit('update:modelValue', event.target.checked)
+const updateValue = (event: Event) => {
+  emit('update:modelValue', (event.target as HTMLInputElement).checked)
 }
 </script>
 
