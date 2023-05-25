@@ -17,7 +17,8 @@
     "submit": "Envoyer",
     "continue": "Continuer",
     "signIn": "S'identifier",
-    "commonError": "Une erreur est survenue 😕"
+    "commonError": "Une erreur est survenue 😕",
+    "track": "Pistes"
   },
   "footer": {
     "codedWithLove": "Codé avec 🖤 par"
@@ -35,7 +36,7 @@
         "playlistDescription": "Description de la playlist",
         "playlistName": "Nom de la playlist",
         "public": "Publique",
-        "onProfil": "Visible sur le profile."
+        "onProfil": "Visible sur le profil."
       },
       "fullPodcastList": "Tous les podcasts sont dispo sur {link}. Copiez l'url du podcast et collez-la dans le champ ci-dessous.",
       "intro": "Zégut PG est une application web qui me permet de créer des playlists Spotify à partir des épisode du podcast de l'émission {link} présentée par Francis Zégut & Marjorie Hache. C'est aussi un prétexte pour moi de faire mumuse avec Vue.js et l'API Spotify 🤓.",
@@ -44,8 +45,8 @@
         "title": "Créer la playlist Spotify"
       },
       "notLogged": "😬 Vous devez vous identifier à votre compte Spotify pour pouvoir créer une playlist.",
-      "openPlaylistBrowser": "Ouvrir la playlist dans le navigateur :",
-      "openPlaylistSpotify": "Ouvrir la playlist dans l'application Spotify :",
+      "openPlaylistBrowser": "Ouvrir la playlist dans le navigateur",
+      "openPlaylistSpotify": "Ouvrir la playlist dans l'application Spotify",
       "podcastTrackList": "Liste des pistes de l'épisode",
       "publishedDateByAuth": "Publiée le {date} par {author}",
       "quote": "Mais nan ! Les playlists de Zégut ne sont pas sur Spotify ?!\nOk j'ai compris, je m'en occupe.",
@@ -70,7 +71,7 @@
         "title": "@:pages.login.title"
       },
       "title": "Connexion",
-      "intro": "Zégut PG doit demander l'autorisation à spotify pour afficher les infos de votre profile et créer des playlists."
+      "intro": "Zégut PG doit demander l'autorisation à spotify pour afficher les infos de votre profil et créer des playlists."
     },
     "notFound": {
       "lost": "Zégut est tout perdu. Ramène le à la | maison",
@@ -85,7 +86,14 @@
         "title": "@:pages.home.userProfil"
       },
       "notLoggedIn": "@:pages.home.notLogged",
-      "title": "Profil"
+      "title": "Profil",
+      "playlists": "Playlists",
+      "details": {
+        "profilId": "Id utilisateur :",
+        "spotifyUrl": "Url Spotify :",
+        "spotifyUri": "Uri Spotify :",
+        "followers": "Abonnés :"
+      }
     },
     "redirect": {
       "loginSuccess": "Connexion réussi 💪. Vous allez être redirigé vers la page d'accueil.",
@@ -93,6 +101,13 @@
         "title": "@:pages.redirect.title"
       },
       "title": "Connexion en cours"
+    }
+  },
+  "components": {
+    "playlistsItem": {
+      "trackCount": "Pas de pistes | Une piste | {count} pistes",
+      "public": "Publique",
+      "private": "Privée"
     }
   }
 }

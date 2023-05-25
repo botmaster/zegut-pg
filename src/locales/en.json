@@ -1,98 +1,12 @@
 {
-  "common": {
-    "cancel": "Cancel",
-    "duration": "Duration",
-    "episode": "Episode",
-    "goBackHome": "Go back home",
-    "here": "Here",
-    "loading": "Loading...",
-    "login": "Log in",
-    "logout": "Log out",
-    "moreInfo": "More info",
-    "noTracksFound": "No tracks found",
-    "someTracksNotFound": "Some tracks have not been found",
-    "pleaseWait": "Please wait",
-    "podcast": "Podcast | Podcasts",
-    "rtl2PopRockStation ": "RTL2 Pop-Rock Station",
-    "submit": "Submit",
-    "continue": "Continue",
-    "signIn": "Sign in",
-    "commonError": "An error has occurred 😕"
-  },
-  "footer": {
-    "codedWithLove": "Coded with 🖤 by"
-  },
   "pages": {
-    "home": {
-      "calloutExtension": "In case of error (CORS), you will need to install and activate this {link}.",
-      "caption": "Pascal Achard",
-      "cite": "in his mind.",
-      "createSpotifyPlaylist": "Create Spotify playlist",
-      "enableToCreateTheSpotifyPlaylist": "Unable to create Spotify playlist 😕.",
-      "episodesCount": "No episodes | One episode | {count} episodes",
-      "form": {
-        "ctaCreatePlaylist": "Create playlist",
-        "playlistDescription": "Playlist description",
-        "playlistName": "Playlist name",
-        "onProfil": "Visible on profile.",
-        "public": "Public"
-      },
-      "fullPodcastList": "The complete list of Zégut's podcasts can be found on {link}. Copy the url of the podcast and paste it in the field below.",
-      "intro": "Zégut PG is a web application that allows me to create Spotify playlists from the podcast episodes of the {link} show presented by Francis Zégut & Marjorie Hache. It's also an excuse for me to play around with Vue.js and the Spotify API 🤓.",
-      "lastUpdate": "Last episode published on {date}",
-      "meta": {
-        "title": "Create Spotify playlists"
-      },
-      "notLogged": "😬 You must sign in to your Spotify account to create a playlist.",
-      "openPlaylistBrowser": "Open the playlist in the browser",
-      "openPlaylistSpotify": "Open the playlist in the Spotify application:",
-      "podcastTrackList": "Episode track list",
-      "publishedDateByAuth": "Publiée le {date} par {author}",
-      "quote": "Oh wait! Pop-Rock Station by Zégut's playlists are not on Spotify ?!\nOk I got it, I'll take care of it.",
-      "selectEpisode": "Select an episode",
-      "title": "Zégut PG",
-      "toast": {
-        "fetchPodcastError": "Error while retrieving the podcast 😕\n",
-        "fetchPodcastSuccess": "Successful recovery of the podcast!",
-        "playlistCreated": "🍻 Playlist created!",
-        "playlistError": "Error while creating playlist 😕\n",
-        "searchTracksError": "Error while searching for tracks 😕\n"
-      },
-      "userProfil": "User profil",
-      "foundedSpotifyTracks": "Tracks found on Spotify"
-    },
-    "login": {
-      "alreadyLogged": "You are already logged to Spotify 💪",
-      "callout": "Spotify has not yet allowed everyone to access this application. Send me a message {link} so I can add you to the list of authorized users.",
-      "calloutTitle": "😬 Oops",
-      "letsConnect": "Continue with",
-      "meta": {
-        "title": "@:pages.login.title"
-      },
-      "title": "Log in",
-      "intro": "Zegut PG must request permission from spotify to display your profile info and create playlists."
-    },
-    "notFound": {
-      "lost": "Zégut is completely lost. Bring him back at | home",
-      "meta": {
-        "title": "404 - Page not found"
-      },
-      "title": "404 "
-    },
     "profil": {
-      "loggedAs": "🤘 Logged as {name}.",
-      "meta": {
-        "title": "@:pages.home.userProfil"
-      },
-      "notLoggedIn": "@:pages.home.notLogged",
-      "title": "Profil"
-    },
-    "redirect": {
-      "loginSuccess": "Successful login 💪. You will be redirected to the home page.",
-      "meta": {
-        "title": "@:pages.redirect.title"
-      },
-      "title": "Sign in in progress"
+      "details": {
+        "profilId": "User id:",
+        "followers": "Followers:",
+        "spotifyUri": "Uri Spotify:",
+        "spotifyUrl": "Url Spotify:"
+      }
     }
   }
 }
