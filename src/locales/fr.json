@@ -18,7 +18,10 @@
     "continue": "Continuer",
     "signIn": "S'identifier",
     "commonError": "Une erreur est survenue 😕",
-    "track": "Pistes"
+    "track": "Piste | Pistes",
+    "errors": {
+      "sessionExpired": "Your session has expired, please login again."
+    }
   },
   "footer": {
     "codedWithLove": "Codé avec 🖤 par"
