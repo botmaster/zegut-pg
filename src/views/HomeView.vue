@@ -436,7 +436,7 @@ onMounted(async () => {
             <p class="">
               {{ t('pages.home.openPlaylistBrowser') }}&nbsp;<a :href="spotifyPlaylist.external_urls.spotify"
                 target="_blank">
-                {{ t('common.here') }}</a>
+                {{ t('common.here').toLowerCase() }}</a>
               <br />{{ t('pages.home.openPlaylistSpotify') }}&nbsp;<a :href="spotifyPlaylist.uri">{{
                 t('common.here')
               }}</a>

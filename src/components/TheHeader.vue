@@ -54,7 +54,7 @@ const { user } = storeToRefs(userStore)
           height="40"
           class="absolute top-0 left-0 w-full h-full object-cover"
         />
-        <span v-else class="text-base font-extrabold leading-none">
+        <span v-else class="text-base font-extrabold leading-none" :title="user?.display_name">
           {{ user?.display_name?.charAt(0) }}
         </span>
       </RouterLink>
