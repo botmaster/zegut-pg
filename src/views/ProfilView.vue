@@ -91,7 +91,7 @@ onMounted(async () => {
                   </template>
                 </i18n-t>
               </h2>
-              <div class="flex gap-x-8">
+              <div class="md:flex gap-x-8">
                 <figure class="shrink-0 !my-0" v-if="user.images && user.images.length > 0">
                   <img
                     :src="user.images[0].url"
@@ -100,19 +100,25 @@ onMounted(async () => {
                   />
                 </figure>
                 <div class="text-base">
-                  <ul class="p-0 !mt-0">
-                    <li>{{ t('pages.profil.details.profilId') }} {{ user.id }}</li>
-                    <li>
+                  <ul class="p-0 !mt-0 !list-inside !md:list-outside min-w-0">
+                    <li class="truncate">
+                      {{ t('pages.profil.details.profilId') }}
+                      <span class="font-medium">{{ user.id }}</span>
+                    </li>
+                    <li class="truncate">
                       {{ t('pages.profil.details.spotifyUrl') }}
-                      <a :href="user.external_urls?.spotify">{{ user.uri }}</a>
+                      <a :href="user.external_urls?.spotify" target="_blank" rel="noopener">{{
+                        user.external_urls?.spotify
+                      }}</a>
+                    </li>
+                    <li class="truncate">
+                      {{ t('pages.profil.details.spotifyUri') }}
+                      <a :href="user.uri" target="_blank"> {{ user.uri }}</a>
                     </li>
                     <li>
-                      {{ t('pages.profil.details.spotifyUri') }}
-                      <a :href="user.external_urls?.spotify" target="_blank">
-                        {{ user.external_urls?.spotify }}</a
-                      >
+                      {{ t('pages.profil.details.followers') }}
+                      <span class="font-medium">{{ user.followers?.total }}</span>
                     </li>
-                    <li>{{ t('pages.profil.details.followers') }} {{ user.followers?.total }}</li>
                   </ul>
                   <p class="mt-2 md:mt-4">
                     <button class="inline-flex btn btn-border" @click="logoutClickHandler">
