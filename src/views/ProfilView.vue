@@ -51,7 +51,7 @@ onMounted(async () => {
     await playlistsStore.fetchPlaylists(50)
   } catch (error) {
     console.error(error)
-    toast.error(t('common.error'))
+    toast.error(t('common.commonError'))
   }
 })
 </script>

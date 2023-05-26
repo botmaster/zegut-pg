@@ -1,5 +1,11 @@
 import axios from 'axios'
 import { useAuthStore } from '@/stores/authStore'
+import { useToast } from 'vue-toastification'
+// @ts-ignore
+import i18n from '@/plugins/i18n'
+
+const toast = useToast()
+const { t } = i18n.global
 
 /**
  * Axios instance to make requests to the Spotify API
@@ -38,6 +44,7 @@ api.interceptors.response.use(
     if (error.response.status === 401) {
       console.warn('Http 401 error, logging out')
       useAuthStore().logout()
+      toast.warning(t('common.errors.sessionExpired'))
     }
     return Promise.reject(error)
   }

@@ -3,7 +3,7 @@ import './assets/styles/main.css'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { createHead } from '@vueuse/head'
-import Toast, { type PluginOptions } from 'vue-toastification'
+import Toast, { type PluginOptions, POSITION } from 'vue-toastification'
 import 'vue-toastification/dist/index.css'
 import prettyConsole from '@/plugins/pretty-console'
 import i18n from '@/plugins/i18n'
@@ -15,6 +15,7 @@ import router from './router'
 // Toast options
 const options: PluginOptions = {
   // You can set your default options here
+  position: POSITION.BOTTOM_RIGHT
 }
 
 const app = createApp(App)
