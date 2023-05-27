@@ -17,8 +17,11 @@
     "submit": "Submit",
     "continue": "Continue",
     "signIn": "Sign in",
-    "commonError": "An error has occurred 😕",
-    "track": "Track | Tracks"
+    "track": "Track | Tracks",
+    "errors": {
+      "default": "An error has occurred 😕",
+      "sessionExpired": "Your session has expired, please login again."
+    }
   },
   "footer": {
     "codedWithLove": "Coded with 🖤 by"
