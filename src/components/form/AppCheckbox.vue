@@ -11,7 +11,7 @@ defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (event: 'update:modelValue', payload: boolean): void
+  'update:modelValue': [payload: boolean]
 }>()
 
 const updateValue = (event: Event) => {

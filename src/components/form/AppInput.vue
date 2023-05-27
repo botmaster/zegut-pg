@@ -9,7 +9,7 @@ defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (event: 'update:modelValue', payload: string | number): void
+  'update:modelValue': [payload: string | number]
 }>()
 
 const uuid = UniqueID().getID()

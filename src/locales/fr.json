@@ -17,10 +17,10 @@
     "submit": "Envoyer",
     "continue": "Continuer",
     "signIn": "S'identifier",
-    "commonError": "Une erreur est survenue 😕",
     "track": "Piste | Pistes",
     "errors": {
-      "sessionExpired": "Your session has expired, please login again."
+      "default": "Une erreur est survenue 😕",
+      "sessionExpired": "Votre session a expiré, veuillez vous connecter à nouveau."
     }
   },
   "footer": {

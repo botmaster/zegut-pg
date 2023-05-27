@@ -17,7 +17,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (event: 'update:modelValue', payload: string): void
+  'update:modelValue': [payload: string]
 }>()
 
 const selectEpisode = (episode: PodcastItem) => {
