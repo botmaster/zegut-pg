@@ -15,7 +15,14 @@ import router from './router'
 // Toast options
 const options: PluginOptions = {
   // You can set your default options here
-  position: POSITION.BOTTOM_RIGHT
+  position: POSITION.BOTTOM_RIGHT,
+  filterBeforeCreate(toast, toasts) {
+    // Prevent duplicate toasts with the same message
+    if (toasts.filter((t) => t.content === toast.content).length) {
+      return false
+    }
+    return toast
+  },
 }
 
 const app = createApp(App)
