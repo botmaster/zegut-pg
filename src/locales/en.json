@@ -23,6 +23,12 @@
       "sessionExpired": "Your session has expired, please login again."
     }
   },
+  "nav" :{
+    "home": "Homepage",
+    "profil": "Profil",
+    "login": "@:common.login",
+    "logout": "@:common.logout"
+  },
   "footer": {
     "codedWithLove": "Coded with 🖤 by"
   },
