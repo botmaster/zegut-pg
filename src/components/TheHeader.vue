@@ -45,7 +45,7 @@ const logoutClickHandler = () => {
 
       <!-- User menu     -->
 
-      <Menu as="div" class="relative text-left leading-[0]">
+      <Menu as="div" class="relative text-left leading-[0] select-none">
         <RouterLink
           v-if="!user"
           class="router-link relative flex items-center justify-center px-4 h-8 rounded-full bg-black border-2 border-black font-medium text-white overflow-hidden"
@@ -85,21 +85,21 @@ const logoutClickHandler = () => {
             class="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-zinc-600 rounded bg-zinc-700 shadow-lg ring-1 ring-zinc-900 ring-opacity-5 focus:outline-none text-white font-medium"
           >
             <div class="px-1 py-1" v-if="user">
-              <MenuItem v-slot="{ active, close }">
+              <MenuItem v-slot="{ active, close }" as="span">
                 <RouterLink
                   :class="[
                     active ? 'bg-zinc-500 text-white' : 'text-[inherit]',
                     'group flex w-full items-center rounded-sm px-2 py-1.5 leading-snug'
                   ]"
                   :to="{ name: 'profil', params: { id: user.id } }"
-                  @click="close"
+                  @click.prevent="close"
                 >
                   {{ t('nav.profil') }}
                 </RouterLink>
               </MenuItem>
             </div>
             <div class="px-1 py-1">
-              <MenuItem v-slot="{ active }">
+              <MenuItem v-slot="{ active }" as="span">
                 <button
                   :class="[
                     active ? 'bg-zinc-500 text-white' : 'text-[inherit]',
