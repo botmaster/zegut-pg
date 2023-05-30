@@ -31,7 +31,7 @@ const logoutClickHandler = () => {
         <RouterLink to="/">Zégut PG</RouterLink>
       </p>
     </div>
-    <nav class="flex gap-x-3 items-center text-sm">
+    <nav class="flex gap-x-3 items-center text-sm leading-none">
       <a
         href="https://github.com/botmaster/zegut-pg"
         target="_blank"
@@ -45,7 +45,7 @@ const logoutClickHandler = () => {
 
       <!-- User menu     -->
 
-      <Menu as="div" class="relative inline-block text-left">
+      <Menu as="div" class="relative text-left leading-[0]">
         <RouterLink
           v-if="!user"
           class="router-link relative flex items-center justify-center px-4 h-8 rounded-full bg-black border-2 border-black font-medium text-white overflow-hidden"
@@ -54,7 +54,7 @@ const logoutClickHandler = () => {
           <Icon class="inline-block text-base mr-2" icon="material-symbols:login" />
           <span> {{ t('common.signIn') }}</span>
         </RouterLink>
-        <MenuButton v-else class="">
+        <MenuButton v-else>
           <span
             class="relative rounded-full bg-white/50 w-6 h-6 overflow-hidden flex items-center justify-center border-2 border-current"
           >
@@ -85,13 +85,14 @@ const logoutClickHandler = () => {
             class="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-zinc-600 rounded bg-zinc-700 shadow-lg ring-1 ring-zinc-900 ring-opacity-5 focus:outline-none text-white font-medium"
           >
             <div class="px-1 py-1" v-if="user">
-              <MenuItem v-slot="{ active }">
+              <MenuItem v-slot="{ active, close }">
                 <RouterLink
                   :class="[
                     active ? 'bg-zinc-500 text-white' : 'text-[inherit]',
                     'group flex w-full items-center rounded-sm px-2 py-1.5 leading-snug'
                   ]"
                   :to="{ name: 'profil', params: { id: user.id } }"
+                  @click="close"
                 >
                   {{ t('nav.profil') }}
                 </RouterLink>
