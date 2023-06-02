@@ -3,12 +3,13 @@ import { useAuthStore } from '@/stores/authStore'
 import { storeToRefs } from 'pinia'
 import { useUserStore } from '@/stores/userStore'
 import { usePlaylistsStore } from '@/stores/playlistsStore'
-import { computed, onMounted, ref } from 'vue'
+import { ref, watch } from 'vue'
 // @ts-ignore
 import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
 import PlaylistItem from '@/components/PlaylistItem.vue'
 import AppLoader from '@/components/AppLoader.vue'
+import AppPagination from '@/components/AppPagination.vue'
 
 const { t } = useI18n()
 
@@ -34,38 +35,13 @@ const logoutClickHandler = () => {
 }
 
 // Local state
-const offset = ref(0)
 const pageSize = 50
+const currentPage = ref(1)
 
 // Refs
 const playlistListRef = ref<HTMLElement | null>(null)
 
-const hasMorePages = computed(() => {
-  if (!playlists.value) return false
-  return playlists.value.items.length % pageSize === 0
-})
-const hasPreviousPages = computed(() => offset.value > 0)
-
 // Methods
-const loadNextPage = async () => {
-  try {
-    await playlistsStore.fetchPlaylists(pageSize, offset.value + pageSize)
-    offset.value += pageSize
-    scrollListToTop()
-  } catch (error) {
-    console.error(error)
-  }
-}
-
-const loadPreviousPage = async () => {
-  try {
-    await playlistsStore.fetchPlaylists(pageSize, offset.value - pageSize)
-    offset.value -= pageSize
-    scrollListToTop()
-  } catch (error) {
-    console.error(error)
-  }
-}
 
 const scrollListToTop = () => {
   const listElement = playlistListRef.value as HTMLElement
@@ -77,19 +53,18 @@ const scrollListToTop = () => {
   }
 }
 
-onMounted(async () => {
-  // Get user profil id from url params
-  // const id = route.params.id
-
-  // Get user profil
-  // userStore.getUserProfile(id)
-  if (!user?.value) {
-    await userStore.fetchUserCurrentUser()
-  }
-
-  // Get user playlists
-  await playlistsStore.fetchPlaylists(pageSize, offset.value)
-})
+watch(
+  currentPage,
+  async (newPage, oldPage) => {
+    if (!user?.value) {
+      await userStore.fetchUserCurrentUser()
+    }
+    if (newPage === oldPage || !newPage) return
+    await playlistsStore.fetchPlaylists(pageSize, (newPage - 1) * pageSize)
+    scrollListToTop()
+  },
+  { immediate: true }
+)
 </script>
 
 <template>
@@ -189,27 +164,15 @@ onMounted(async () => {
                   </li>
                 </ul>
               </div>
-              <div class="not-prose flex items-center gap-x-3 mt-6 text-zinc-500 font-bold">
-                <button
-                  :disabled="!hasPreviousPages"
-                  class="text-3xl enabled:hover:text-zinc-900 disabled:text-zinc-300"
-                  @click="loadPreviousPage"
-                  :title="t('common.previous')"
-                >
-                  <Icon icon="material-symbols:arrow-circle-left"></Icon>
-                  <span class="sr-only">{{ t('common.previous') }}</span>
-                </button>
-                <span class="text-xs">{{ offset }}/{{ playlists?.total }}</span>
-                <button
-                  :disabled="!hasMorePages"
-                  class="text-3xl enabled:hover:text-zinc-900 disabled:text-zinc-300"
-                  @click="loadNextPage"
-                  :title="t('common.next')"
-                >
-                  <Icon icon="material-symbols:arrow-circle-right"></Icon>
-                  <span class="sr-only">{{ t('common.next') }}</span>
-                </button>
-              </div>
+              <app-pagination
+                v-if="
+                  playlists?.items && playlists?.items.length > 0 && playlists?.total > pageSize
+                "
+                v-model="currentPage"
+                :total-items="playlists?.total"
+                :items-per-page="pageSize"
+                class="not-prose mt-6"
+              />
             </template>
           </div>
         </template>
