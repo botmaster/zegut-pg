@@ -4,16 +4,14 @@ import { useAuthStore } from '@/stores/authStore'
 import { storeToRefs } from 'pinia'
 import { useUserStore } from '@/stores/userStore'
 import { usePlaylistsStore } from '@/stores/playlistsStore'
-import { onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 // @ts-ignore
 import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
 import PlaylistItem from '@/components/PlaylistItem.vue'
 import AppLoader from '@/components/AppLoader.vue'
-import { useToast } from 'vue-toastification'
 
 const { t } = useI18n()
-const toast = useToast()
 
 // AuthStore
 const authStore = useAuthStore()
@@ -36,6 +34,50 @@ const logoutClickHandler = () => {
   authStore.logout()
 }
 
+// Loacal state
+const offset = ref(0)
+const pageSize = 50
+
+// Refs
+const playlistListRef = ref<HTMLElement | null>(null)
+
+const hasMorePages = computed(() => {
+  if (!playlists.value) return false
+  return playlists.value.items.length % pageSize === 0
+})
+const hasPreviousPages = computed(() => offset.value > 0)
+
+// Methods
+const loadNextPage = async () => {
+  try {
+    await playlistsStore.fetchPlaylists(pageSize, offset.value + pageSize)
+    offset.value += pageSize
+    scrollListToTop()
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const loadPreviousPage = async () => {
+  try {
+    await playlistsStore.fetchPlaylists(pageSize, offset.value - pageSize)
+    offset.value -= pageSize
+    scrollListToTop()
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const scrollListToTop = () => {
+  const listElement = playlistListRef.value as HTMLElement
+  if (listElement) {
+    listElement.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    })
+  }
+}
+
 onMounted(async () => {
   // Get user profil id from url params
   // const id = route.params.id
@@ -47,12 +89,7 @@ onMounted(async () => {
   }
 
   // Get user playlists
-  try {
-    await playlistsStore.fetchPlaylists(50)
-  } catch (error) {
-    console.error(error)
-    toast.error(t('common.errors.sessionExpired'))
-  }
+  await playlistsStore.fetchPlaylists(pageSize, offset.value)
 })
 </script>
 
@@ -132,23 +169,48 @@ onMounted(async () => {
               <h2 class="text-2xl">
                 {{ t('pages.profil.playlists') }}
 
-                <AppLoader v-if="isPlaylistsLoading"></AppLoader
-                ><span v-else-if="playlists" class="text-xs text-zinc-500"
-                  >{{ playlists.items.length }}/{{ playlists.total }}</span
-                >
+                <transition name="fade" mode="out-in">
+                  <AppLoader v-if="isPlaylistsLoading" class="text-2xl ml-3"></AppLoader
+                  ><span v-else-if="playlists" class="text-xs text-zinc-500"
+                    >{{ playlists?.total }}
+                  </span>
+                </transition>
               </h2>
               <pre v-if="hasPlaylistsError">
                 {{ hasPlaylistsError }}
               </pre>
-              <div v-else class="not-prose max-h-80 overflow-y-auto bg-zinc-50 rounded p-2">
+              <div
+                ref="playlistListRef"
+                v-else
+                class="not-prose max-h-[50vh] overflow-y-auto bg-zinc-50 rounded p-2"
+              >
                 <ul v-if="playlists" class="not-prose list-none text-sm flex flex-col gap-y-2">
                   <li v-for="playlist in playlists.items" :key="playlist.id">
                     <PlaylistItem :playlist="playlist"></PlaylistItem>
                   </li>
                 </ul>
               </div>
-
-              <pre class="!text-xs !mt-12">{{ user }}</pre>
+              <div class="not-prose flex items-center gap-x-3 mt-6 text-zinc-500 font-bold">
+                <button
+                  :disabled="!hasPreviousPages"
+                  class="text-3xl enabled:hover:text-zinc-900 disabled:text-zinc-300"
+                  @click="loadPreviousPage"
+                  :title="t('common.previous')"
+                >
+                  <Icon icon="material-symbols:arrow-circle-left"></Icon>
+                  <span class="sr-only">{{ t('common.previous') }}</span>
+                </button>
+                <span class="text-xs">{{ offset }}/{{ playlists?.total }}</span>
+                <button
+                  :disabled="!hasMorePages"
+                  class="text-3xl enabled:hover:text-zinc-900 disabled:text-zinc-300"
+                  @click="loadNextPage"
+                  :title="t('common.next')"
+                >
+                  <Icon icon="material-symbols:arrow-circle-right"></Icon>
+                  <span class="sr-only">{{ t('common.next') }}</span>
+                </button>
+              </div>
             </template>
           </div>
         </template>
