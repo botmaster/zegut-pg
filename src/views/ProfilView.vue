@@ -1,5 +1,4 @@
 <script setup lang="ts">
-// AuthStore
 import { useAuthStore } from '@/stores/authStore'
 import { storeToRefs } from 'pinia'
 import { useUserStore } from '@/stores/userStore'
@@ -34,7 +33,7 @@ const logoutClickHandler = () => {
   authStore.logout()
 }
 
-// Loacal state
+// Local state
 const offset = ref(0)
 const pageSize = 50
 
