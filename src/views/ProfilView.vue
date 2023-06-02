@@ -165,7 +165,9 @@ watch(
                 </ul>
               </div>
               <app-pagination
-                v-if="playlists?.items"
+                v-if="
+                  playlists?.items && playlists?.items.length > 0 && playlists?.total > pageSize
+                "
                 v-model="currentPage"
                 :total-items="playlists?.total"
                 :items-per-page="pageSize"
