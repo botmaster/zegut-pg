@@ -14,6 +14,7 @@ export const usePlaylistsStore = defineStore('playlistsStore', () => {
   const fetchPlaylists = async (limit: number = 20, offset: number = 0) => {
     try {
       isLoading.value = true
+      hasError.value = false
       playlists.value = await getUserPlaylists(limit, offset)
       return playlists
     } catch (error) {

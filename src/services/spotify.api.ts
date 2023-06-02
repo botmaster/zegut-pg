@@ -11,8 +11,10 @@ const { t } = i18n.global
  * Axios instance to make requests to the Spotify API
  */
 
+const baseURL = 'https://api.spotify.com/v1'
+
 const api = axios.create({
-  baseURL: 'https://api.spotify.com/v1',
+  baseURL,
   headers: {
     'Content-Type': 'application/json'
   }

@@ -485,8 +485,6 @@ onMounted(async () => {
                 t('common.here')
               }}</a>
             </p>
-
-            <pre class="!text-xs max-h-64">{{ spotifyPlaylist }}</pre>
           </div>
         </template>
       </section>
