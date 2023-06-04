@@ -273,8 +273,6 @@ watch(
  */
 
 onMounted(async () => {
-  console.log('HomeView mounted')
-
   // fetch current user
   if (isAuthenticated.value && !user.value) {
     await userStore.fetchUserCurrentUser()
