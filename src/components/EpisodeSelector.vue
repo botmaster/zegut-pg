@@ -10,6 +10,8 @@
  */
 import type { PodcastItem } from '@/types/podcast'
 import { onMounted } from 'vue'
+// @ts-ignore
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps<{
   episodes: PodcastItem[] | null
@@ -20,6 +22,8 @@ const emit = defineEmits<{
   'update:modelValue': [payload: string]
 }>()
 
+const { d } = useI18n()
+
 const selectEpisode = (episode: PodcastItem) => {
   emit('update:modelValue', episode.id)
 }
@@ -29,8 +33,6 @@ const isSelected = (episode: PodcastItem) => {
 }
 
 onMounted(() => {
-  console.log('mounted')
-
   // Scroll to selected episode
   const selectedEpisode = props.episodes?.find((episode) => episode.id === props.modelValue)
   if (selectedEpisode) {
@@ -64,11 +66,14 @@ onMounted(() => {
           />
         </figure>
 
-        <button @click="selectEpisode(episode)" class="py-1 text-left leading-none">
-          <span class="pr-1">{{ episode.title }}</span
-          ><span class="inline-flex gap-x-1 text-xs italic text-zinc-500">
+        <button @click="selectEpisode(episode)" class="py-1 text-left leading-none min-w-0">
+          <span class="block pr-1 truncate">{{ episode.title }}</span
+          ><span
+            class="flex gap-x-1 text-xs italic text-zinc-500 leading-none mt-1 md:mt-2 truncate"
+          >
             <span>{{ episode.itunes_author }}</span
-            >-<span>{{ episode.itunes_duration }}</span>
+            >-<span>{{ episode.itunes_duration }}</span
+            >-<span class="truncate">{{ d(new Date(episode.created), 'long') }}</span>
           </span>
 
           <!--            <span class="block text-xs italic">{{ episode.description }}</span>-->
