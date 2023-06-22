@@ -13,8 +13,8 @@ Zégut PG is a web application that allows me to create Spotify playlists from t
 - [x] Login with Spotify
 - [x] Display the list of tracks for each episode
 - [x] Create a Spotify playlist from the tracks of an episode
-- [ ] Display the created playlist
-- [ ] Display user Spotify profile
+- [x] Display the created playlist
+- [x] Display user Spotify profile
 
 ## Tech Stack
 
