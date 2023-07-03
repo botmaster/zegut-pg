@@ -122,6 +122,11 @@ const spotifySearchResultListFulfilled = computed(() => {
  * Methods
  */
 
+// Sanitize search query. Remove ' - ' and ' : ' from query
+const sanitizeSearchQuery = (query: string) => {
+  return query.split(' - ').join(', ').split(' : ').join(', ')
+}
+
 // Search tracks in parallel
 const searchTracksInParallel = async () => {
   // console.log('searchTracksInParallel')
@@ -133,7 +138,7 @@ const searchTracksInParallel = async () => {
     spotifySearchResultList.value = await Promise.allSettled(
       episodeTrackList.value.map(async (trackItem) => {
         const tracks = await searchTracks({
-          query: trackItem.split(' : ')[0].trim()
+          query: sanitizeSearchQuery(trackItem)
         })
 
         const track = tracks?.tracks?.items[0]
