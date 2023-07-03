@@ -70,9 +70,14 @@ const formPlaylist = reactive<{ name: string; description: string; public: boole
 const isCreatePlaylistPending = ref(false)
 const hasCreatePlaylistError = ref<boolean | any>(false)
 const currentEpisodeId = useRouteQuery('id')
-const spotifySearchResultList = ref<Array<SpotifyApi.TrackObjectFull | { id: null; name: string }>>(
+/*const spotifySearchResultList = ref<Array<SpotifyApi.TrackObjectFull | { id: null; name: string }>>(
   []
-)
+)*/
+// Promise.allSettled
+const spotifySearchResultList = ref<
+  Array<PromiseSettledResult<SpotifyApi.TrackObjectFull | { id: null; name: string }>>
+>([])
+
 const isSearchPending = ref(false)
 const hasSearchError = ref<boolean | any>(false)
 
@@ -81,7 +86,7 @@ const hasSearchError = ref<boolean | any>(false)
  */
 const episodeTrackList = computed(() => {
   const content = currentEpisode.value?.content.split('\n') || []
-  return content.filter((track) => !track.toLowerCase().includes('reprise') && track !== '')
+  return content.filter((track) => !track.toLowerCase().includes('reprise') && track.trim() !== '')
 })
 
 const episodeInfos = computed(() => {
@@ -106,11 +111,18 @@ const lastEpisodeDate = computed(() => {
   )
 })
 
+const spotifySearchResultListFulfilled = computed(() => {
+  const tracks = spotifySearchResultList.value.filter(
+    (track) => track.status === 'fulfilled'
+  ) as Array<PromiseFulfilledResult<SpotifyApi.TrackObjectFull | { id: null; name: string }>>
+  return tracks.map((track) => track.value)
+})
+
 /**
  * Methods
  */
 
-// Search tracks in paralell
+// Search tracks in parallel
 const searchTracksInParallel = async () => {
   // console.log('searchTracksInParallel')
 
@@ -118,11 +130,12 @@ const searchTracksInParallel = async () => {
   try {
     isSearchPending.value = true
     hasSearchError.value = false
-    spotifySearchResultList.value = await Promise.all(
+    spotifySearchResultList.value = await Promise.allSettled(
       episodeTrackList.value.map(async (trackItem) => {
         const tracks = await searchTracks({
-          query: trackItem
+          query: trackItem.split(' : ')[0].trim()
         })
+
         const track = tracks?.tracks?.items[0]
         if (!track) {
           return {
@@ -170,10 +183,10 @@ const createPlaylistSubmitHandler = async () => {
     hasCreatePlaylistError.value = false
 
     // Get ids
-    let tracksIds = spotifySearchResultList.value.map((track) => track?.id)
+    let tracksIds = spotifySearchResultListFulfilled.value.map((track) => track?.id)
 
     // Get tracks without id
-    const tracksWithoutId = spotifySearchResultList.value.filter((track) => !track?.id)
+    const tracksWithoutId = spotifySearchResultListFulfilled.value.filter((track) => !track?.id)
     console.log('Tracks not found!', tracksWithoutId)
 
     // Remove tracks without id
@@ -393,7 +406,7 @@ onMounted(async () => {
                   tabindex="0"
                   v-if="!isSearchPending && !hasSearchError"
                 >
-                  <li v-for="(item, index) in spotifySearchResultList" :key="index">
+                  <li v-for="(item, index) in spotifySearchResultListFulfilled" :key="index">
                     <span v-if="item.id">{{ item.artists[0].name }} - {{ item.name }}</span>
                     <span v-else>{{ item }}</span>
                   </li>
