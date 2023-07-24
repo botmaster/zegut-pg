@@ -1,4 +1,3 @@
-
 export interface UserAuth {
   access_token: string
   token_type: string
@@ -6,4 +5,3 @@ export interface UserAuth {
   scope: string
   refresh_token: string
 }
-
