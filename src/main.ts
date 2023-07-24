@@ -22,7 +22,7 @@ const options: PluginOptions = {
       return false
     }
     return toast
-  },
+  }
 }
 
 const app = createApp(App)

@@ -110,8 +110,8 @@ export const getPlaylist = async (playlistId: string, fields: string) => {
  * Get a list of the playlists owned or followed by the current Spotify user.
  * @param limit The maximum number of playlists to return. Default: 20. Minimum: 1. Maximum: 50
  * @param offset The index of the first playlist to return. Default: 0 (the first object). Maximum offset: 100.000. Use with limit to get the next set of playlists.
- * 
-  */
+ *
+ */
 
 export const getUserPlaylists = async (limit: number, offset: number) => {
   const url = `/me/playlists`

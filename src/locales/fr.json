@@ -25,7 +25,7 @@
       "sessionExpired": "Votre session a expiré, veuillez vous connecter à nouveau."
     }
   },
-  "nav" :{
+  "nav": {
     "home": "Accueil",
     "profil": "Profil",
     "login": "@:common.login",
