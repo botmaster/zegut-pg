@@ -20,6 +20,8 @@ import AppLoader from '@/components/AppLoader.vue'
 import EpisodeSelector from '@/components/EpisodeSelector.vue'
 import AppInput from '@/components/form/AppInput.vue'
 import AppCheckbox from '@/components/form/AppCheckbox.vue'
+import { PodcastItunesAuthor } from '@/types/podcast'
+import { getEpisodeAuthorImage } from '@/utils/podcast'
 
 // Preferred language
 const languages = usePreferredLanguages()
@@ -347,17 +349,30 @@ onMounted(async () => {
           <p>{{ t('common.loading') }}</p>
         </template>
         <template v-else-if="!isPodcastLoading && !hasPodcastError">
-          <p class="font-bold">
+          <h3>
             {{ podcast?.title }}
-          </p>
-          <p>
-            {{ podcast?.description.replace(/<[^>]+>/g, '') }}
-          </p>
+          </h3>
+          <div class="md:flex md:items-start">
+            <img
+              v-if="podcast"
+              :src="podcast.image"
+              alt=""
+              width="200"
+              height="200"
+              class="w-full md:w-1/4 md:h-1/4 md:mr-6 md:!my-0 shrink-0 border border-zinc-100"
+            />
+            <div>
+              <p class="last:mb-0">
+                {{ podcast?.description.replace(/<[^>]+>/g, '') }}
+              </p>
+            </div>
+          </div>
           <p>
             {{ t('pages.home.episodesCount', podcast?.items?.length) }}.
             {{ t('pages.home.lastUpdate', { date: lastEpisodeDate }) }}.
           </p>
 
+          <h3>{{ t('pages.home.episodeList') }}</h3>
           <EpisodeSelector
             :episodes="episodesTypeIntegral"
             v-model="currentEpisodeId"
@@ -369,7 +384,11 @@ onMounted(async () => {
             <div class="md:flex">
               <img
                 v-if="currentEpisode?.itunes_image"
-                :src="currentEpisode.itunes_image"
+                :src="
+                  getEpisodeAuthorImage(currentEpisode?.itunes_author) ||
+                  currentEpisode?.itunes_image ||
+                  ''
+                "
                 :alt="episodeInfos.description"
                 :width="500"
                 :height="500"

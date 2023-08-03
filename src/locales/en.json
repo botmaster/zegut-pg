@@ -71,7 +71,8 @@
         "searchTracksError": "Error while searching for tracks 😕\n"
       },
       "userProfil": "User profile",
-      "foundedSpotifyTracks": "Tracks found on Spotify"
+      "foundedSpotifyTracks": "Tracks found on Spotify",
+      "episodeList": "Episode list"
     },
     "login": {
       "alreadyLogged": "You are already logged to Spotify 💪",

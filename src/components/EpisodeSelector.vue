@@ -12,6 +12,7 @@ import type { PodcastItem } from '@/types/podcast'
 import { onMounted } from 'vue'
 // @ts-ignore
 import { useI18n } from 'vue-i18n'
+import { getEpisodeAuthorImage } from '@/utils/podcast'
 
 const props = defineProps<{
   episodes: PodcastItem[] | null
@@ -56,7 +57,7 @@ onMounted(() => {
       >
         <figure class="shrink-0">
           <img
-            :src="episode.itunes_image"
+            :src="getEpisodeAuthorImage(episode.itunes_author) || episode.itunes_image || ''"
             :alt="episode.title"
             :title="episode.title"
             width="40"
