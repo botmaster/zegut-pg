@@ -43,7 +43,7 @@ const datetimeFormats = {
       hour12: false
     }
   }
-}
+} as const
 
 const i18n = createI18n({
   legacy: false,

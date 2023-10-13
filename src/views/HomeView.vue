@@ -367,7 +367,7 @@ onMounted(async () => {
               </p>
             </div>
           </div>
-          <p>
+          <p v-if="podcast?.items && lastEpisodeDate">
             {{ t('pages.home.episodesCount', podcast?.items?.length) }}.
             {{ t('pages.home.lastUpdate', { date: lastEpisodeDate }) }}.
           </p>
