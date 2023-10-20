@@ -1,6 +1,6 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
-import { getAccessToken } from '@/helpers/auth/authCodeWithPkce'
+import { getAccessToken, refreshAccessToken } from '@/helpers/auth/authCodeWithPkce'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/userStore'
 import { useToast } from 'vue-toastification'
@@ -41,6 +41,27 @@ export const useAuthStore = defineStore('authStore', () => {
     useUserStore().reset()
   }
 
+  // Refresh the token
+  const refreshTheToken = async () => {
+    isLoading.value = true
+    hasError.value = false
+    try {
+      // @ts-ignore
+      userAuth.value = await refreshAccessToken(
+        import.meta.env.VITE_SPOTIFY_CLIENT_ID,
+        refreshToken.value!
+      )
+      localStorage.setItem('userAuth', JSON.stringify(userAuth.value))
+      toast.success('Successfully refreshed token!')
+    } catch (error) {
+      console.log(error)
+      hasError.value = error
+      toast.error('Error while refreshing token!\n' + error)
+    } finally {
+      isLoading.value = false
+    }
+  }
+
   const isAuthenticated = computed(() => {
     return userAuth.value !== null
   })
@@ -49,13 +70,19 @@ export const useAuthStore = defineStore('authStore', () => {
     return userAuth.value?.access_token
   })
 
+  const refreshToken = computed(() => {
+    return userAuth.value?.refresh_token
+  })
+
   return {
     userAuth,
     isAuthenticated,
     accessToken,
+    refreshToken,
     isLoading,
     hasError,
     login,
-    logout
+    logout,
+    refreshTheToken
   }
 })
