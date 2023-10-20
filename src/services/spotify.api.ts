@@ -23,6 +23,7 @@ const api = axios.create({
 // Add an interceptor to add the authentication token to requests
 api.interceptors.request.use(
   (config) => {
+    // console.log('Axios interceptors request', config)
     const authStore = useAuthStore()
     config.headers.Authorization = `Bearer ${authStore.accessToken}`
     return config
@@ -36,18 +37,30 @@ api.interceptors.request.use(
 // Add an interceptor to refresh the token if it has expired
 api.interceptors.response.use(
   (response) => {
-    // console.log('Axios interceptors response', response)
+    //console.log('Axios interceptors response', response)
     return response
   },
   (error) => {
     console.error('Axios interceptors response error', error)
 
-    // If token is expired, logout
+    // If token is expired, refresh it
     if (error.response.status === 401) {
-      console.warn('Http 401 error, logging out')
-      useAuthStore().logout()
-      toast.warning(t('common.errors.sessionExpired'))
+      console.warn('Http 401 error, refreshing token')
+      useAuthStore()
+        .refreshTheToken()
+        .then(() => {
+          console.log('Token refreshed')
+          // Retry the request
+          return api.request(error.config)
+        })
+        .catch((error) => {
+          console.error('Error refreshing token', error)
+          useAuthStore().logout()
+          toast.warning(t('common.errors.sessionExpired'))
+        })
+      toast.info(t('common.errors.refreshingToken'))
     }
+
     return Promise.reject(error)
   }
 )

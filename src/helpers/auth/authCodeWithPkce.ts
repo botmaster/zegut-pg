@@ -1,10 +1,14 @@
 import axios from 'axios'
 
+// Spotify local storage verifier
+// https://developer.spotify.com/documentation/general/guides/authorization-guide/#authorization-code-flow-with-proof-key-for-code-exchange-pkce
+const VERIFIER_KEY = 'verifier'
+
 export async function redirectToAuthCodeFlow(clientId: string) {
   const verifier = generateCodeVerifier(128)
   const challenge = await generateCodeChallenge(verifier)
 
-  localStorage.setItem('verifier', verifier)
+  localStorage.setItem(VERIFIER_KEY, verifier)
 
   const params = new URLSearchParams()
   params.append('client_id', clientId)
@@ -22,7 +26,7 @@ export async function redirectToAuthCodeFlow(clientId: string) {
 
 export async function getAccessToken(clientId: string, code: string) {
   console.log('getAccessToken')
-  const verifier = localStorage.getItem('verifier')
+  const verifier = localStorage.getItem(VERIFIER_KEY)
 
   const params = new URLSearchParams()
   params.append('client_id', clientId)
@@ -36,6 +40,20 @@ export async function getAccessToken(clientId: string, code: string) {
   })
 
   // const { access_token } = data
+  return data
+}
+
+export async function refreshAccessToken(clientId: string, refreshToken: string) {
+  const params = new URLSearchParams()
+  params.append('grant_type', 'refresh_token')
+  params.append('refresh_token', refreshToken)
+  params.append('client_id', clientId)
+
+  const { data } = await axios.post('https://accounts.spotify.com/api/token', params, {
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+  })
+
+  //const { access_token } = data
   return data
 }
 

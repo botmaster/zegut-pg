@@ -20,7 +20,6 @@ import AppLoader from '@/components/AppLoader.vue'
 import EpisodeSelector from '@/components/EpisodeSelector.vue'
 import AppInput from '@/components/form/AppInput.vue'
 import AppCheckbox from '@/components/form/AppCheckbox.vue'
-import { PodcastItunesAuthor } from '@/types/podcast'
 import { getEpisodeAuthorImage } from '@/utils/podcast'
 
 // Preferred language
