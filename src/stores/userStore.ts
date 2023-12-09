@@ -8,7 +8,6 @@ export const useUserStore = defineStore('userStore', () => {
   const hasError = ref<boolean | any>(false)
 
   const fetchUserCurrentUser = async () => {
-    console.log('fetchUserCurrentUser')
     isLoading.value = true
     hasError.value = false
     try {
