@@ -236,10 +236,10 @@ const createPlaylistSubmitHandler = async () => {
     console.log('uris', uris)
     await addTracksToPlaylist(spotifyPlaylist.value?.id || '', uris)
 
-    spotifyPlaylist.value = await getPlaylist(
+    /*spotifyPlaylist.value = await getPlaylist(
       spotifyPlaylist.value?.id || '',
       'name, description,tracks.items(track(name,href,album(name,href))), uri, external_urls.spotify'
-    )
+    )*/
 
     toast.success(t('pages.home.toast.playlistCreated'))
   } catch (error) {
@@ -508,7 +508,7 @@ onMounted(async () => {
         <template v-else>
           <div v-if="spotifyPlaylist" class="">
             <p class="">{{ t('pages.home.toast.playlistCreated') }}</p>
-            <p class="">
+            <p class="" v-if="spotifyPlaylist.external_urls?.spotify">
               {{ t('pages.home.openPlaylistBrowser') }}&nbsp;<a
                 :href="spotifyPlaylist.external_urls.spotify"
                 target="_blank"
