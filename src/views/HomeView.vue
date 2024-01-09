@@ -7,12 +7,7 @@ import { DateTimeOptions, useI18n } from 'vue-i18n'
 import { usePreferredLanguages } from '@vueuse/core'
 import { useRouteQuery } from '@vueuse/router'
 
-import {
-  addTracksToPlaylist,
-  createPlaylist,
-  getPlaylist,
-  searchTracks
-} from '@/services/spotify.service'
+import { addTracksToPlaylist, createPlaylist, searchTracks } from '@/services/spotify.service'
 import { usePodcastStore } from '@/stores/podcastStore'
 import { useAuthStore } from '@/stores/authStore'
 import { useUserStore } from '@/stores/userStore'
