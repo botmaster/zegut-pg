@@ -1,4 +1,6 @@
-# Zegut-pg
+# Zegut-pg 
+
+[![Netlify Status](https://api.netlify.com/api/v1/badges/39211acd-87fe-4556-8658-a9ced321164a/deploy-status)](https://app.netlify.com/sites/pascal-achard/deploys)
 
 Zégut PG is a web application that allows me to create Spotify playlists from the podcast episodes of the [**RTL2 Pop-Rock Station**](https://www.rtl2.fr/programmes/poprockstation) show presented by Francis Zégut & Marjorie Hache. It's also an excuse for me to play around with Vue.js and the Spotify API 🤓.
 
