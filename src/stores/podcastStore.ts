@@ -32,7 +32,7 @@ export const usePodcastStore = defineStore('podcastStore', () => {
         hasError.value = 'No podcast found'
       }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       hasError.value = error
     } finally {
       isLoading.value = false
