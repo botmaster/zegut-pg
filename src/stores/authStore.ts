@@ -24,7 +24,7 @@ export const useAuthStore = defineStore('authStore', () => {
 
       toast.success('Successfully logged in!')
     } catch (error) {
-      console.log(error)
+      console.error(error)
       hasError.value = error
       toast.error('Error while logging in!\n' + error)
     } finally {
@@ -54,7 +54,7 @@ export const useAuthStore = defineStore('authStore', () => {
       localStorage.setItem('userAuth', JSON.stringify(userAuth.value))
       toast.success('Successfully refreshed token!')
     } catch (error) {
-      console.log(error)
+      console.error(error)
       hasError.value = error
       toast.error('Error while refreshing token!\n' + error)
     } finally {

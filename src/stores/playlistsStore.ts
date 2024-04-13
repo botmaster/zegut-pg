@@ -18,7 +18,7 @@ export const usePlaylistsStore = defineStore('playlistsStore', () => {
       playlists.value = await getUserPlaylists(limit, offset)
       return playlists
     } catch (error) {
-      console.log(error)
+      console.error(error)
       hasError.value = error
     } finally {
       isLoading.value = false
