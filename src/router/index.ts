@@ -64,6 +64,11 @@ const router = createRouter({
         }
       }
     },
+    {
+      path: '/style-guide',
+      name: 'styleGuide',
+      component: () => import('@/views/StyleGuideView.vue')
+    },
     /*{
       path: '/about',
       name: 'about',
