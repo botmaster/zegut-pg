@@ -53,7 +53,7 @@ onMounted(() => {
         v-for="episode in episodes"
         :key="episode.id"
         :id="episode.id"
-        :class="{ '!bg-amber-200': isSelected(episode) }"
+        :class="{ '!bg-primary/10': isSelected(episode) }"
       >
         <figure class="shrink-0">
           <img

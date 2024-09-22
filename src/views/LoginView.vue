@@ -35,7 +35,7 @@ const connectClickHandler = () => {
         <h1>{{ t('pages.login.title') }}</h1>
         <template v-if="!isAuthenticated">
           <div
-            class="border-l-4 border-amber-200 mb-8 py-3 pl-8 pr-6 bg-amber-200/20 not-prose text-base"
+            class="border-l-4 border-primary/70 mb-8 py-3 pl-8 pr-6 bg-secondary not-prose text-base"
           >
             <p class="mb-2 font-bold">{{ t('pages.login.calloutTitle') }}</p>
             <!--            <p class="leading-snug my-0">
