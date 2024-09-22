@@ -27,7 +27,7 @@ const updateValue = (event: Event) => {
         :checked="modelValue"
         :id="uuid"
         type="checkbox"
-        class="form-checkbox h-4 w-4 rounded border-gray-300 text-amber-500 focus:ring-amber-500"
+        class="form-checkbox h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
       />
     </div>
     <div class="ml-3 leading-6" v-if="label">

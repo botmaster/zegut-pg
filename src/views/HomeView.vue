@@ -297,6 +297,12 @@ onMounted(async () => {
     //await fetchPodcast()
   }
 })
+
+const objEl = ref('')
+function clickHandler(e: MouseEvent) {
+  console.log('click', e)
+  throw new Error('coucou')
+}
 </script>
 
 <template>
@@ -304,6 +310,9 @@ onMounted(async () => {
     <div class="container mx-auto pt-8 pb-14">
       <section class="prose lg:prose-lg max-w-prose">
         <h1 class="mb-8">{{ t('pages.home.title') }}</h1>
+        <p>
+          <button class="mt-20" @click="clickHandler">test</button>
+        </p>
         <figure>
           <blockquote>
             <p class="whitespace-pre-line">
