@@ -8,6 +8,7 @@ defineProps<{
   statusCode: number
   hint: string | null
   details: string
+  rawError?: any
 }>()
 </script>
 
@@ -19,6 +20,7 @@ defineProps<{
     <p class="error__msg">{{ message }}</p>
     <p v-if="hint">{{ hint }}</p>
     <p v-if="details">{{ details }}</p>
+    <pre class="text-left text-xs" v-if="rawError">{{ rawError.stack }}</pre>
     <div class="error-footer">
       <p class="error-footer__text">You'll find lots to explore on the home page.</p>
       <RouterLink to="/">

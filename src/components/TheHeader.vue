@@ -27,9 +27,9 @@ const logoutClickHandler = () => {
     class="min-h-[--header-height] flex items-center justify-between border-b border-gray-100 backdrop-blur-sm bg-white/95 fixed top-0 w-full px-4 md:px-8"
   >
     <div class="">
-      <p class="text-primary text-2xl font-extrabold">
+      <div class="text-primary text-2xl font-extrabold">
         <RouterLink to="/">Zégut PG</RouterLink>
-      </p>
+      </div>
     </div>
     <nav class="flex gap-x-3 items-center text-sm leading-none">
       <a

@@ -76,7 +76,7 @@
 
 @layer components {
   .btn {
-    @apply inline-flex items-center px-[1.2em] py-[0.4em] rounded-md text-white text-base font-medium no-underline;
+    @apply inline-flex items-center px-[1.2em] py-[0.4em] rounded-md text-inherit text-base font-medium no-underline;
   }
 
   .btn.btn-primary {
@@ -96,11 +96,15 @@
   }
 
   .btn.btn-link {
-    @apply text-blue-500 hover:text-blue-600;
+    @apply text-primary underline-offset-4 hover:underline;
   }
 
-  .btn.btn-border {
-    @apply border border-gray-300 hover:border-gray-400 text-current;
+  .btn.btn-outline {
+    @apply border border-input bg-background hover:bg-accent hover:text-accent-foreground;
+  }
+
+  .btn.btn-ghost {
+    @apply hover:bg-accent hover:text-accent-foreground;
   }
 
   .btn[disabled] {

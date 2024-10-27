@@ -298,11 +298,19 @@ onMounted(async () => {
   }
 })
 
-const objEl = ref('')
+const objEl = ref(null)
 function clickHandler(e: MouseEvent) {
   console.log('click', e)
   throw new Error('coucou')
 }
+
+//const objEl = ref<HTMLElement | null>(null)
+onMounted(() => {
+  // objEl.value.innerHTML = 'hi'
+  setTimeout(() => {
+    objEl.value.innerHTML = 'hi'
+  }, 3000)
+})
 </script>
 
 <template>

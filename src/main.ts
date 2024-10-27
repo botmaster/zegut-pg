@@ -11,6 +11,7 @@ import i18n from '@/plugins/i18n'
 // @ts-ignore
 import App from './App.vue'
 import router from './router'
+import { useErrorStore } from '@/stores/error'
 
 // Toast options
 const options: PluginOptions = {
@@ -32,5 +33,13 @@ app.use(createHead())
 app.use(router)
 app.use(i18n)
 app.use(Toast, options)
+
+app.config.errorHandler = (err, vm, info) => {
+  console.error('Error:', err)
+  console.error('Vue component:', vm)
+  console.error('Additional info:', info)
+  const errorStore = useErrorStore()
+  errorStore.setError({ error: err as Error })
+}
 
 app.mount('#app')

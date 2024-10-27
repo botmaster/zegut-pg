@@ -48,6 +48,7 @@ router.afterEach(() => {
       :hint
       :details
       :isCustomError="errorStore.isCustomError"
+      :rawError="error"
     />
   </section>
 </template>

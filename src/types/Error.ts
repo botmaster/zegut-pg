@@ -14,4 +14,5 @@ export interface ExtendedPostgrestError extends PostgrestError {
 
 export interface CustomError extends Error {
   customCode?: number
+  rawError?: Error
 }
