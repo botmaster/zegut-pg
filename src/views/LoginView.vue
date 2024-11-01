@@ -18,8 +18,6 @@ const initiateSpotifyLogin = () => {
 }
 
 const connectClickHandler = () => {
-  console.log('connectClickHandler')
-
   if (!authStore.userAuth?.access_token) {
     initiateSpotifyLogin()
   } else {
