@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, watch } from 'vue'
+import { computed, onMounted, reactive, ref, useTemplateRef, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useToast } from 'vue-toastification'
 // @ts-ignore
@@ -66,9 +66,7 @@ const formPlaylist = reactive<{ name: string; description: string; public: boole
 const isCreatePlaylistPending = ref(false)
 const hasCreatePlaylistError = ref<boolean | any>(false)
 const currentEpisodeId = useRouteQuery('id')
-/*const spotifySearchResultList = ref<Array<SpotifyApi.TrackObjectFull | { id: null; name: string }>>(
-  []
-)*/
+
 // Promise.allSettled
 const spotifySearchResultList = ref<
   Array<PromiseSettledResult<SpotifyApi.TrackObjectFull | { id: null; name: string }>>
@@ -77,12 +75,22 @@ const spotifySearchResultList = ref<
 const isSearchPending = ref(false)
 const hasSearchError = ref<boolean | any>(false)
 
+// Template refs
+const episodeInfosContent = useTemplateRef('episodeInfosContent')
+
 /**
  * Computed
  */
 const episodeTrackList = computed(() => {
   const content = currentEpisode.value?.content.split('\n') || []
-  return content.filter((track) => !track.toLowerCase().includes('reprise') && track.trim() !== '')
+  return content.filter((line) => {
+    // Line must contain at least 3 characters
+    // Line must not contain 'reprise'
+    // Line must match the pattern 'Artist - Title' or 'Artist : Title'
+    return (
+      line.length > 3 && !line.toLowerCase().includes('reprise') && /(.+ - .+)|(.+ : .+)/.test(line)
+    )
+  })
 })
 
 const episodeInfos = computed(() => {
@@ -96,7 +104,8 @@ const episodeInfos = computed(() => {
   return {
     title: currentEpisode.value?.title || '',
     description: date && author ? t('pages.home.publishedDateByAuth', { date, author }) : '',
-    duration: currentEpisode.value?.itunes_duration || ''
+    duration: currentEpisode.value?.itunes_duration || '',
+    content: currentEpisode.value?.content || ''
   }
 })
 
@@ -125,8 +134,6 @@ const sanitizeSearchQuery = (query: string) => {
 
 // Search tracks in parallel
 const searchTracksInParallel = async () => {
-  // console.log('searchTracksInParallel')
-
   // Search tracks in parallel
   try {
     isSearchPending.value = true
@@ -161,8 +168,6 @@ const searchTracksInParallel = async () => {
  */
 
 const fetchPodcast = async () => {
-  console.log('fetchPodcast')
-
   try {
     // Fetch podcast
     await podcastStore.fetchPodcast()
@@ -176,8 +181,6 @@ const fetchPodcast = async () => {
 }
 
 const createPlaylistSubmitHandler = async () => {
-  // console.log('createPlaylistSubmitHandler')
-
   try {
     // Set pending, error.
     isCreatePlaylistPending.value = true
@@ -228,7 +231,6 @@ const createPlaylistSubmitHandler = async () => {
 
     // Add tracks to playlist
     const uris = tracksIds.map((trackId) => `spotify:track:${trackId}`)
-    console.log('uris', uris)
     await addTracksToPlaylist(spotifyPlaylist.value?.id || '', uris)
 
     /*spotifyPlaylist.value = await getPlaylist(
@@ -268,6 +270,9 @@ watch(
 watch(
   currentEpisodeId,
   async (value) => {
+    // Scroll podcast content to top
+    episodeInfosContent.value?.scrollTo(0, 0)
+
     if (!value) {
       await fetchPodcast()
       currentEpisodeId.value = episodesTypeIntegral.value[0].id
@@ -376,6 +381,7 @@ function clickHandler(e: MouseEvent) {
 
           <h3>{{ t('pages.home.episodeList') }}</h3>
           <EpisodeSelector
+            v-if="currentEpisodeId"
             :episodes="episodesTypeIntegral"
             v-model="currentEpisodeId"
           ></EpisodeSelector>
@@ -404,6 +410,13 @@ function clickHandler(e: MouseEvent) {
                   {{ episodeInfos.description }}.<br />{{ t('common.duration') }} :
                   {{ episodeInfos.duration }}
                 </p>
+                <div
+                  ref="episodeInfosContent"
+                  v-if="episodeInfos.content"
+                  class="text-sm max-h-56 overflow-y-auto"
+                >
+                  <div style="white-space: pre-wrap" v-html="episodeInfos.content"></div>
+                </div>
               </div>
             </div>
             <div class="md:flex gap-x-4">
