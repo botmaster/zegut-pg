@@ -425,12 +425,12 @@ function clickHandler(e: MouseEvent) {
                 <h4 class="">
                   {{ t('pages.home.podcastTrackList') }} ({{ episodeTrackList.length }})
                 </h4>
-                <ol
-                  class="not-prose text-sm max-h-64 overflow-auto bg-zinc-50 list-inside !px-3 py-2"
+                <ul
+                  class="not-prose text-sm max-h-64 overflow-auto bg-accent text-accent-foreground list-inside !px-3 py-2"
                   tabindex="0"
                 >
                   <li v-for="(track, index) in episodeTrackList" :key="index">{{ track }}</li>
-                </ol>
+                </ul>
               </div>
               <div v-if="isAuthenticated" class="flex-1">
                 <!-- Spotify track list -->
@@ -440,8 +440,8 @@ function clickHandler(e: MouseEvent) {
                   /><span v-else>{{ spotifySearchResultList?.length }}</span
                   >)
                 </h4>
-                <ol
-                  class="not-prose text-sm max-h-64 overflow-auto bg-zinc-50 list-inside !px-3 py-2"
+                <ul
+                  class="not-prose text-sm max-h-64 overflow-auto bg-accent text-accent-foreground list-inside !px-3 py-2"
                   tabindex="0"
                   v-if="!isSearchPending && !hasSearchError"
                 >
@@ -449,7 +449,7 @@ function clickHandler(e: MouseEvent) {
                     <span v-if="item.id">{{ item.artists[0].name }} - {{ item.name }}</span>
                     <span v-else>{{ item }}</span>
                   </li>
-                </ol>
+                </ul>
               </div>
             </div>
           </template>
