@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useErrorStore } from '@/stores/error'
 import { useRouter } from 'vue-router'
-import { defineAsyncComponent, ref } from 'vue'
+import { computed, defineAsyncComponent, ref } from 'vue'
 
 const router = useRouter()
 
@@ -29,9 +29,11 @@ if (error.value && 'code' in error.value) {
   statusCode.value = error.value.statusCode ?? 0
 }
 
-const ErrorTemplate = import.meta.env.DEV
-  ? defineAsyncComponent(() => import('./AppErrorDevSection.vue'))
-  : defineAsyncComponent(() => import('./AppErrorProdSection.vue'))
+const ComputedErrorTemplate = computed(() => {
+  return import.meta.env.DEV
+    ? defineAsyncComponent(() => import('./AppErrorDevSection.vue'))
+    : defineAsyncComponent(() => import('./AppErrorProdSection.vue'))
+})
 
 router.afterEach(() => {
   errorStore.clearError()
@@ -40,7 +42,7 @@ router.afterEach(() => {
 
 <template>
   <section class="error">
-    <ErrorTemplate
+    <ComputedErrorTemplate
       :message
       :customCode
       :code

@@ -17,7 +17,6 @@ const { user } = storeToRefs(userStore)
 const authStore = useAuthStore()
 
 const logoutClickHandler = () => {
-  console.log('logoutClickHandler')
   authStore.logout()
 }
 </script>

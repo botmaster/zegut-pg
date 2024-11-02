@@ -4,7 +4,7 @@ import { changeHeadTitle } from '@/router/navigationGuards'
 import HomeView from '@/views/HomeView.vue'
 import LoginView from '@/views/LoginView.vue'
 import SpotifyAuthRedirectView from '@/views/SpotifyAuthRedirectView.vue'
-import NotFound from '@/views/NotFound.vue'
+import NotFoundView from '@/views/NotFoundView.vue'
 import i18n from '@/plugins/i18n'
 
 declare module 'vue-router' {
@@ -81,7 +81,7 @@ const router = createRouter({
     {
       path: '/:pathMatch(.*)*',
       name: 'NotFound',
-      component: NotFound,
+      component: NotFoundView,
       meta: { head: { title: t('pages.notFound.meta.title') } }
     }
   ]

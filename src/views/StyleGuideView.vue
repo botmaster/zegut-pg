@@ -44,7 +44,7 @@ const colorsList = [
 </script>
 
 <template>
-  <div class="container mx-auto">
+  <div class="container mx-auto mt-4 mb-12">
     <h1 class="text-5xl font-black mb-8">Styles guide</h1>
 
     <h2 class="text-2xl font-black mb-6">Colors</h2>
@@ -77,6 +77,15 @@ const colorsList = [
       <button class="btn btn-outline">Outline</button>
       <button class="btn btn-ghost">Ghost</button>
       <button class="btn btn-link">Link</button>
+    </div>
+
+    <div class="mt-4 flex flex-wrap gap-2">
+      <button disabled class="btn btn-primary">Primary</button>
+      <button disabled class="btn btn-secondary">Secondary</button>
+      <button disabled class="btn btn-destructive">Destructive</button>
+      <button disabled class="btn btn-outline">Outline</button>
+      <button disabled class="btn btn-ghost">Ghost</button>
+      <button disabled class="btn btn-link">Link</button>
     </div>
   </div>
 </template>

@@ -1,16 +1,16 @@
 import type { CustomError, ExtendedPostgrestError, PostgrestError } from '@/types/Error'
-import { defineStore } from 'pinia'
+import { acceptHMRUpdate, defineStore } from 'pinia'
 import { ref } from 'vue'
 
 export const useErrorStore = defineStore('error-store', () => {
-  const activeError = ref<null | CustomError | ExtendedPostgrestError>(null)
+  const activeError = ref<CustomError | ExtendedPostgrestError | null>(null)
   const isCustomError = ref(false)
 
   const setError = ({
     error,
     customCode
   }: {
-    error: string | PostgrestError | Error
+    error: string | CustomError | PostgrestError | Error
     customCode?: number
   }) => {
     if (typeof error === 'string') isCustomError.value = true
@@ -32,8 +32,12 @@ export const useErrorStore = defineStore('error-store', () => {
 
   return {
     activeError,
-    setError,
     isCustomError,
+    setError,
     clearError
   }
 })
+
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(useErrorStore, import.meta.hot))
+}

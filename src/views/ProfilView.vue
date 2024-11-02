@@ -30,7 +30,6 @@ const {
 } = storeToRefs(playlistsStore)
 
 const logoutClickHandler = () => {
-  console.log('logoutClickHandler')
   authStore.logout()
 }
 
