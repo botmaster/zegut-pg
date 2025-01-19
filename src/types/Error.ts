@@ -1,14 +1,6 @@
-//import type { PostgrestError } from '@supabase/supabase-js'
+import type { AxiosError } from 'axios'
 
-// Example of third-party type error
-export type PostgrestError = {
-  message: string
-  details: string
-  hint: string
-  code: string
-}
-
-export interface ExtendedPostgrestError extends PostgrestError {
+export interface ExtendedAxiosError extends AxiosError {
   statusCode?: number
 }
 

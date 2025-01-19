@@ -1,28 +1,30 @@
-import type { CustomError, ExtendedPostgrestError, PostgrestError } from '@/types/Error'
+import type { CustomError, ExtendedAxiosError } from '@/types/Error'
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { ref } from 'vue'
 
 export const useErrorStore = defineStore('error-store', () => {
-  const activeError = ref<CustomError | ExtendedPostgrestError | null>(null)
+  const activeError = ref<null | CustomError | ExtendedAxiosError>(null)
   const isCustomError = ref(false)
 
   const setError = ({
     error,
     customCode
   }: {
-    error: string | CustomError | PostgrestError | Error
+    error: Error | ExtendedAxiosError | string
     customCode?: number
   }) => {
     if (typeof error === 'string') isCustomError.value = true
 
     if (typeof error === 'string' || error instanceof Error) {
       activeError.value = typeof error === 'string' ? Error(error) : error
-      activeError.value.customCode = customCode || 500
+      //activeError.value.customCode = customCode || 500
       return
     }
 
-    activeError.value = error
-    activeError.value.statusCode = customCode || 500
+    activeError.value = error as ExtendedAxiosError
+    if (isExtendedAxiosError(activeError.value)) {
+      activeError.value.statusCode = customCode || 500
+    }
   }
 
   const clearError = () => {
@@ -40,4 +42,8 @@ export const useErrorStore = defineStore('error-store', () => {
 
 if (import.meta.hot) {
   import.meta.hot.accept(acceptHMRUpdate(useErrorStore, import.meta.hot))
+}
+
+function isExtendedAxiosError(error: any): error is ExtendedAxiosError {
+  return (error as ExtendedAxiosError).statusCode !== undefined
 }

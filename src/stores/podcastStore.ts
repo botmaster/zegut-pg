@@ -7,6 +7,8 @@ import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { fetchRss } from '@/services/rss.service'
 import type { Podcast, PodcastItem } from '@/types/podcast'
+import { useErrorStore } from '@/stores/error'
+import type { ExtendedAxiosError } from '@/types/Error'
 
 export const usePodcastStore = defineStore('podcastStore', () => {
   //const url = 'https://www.rtl2.fr/podcast/pop-rock-station.xml'
@@ -16,6 +18,8 @@ export const usePodcastStore = defineStore('podcastStore', () => {
   const currentEpisode = ref<PodcastItem | null>(null)
   const isLoading = ref<boolean>(false)
   const hasError = ref<boolean | any>(false)
+
+  const errorStore = useErrorStore()
 
   const episodesTypeIntegral = computed(() => {
     return episodes.value.filter((episode) => episode.title.toLowerCase().includes('intégrale'))
@@ -34,7 +38,8 @@ export const usePodcastStore = defineStore('podcastStore', () => {
       }
     } catch (error) {
       console.error(error)
-      hasError.value = error
+      hasError.value = error as ExtendedAxiosError
+      errorStore.setError({ error: hasError.value, customCode: hasError.value.code })
     } finally {
       isLoading.value = false
     }
