@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, watch } from 'vue'
+import { computed, onMounted, reactive, ref, useTemplateRef, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useToast } from 'vue-toastification'
 // @ts-ignore
@@ -66,9 +66,7 @@ const formPlaylist = reactive<{ name: string; description: string; public: boole
 const isCreatePlaylistPending = ref(false)
 const hasCreatePlaylistError = ref<boolean | any>(false)
 const currentEpisodeId = useRouteQuery('id')
-/*const spotifySearchResultList = ref<Array<SpotifyApi.TrackObjectFull | { id: null; name: string }>>(
-  []
-)*/
+
 // Promise.allSettled
 const spotifySearchResultList = ref<
   Array<PromiseSettledResult<SpotifyApi.TrackObjectFull | { id: null; name: string }>>
@@ -77,12 +75,22 @@ const spotifySearchResultList = ref<
 const isSearchPending = ref(false)
 const hasSearchError = ref<boolean | any>(false)
 
+// Template refs
+const episodeInfosContent = useTemplateRef('episodeInfosContent')
+
 /**
  * Computed
  */
 const episodeTrackList = computed(() => {
   const content = currentEpisode.value?.content.split('\n') || []
-  return content.filter((track) => !track.toLowerCase().includes('reprise') && track.trim() !== '')
+  return content.filter((line) => {
+    // Line must contain at least 3 characters
+    // Line must not contain 'reprise'
+    // Line must match the pattern 'Artist - Title' or 'Artist : Title'
+    return (
+      line.length > 3 && !line.toLowerCase().includes('reprise') && /(.+ - .+)|(.+ : .+)/.test(line)
+    )
+  })
 })
 
 const episodeInfos = computed(() => {
@@ -96,7 +104,8 @@ const episodeInfos = computed(() => {
   return {
     title: currentEpisode.value?.title || '',
     description: date && author ? t('pages.home.publishedDateByAuth', { date, author }) : '',
-    duration: currentEpisode.value?.itunes_duration || ''
+    duration: currentEpisode.value?.itunes_duration || '',
+    content: currentEpisode.value?.content || ''
   }
 })
 
@@ -125,8 +134,6 @@ const sanitizeSearchQuery = (query: string) => {
 
 // Search tracks in parallel
 const searchTracksInParallel = async () => {
-  // console.log('searchTracksInParallel')
-
   // Search tracks in parallel
   try {
     isSearchPending.value = true
@@ -161,8 +168,6 @@ const searchTracksInParallel = async () => {
  */
 
 const fetchPodcast = async () => {
-  console.log('fetchPodcast')
-
   try {
     // Fetch podcast
     await podcastStore.fetchPodcast()
@@ -176,8 +181,6 @@ const fetchPodcast = async () => {
 }
 
 const createPlaylistSubmitHandler = async () => {
-  // console.log('createPlaylistSubmitHandler')
-
   try {
     // Set pending, error.
     isCreatePlaylistPending.value = true
@@ -228,7 +231,6 @@ const createPlaylistSubmitHandler = async () => {
 
     // Add tracks to playlist
     const uris = tracksIds.map((trackId) => `spotify:track:${trackId}`)
-    console.log('uris', uris)
     await addTracksToPlaylist(spotifyPlaylist.value?.id || '', uris)
 
     /*spotifyPlaylist.value = await getPlaylist(
@@ -268,6 +270,9 @@ watch(
 watch(
   currentEpisodeId,
   async (value) => {
+    // Scroll podcast content to top
+    episodeInfosContent.value?.scrollTo(0, 0)
+
     if (!value) {
       await fetchPodcast()
       currentEpisodeId.value = episodesTypeIntegral.value[0].id
@@ -297,6 +302,11 @@ onMounted(async () => {
     //await fetchPodcast()
   }
 })
+
+function clickHandler(e: MouseEvent) {
+  console.log('click', e)
+  throw new Error('coucou')
+}
 </script>
 
 <template>
@@ -304,6 +314,9 @@ onMounted(async () => {
     <div class="container mx-auto pt-8 pb-14">
       <section class="prose lg:prose-lg max-w-prose">
         <h1 class="mb-8">{{ t('pages.home.title') }}</h1>
+        <p>
+          <button class="mt-20" @click="clickHandler">test</button>
+        </p>
         <figure>
           <blockquote>
             <p class="whitespace-pre-line">
@@ -368,6 +381,7 @@ onMounted(async () => {
 
           <h3>{{ t('pages.home.episodeList') }}</h3>
           <EpisodeSelector
+            v-if="currentEpisodeId"
             :episodes="episodesTypeIntegral"
             v-model="currentEpisodeId"
           ></EpisodeSelector>
@@ -396,6 +410,13 @@ onMounted(async () => {
                   {{ episodeInfos.description }}.<br />{{ t('common.duration') }} :
                   {{ episodeInfos.duration }}
                 </p>
+                <div
+                  ref="episodeInfosContent"
+                  v-if="episodeInfos.content"
+                  class="text-sm max-h-56 overflow-y-auto"
+                >
+                  <div style="white-space: pre-wrap" v-html="episodeInfos.content"></div>
+                </div>
               </div>
             </div>
             <div class="md:flex gap-x-4">
@@ -404,12 +425,12 @@ onMounted(async () => {
                 <h4 class="">
                   {{ t('pages.home.podcastTrackList') }} ({{ episodeTrackList.length }})
                 </h4>
-                <ol
-                  class="not-prose text-sm max-h-64 overflow-auto bg-zinc-50 list-inside !px-3 py-2"
+                <ul
+                  class="not-prose text-sm max-h-64 overflow-auto bg-accent text-accent-foreground list-inside !px-3 py-2"
                   tabindex="0"
                 >
                   <li v-for="(track, index) in episodeTrackList" :key="index">{{ track }}</li>
-                </ol>
+                </ul>
               </div>
               <div v-if="isAuthenticated" class="flex-1">
                 <!-- Spotify track list -->
@@ -419,8 +440,8 @@ onMounted(async () => {
                   /><span v-else>{{ spotifySearchResultList?.length }}</span
                   >)
                 </h4>
-                <ol
-                  class="not-prose text-sm max-h-64 overflow-auto bg-zinc-50 list-inside !px-3 py-2"
+                <ul
+                  class="not-prose text-sm max-h-64 overflow-auto bg-accent text-accent-foreground list-inside !px-3 py-2"
                   tabindex="0"
                   v-if="!isSearchPending && !hasSearchError"
                 >
@@ -428,7 +449,7 @@ onMounted(async () => {
                     <span v-if="item.id">{{ item.artists[0].name }} - {{ item.name }}</span>
                     <span v-else>{{ item }}</span>
                   </li>
-                </ol>
+                </ul>
               </div>
             </div>
           </template>

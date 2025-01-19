@@ -17,7 +17,6 @@ const { user } = storeToRefs(userStore)
 const authStore = useAuthStore()
 
 const logoutClickHandler = () => {
-  console.log('logoutClickHandler')
   authStore.logout()
 }
 </script>
@@ -27,9 +26,9 @@ const logoutClickHandler = () => {
     class="min-h-[--header-height] flex items-center justify-between border-b border-gray-100 backdrop-blur-sm bg-white/95 fixed top-0 w-full px-4 md:px-8"
   >
     <div class="">
-      <p class="text-amber-500 text-2xl font-extrabold">
+      <div class="text-primary text-2xl font-extrabold">
         <RouterLink to="/">Zégut PG</RouterLink>
-      </p>
+      </div>
     </div>
     <nav class="flex gap-x-3 items-center text-sm leading-none">
       <a
@@ -46,17 +45,15 @@ const logoutClickHandler = () => {
       <!-- User menu     -->
 
       <Menu as="div" class="relative text-left leading-[0] select-none">
-        <RouterLink
-          v-if="!user"
-          class="router-link relative flex items-center justify-center px-4 h-8 rounded-full bg-black border-2 border-black font-medium text-white overflow-hidden"
-          :to="{ name: 'login' }"
-        >
-          <Icon class="inline-block text-base mr-2" icon="material-symbols:login" />
-          <span> {{ t('common.signIn') }}</span>
+        <RouterLink custom v-if="!user" :to="{ name: 'login' }" v-slot="{ navigate }">
+          <button class="btn btn-primary btn-sm btn-rounded" @click="navigate" role="link">
+            <Icon class="inline-block text-base mr-2" icon="material-symbols:login" />
+            <span> {{ t('common.signIn') }}</span>
+          </button>
         </RouterLink>
         <MenuButton v-else>
           <span
-            class="relative rounded-full bg-white/50 w-6 h-6 overflow-hidden flex items-center justify-center border-2 border-current"
+            class="relative rounded-full bg-white/50 w-6 h-6 overflow-hidden flex items-center justify-center border-2 border-primary"
           >
             <img
               v-if="user?.images && user?.images[0]?.url"

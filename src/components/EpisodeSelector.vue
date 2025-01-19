@@ -16,7 +16,7 @@ import { getEpisodeAuthorImage } from '@/utils/podcast'
 
 const props = defineProps<{
   episodes: PodcastItem[] | null
-  modelValue: string | string[] | null
+  modelValue: string | string[] | null | undefined
 }>()
 
 const emit = defineEmits<{
@@ -49,11 +49,11 @@ onMounted(() => {
   <div class="not-prose max-h-96 overflow-auto text-sm">
     <ul class="list-none p-0">
       <li
-        class="flex gap-4 mb-4 bg-zinc-50"
+        class="flex gap-4 hover:bg-accent cursor-pointer"
         v-for="episode in episodes"
         :key="episode.id"
         :id="episode.id"
-        :class="{ '!bg-amber-200': isSelected(episode) }"
+        :class="{ '!bg-accent': isSelected(episode) }"
       >
         <figure class="shrink-0">
           <img

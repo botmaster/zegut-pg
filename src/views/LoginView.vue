@@ -18,8 +18,6 @@ const initiateSpotifyLogin = () => {
 }
 
 const connectClickHandler = () => {
-  console.log('connectClickHandler')
-
   if (!authStore.userAuth?.access_token) {
     initiateSpotifyLogin()
   } else {
@@ -35,12 +33,9 @@ const connectClickHandler = () => {
         <h1>{{ t('pages.login.title') }}</h1>
         <template v-if="!isAuthenticated">
           <div
-            class="border-l-4 border-amber-200 mb-8 py-3 pl-8 pr-6 bg-amber-200/20 not-prose text-base"
+            class="border-l-4 border-primary mb-8 py-3 pl-8 pr-6 bg-secondary not-prose text-base text-secondary-foreground"
           >
             <p class="mb-2 font-bold">{{ t('pages.login.calloutTitle') }}</p>
-            <!--            <p class="leading-snug my-0">
-              {{ t('pages.login.callout') }}
-            </p>-->
             <i18n-t tag="p" class="leading-snug my-0" keypath="pages.login.callout">
               <template #link>
                 <a href="mailto:pascal.achard@gmail.com" class="underline">ici</a>
@@ -56,7 +51,7 @@ const connectClickHandler = () => {
             <button class="btn btn-primary" @click="connectClickHandler">
               {{ t('common.continue') }}
             </button>
-            <button class="btn btn-border" @click="router.push({ name: 'home' })">
+            <button class="btn btn-ghost" @click="router.push({ name: 'home' })">
               {{ t('common.cancel') }}
             </button>
           </p>
