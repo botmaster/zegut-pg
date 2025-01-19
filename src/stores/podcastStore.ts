@@ -9,7 +9,8 @@ import { fetchRss } from '@/services/rss.service'
 import type { Podcast, PodcastItem } from '@/types/podcast'
 
 export const usePodcastStore = defineStore('podcastStore', () => {
-  const url = 'https://www.rtl2.fr/podcast/pop-rock-station.xml'
+  //const url = 'https://www.rtl2.fr/podcast/pop-rock-station.xml'
+  const url = 'https://feeds.audiomeans.fr/feed/dcd9e569-1d1f-4b13-bdcc-6ddf7738e10d.xml'
   const podcast = ref<Podcast | null>(null)
   const episodes = ref<Array<PodcastItem>>([])
   const currentEpisode = ref<PodcastItem | null>(null)
