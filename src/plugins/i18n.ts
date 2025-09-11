@@ -1,4 +1,3 @@
-// @ts-ignore
 import { createI18n } from 'vue-i18n'
 
 /*
@@ -47,7 +46,7 @@ const datetimeFormats = {
 
 const i18n = createI18n({
   legacy: false,
-  locale: languages.value[0].split('-')[0],
+  locale: languages.value[0]?.split('-')[0],
   fallbackLocale: 'en',
   messages,
   datetimeFormats

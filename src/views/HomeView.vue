@@ -2,8 +2,8 @@
 import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useToast } from 'vue-toastification'
-// @ts-ignore
-import { DateTimeOptions, useI18n } from 'vue-i18n'
+
+import { type DateTimeOptions, useI18n } from 'vue-i18n'
 import { usePreferredLanguages } from '@vueuse/core'
 import { useRouteQuery } from '@vueuse/router'
 
@@ -291,7 +291,7 @@ watch(
   async (value) => {
     if (!value) {
       await fetchPodcast()
-      currentEpisodeId.value = episodesTypeIntegral.value[0].id
+      currentEpisodeId.value = episodesTypeIntegral.value[0]?.id
       return
     }
 
@@ -389,6 +389,7 @@ onMounted(async () => {
 
           <h3>{{ t('pages.home.episodeList') }}</h3>
           <EpisodeSelector
+            v-if="currentEpisodeId"
             :episodes="episodesTypeIntegral"
             v-model="currentEpisodeId"
           ></EpisodeSelector>
@@ -446,7 +447,7 @@ onMounted(async () => {
                   v-if="!isSearchPending && !hasSearchError"
                 >
                   <li v-for="(item, index) in spotifySearchResultListFulfilled" :key="index">
-                    <span v-if="item.id">{{ item.artists[0].name }} - {{ item.name }}</span>
+                    <span v-if="item.id">{{ item.artists[0]?.name }} - {{ item.name }}</span>
                     <span v-else>{{ item }}</span>
                   </li>
                 </ol>

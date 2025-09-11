@@ -4,7 +4,7 @@ import { storeToRefs } from 'pinia'
 import { useUserStore } from '@/stores/userStore'
 import { usePlaylistsStore } from '@/stores/playlistsStore'
 import { ref, watch } from 'vue'
-// @ts-ignore
+
 import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
 import PlaylistItem from '@/components/PlaylistItem.vue'
@@ -105,7 +105,7 @@ watch(
               <div class="md:flex gap-x-8">
                 <figure class="shrink-0 !my-0" v-if="user.images && user.images.length > 0">
                   <img
-                    :src="user.images[0].url"
+                    :src="user.images[0]?.url"
                     :alt="user.display_name"
                     class="w-48 h-48 border border-zinc-100"
                   />
