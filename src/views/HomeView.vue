@@ -81,8 +81,29 @@ const hasSearchError = ref<boolean | any>(false)
  * Computed
  */
 const episodeTrackList = computed(() => {
-  const content = currentEpisode.value?.content.split('\n') || []
-  return content.filter((track) => !track.toLowerCase().includes('reprise') && track.trim() !== '')
+  // Get the content from the episode description or content
+  const content = currentEpisode.value?.description || currentEpisode.value?.content || ''
+
+  // Split by lines and find tracks that match the pattern "Artist - Song" or "Artist : Song"
+  const lines = content.split('\n')
+
+  // Filter lines that contain " - " or " : " and exclude unwanted content
+  const tracks = lines.filter((line) => {
+    const trimmedLine = line.trim()
+    // Check if line contains track separator and is not empty
+    const hasTrackSeparator = trimmedLine.includes(' - ') || trimmedLine.includes(' : ')
+    // Exclude lines with "reprise", empty lines, and HTML-like content
+    const isValidTrack =
+      trimmedLine.length <= 150 && // Exclude very long lines
+      !trimmedLine.toLowerCase().includes('reprise') &&
+      trimmedLine !== '' &&
+      !trimmedLine.includes('<') &&
+      !trimmedLine.includes('http')
+
+    return hasTrackSeparator && isValidTrack
+  })
+
+  return tracks
 })
 
 const episodeInfos = computed(() => {
@@ -520,5 +541,3 @@ onMounted(async () => {
     </div>
   </main>
 </template>
-
-<style scoped></style>
