@@ -10,7 +10,6 @@
  */
 import type { PodcastItem } from '@/types/podcast'
 import { onMounted } from 'vue'
-// @ts-ignore
 import { useI18n } from 'vue-i18n'
 import { getEpisodeAuthorImage } from '@/utils/podcast'
 
@@ -53,7 +52,7 @@ onMounted(() => {
         v-for="episode in episodes"
         :key="episode.id"
         :id="episode.id"
-        :class="{ '!bg-amber-200': isSelected(episode) }"
+        :class="{ '!bg-accent-light': isSelected(episode) }"
       >
         <figure class="shrink-0">
           <img

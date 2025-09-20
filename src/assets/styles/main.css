@@ -10,11 +10,11 @@
 
 @layer components {
   .btn {
-    @apply inline-flex items-center px-[1em] py-[0.5em] rounded-md text-white text-base font-normal no-underline;
+    @apply inline-flex items-center px-[1em] py-[0.5em] rounded-md text-white text-base font-bold no-underline;
   }
 
   .btn.btn-primary {
-    @apply bg-amber-500 hover:bg-amber-600;
+    @apply bg-primary hover:bg-primary-dark;
   }
 
   .btn.btn-link {
@@ -30,7 +30,7 @@
   }
 
   .form-input {
-    @apply block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-amber-300 focus:ring focus:ring-amber-200 focus:ring-opacity-50;
+    @apply block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-accent focus:ring focus:ring-accent-light focus:ring-opacity-50;
   }
 
   .prose p:first-child {
