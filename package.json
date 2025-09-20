@@ -1,6 +1,6 @@
 {
   "name": "zegut-pg",
-  "version": "0.17.11",
+  "version": "0.18.0",
   "private": true,
   "author": "Pascal Achard",
   "type": "module",
