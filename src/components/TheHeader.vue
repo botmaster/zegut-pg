@@ -5,7 +5,6 @@ import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import { useUserStore } from '@/stores/userStore'
 import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/authStore'
-// @ts-ignore
 import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
 
@@ -27,7 +26,7 @@ const logoutClickHandler = () => {
     class="min-h-[--header-height] flex items-center justify-between border-b border-gray-100 backdrop-blur-sm bg-white/95 fixed top-0 w-full px-4 md:px-8"
   >
     <div class="">
-      <p class="text-amber-500 text-2xl font-extrabold">
+      <p class="text-primary text-2xl font-extrabold">
         <RouterLink to="/">Zégut PG</RouterLink>
       </p>
     </div>

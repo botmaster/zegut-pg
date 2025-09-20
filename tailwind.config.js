@@ -5,7 +5,20 @@ import typo from '@tailwindcss/typography'
 export default {
   content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        primary: {
+          DEFAULT: '#eb1c26',
+          dark: '#b9151b',
+          light: '#ff4d4f'
+        },
+        accent: {
+          DEFAULT: '#c7c7c7',
+          dark: '#8c8c8c',
+          light: '#e1e1e1'
+        }
+      }
+    },
     container: {
       padding: {
         DEFAULT: '1rem',
